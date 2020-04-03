@@ -35,10 +35,16 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
       menuShow: false
+    }
+  },
+  async mounted () {
+    if (!Object.keys(this.$store.getters.status).length) {
+      await this.$store.dispatch('fetchStatus')
     }
   },
   methods: {
@@ -51,8 +57,17 @@ export default {
     checkUser () {
       return this.$store.getters.checkUser
     },
+    checkStatus () {
+      return this.$store.getters.status
+    },
     linkMenu () {
-      if (this.checkUser) {
+      if (this.checkUser && this.checkStatus === 'Startuper') {
+        return [
+          {title: 'Home', url: '/'},
+          {title: 'StartUps', url: '/startUps'},
+          {title: 'Profile', url: '/profile'}
+        ]
+      } else if (this.checkUser && this.checkStatus === 'Investor') {
         return [
           {title: 'Home', url: '/'},
           {title: 'Profile', url: '/profile'}

@@ -8,6 +8,7 @@ import Login from '@/components/Auth/Login'
 import Registration from '@/components/Auth/Registration'
 import ResetPassword from '@/components/Auth/ResetPassword'
 import AddDataProfile from '@/components/Profile/AddDataProfile'
+import StartUps from '@/components/StartUps'
 
 Vue.use(Router)
 
@@ -18,7 +19,7 @@ export default new Router({
       name: 'home',
       component: Home,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next()
         // if (store.getters.sheckUser) {
         //   next()
         // } else {
@@ -31,7 +32,7 @@ export default new Router({
       name: 'profile',
       component: Profile,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next()
       }
     },
     {
@@ -53,6 +54,11 @@ export default new Router({
       path: '/addDataProfile',
       name: 'addDataProfile',
       component: AddDataProfile
+    },
+    {
+      path: '/startUps',
+      name: 'startUps',
+      component: StartUps
     }
   ]
 })

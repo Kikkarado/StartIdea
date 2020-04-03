@@ -45,7 +45,8 @@ new Vue({
       if (user) {
         this.$store.dispatch('loggedUser', user)
       }
-      this.$store.dispatch('loadUserData')
+      this.$store.dispatch('fetchInfo')
+      this.$store.dispatch('fetchStatus')
     })
   }
 })

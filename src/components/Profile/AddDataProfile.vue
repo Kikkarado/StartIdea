@@ -29,6 +29,7 @@
                 option(disabled='', value='') Who are you?
                 option Investor
                 option Startuper
+                option Specialist
               span Choose: {{ status }}
               .error(v-if="!$v.status.required") Field is required
             .buttons-list

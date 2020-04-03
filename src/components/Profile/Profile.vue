@@ -5,71 +5,29 @@
       .auth
         .auth__form
           span.ui-title-2 Profile
-          form(@submit.prevent="onSubmit")
-            p Name: {{ fname }}
-            p Surname: {{sname}}
-            p Status: {{status}}
-            .buttons-list.buttons-list--info
-              p.typo__p(v-if="submitStatus === 'OK'") Thanks for your submission!
-              p.typo__p(v-if="submitStatus === 'ERROR'") Please fill the form correctly.
-              p.typo__p(v-else) {{ submitStatus }}
+          form
+            p Name: {{ profFil.fname }}
+            p Surname: {{ profFil.sname }}
+            p Status: {{ profFil.status }}
             .buttons-list.button-list--info
-              span Ediy account info?
+              span Edit account info?
                 router-link(to="/addDataProfile")  Click Here
 </template>
 
 <script>
-import { required, minLength } from 'vuelidate/lib/validators'
-
 export default {
   data () {
-    return {
-      fname: '',
-      sname: '',
-      status: '',
-      submitStatus: null
-    }
+    return {}
   },
-  validations: {
-    fname: {
-      required
-    },
-    sname: {
-      required
-    },
-    status: {
-      required
-    },
-    password: {
-      required,
-      minLength: minLength(6)
+  async mounted () {
+    if (!Object.keys(this.$store.getters.info).length) {
+      await this.$store.dispatch('fetchInfo')
     }
-  },
-  methods: {
-    onSubmit () {
-      this.$v.$touch()
-      if (this.$v.$invalid) {
-        this.submitStatus = 'ERROR'
-      } else {
-        const user = {
-          fname: this.fname,
-          sname: this.sname,
-          status: this.status
-        }
-        this.$store.dispatch('loadUserData', user)
-          .then(() => {
-            console.log('LOGIN!')
-            this.submitStatus = 'OK'
-            this.$router.push('/')
-          })
-          .catch(err => {
-            this.submitStatus = err.message
-          })
-      }
-    },
-    loadData () {}
   },
   computed: {
+    profFil () {
+      return this.$store.getters.info
+    },
     loading () {
       return this.$store.getters.loading
     }
