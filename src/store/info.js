@@ -3,7 +3,8 @@ import firebase from 'firebase/app'
 export default {
   state: {
     profileInfo: {},
-    statusUs: null
+    statusUs: null,
+    startupsOn: null
   },
   mutations: {
     setInfo (state, profileInfo) {
@@ -14,6 +15,9 @@ export default {
     },
     setStatus (state, statusUs) {
       state.statusUs = statusUs
+    },
+    setOpStatrup (state, startupsOn) {
+      state.startupsOn = startupsOn
     }
   },
   actions: {
@@ -46,10 +50,26 @@ export default {
         commit('setError', e.message)
         throw e
       }
+    },
+    async fetchStartup ({commit}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        const userID = firebase.auth().currentUser.uid
+        const startupsOn = (await firebase.database().ref('Users/' + userID + '/openstartup/').once('value')).val()
+        commit('setOpStatrup', startupsOn)
+        commit('setLoading', false)
+        console.log('openstartup ' + startupsOn)
+      } catch (e) {
+        commit('setLoading', false)
+        commit('setError', e.message)
+        throw e
+      }
     }
   },
   getters: {
     info: s => s.profileInfo,
-    status: s => s.statusUs
+    status: s => s.statusUs,
+    openstartup: s => s.startupsOn
   }
 }

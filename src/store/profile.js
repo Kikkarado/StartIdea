@@ -20,7 +20,8 @@ export default {
         const addUserData = new Profile(
           payload.fname,
           payload.sname,
-          payload.status
+          payload.status,
+          payload.openstartup
         )
         const rootRef = firebase.database().ref('Users')
         const userID = firebase.auth().currentUser.uid

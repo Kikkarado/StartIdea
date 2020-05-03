@@ -47,6 +47,7 @@ new Vue({
       }
       this.$store.dispatch('fetchInfo')
       this.$store.dispatch('fetchStatus')
+      this.$store.dispatch('fetchStartup')
     })
   }
 })

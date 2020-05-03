@@ -33,6 +33,7 @@
               span Choose: {{ status }}
               .error(v-if="!$v.status.required") Field is required
             .buttons-list
+              button.button.button-light(@click="cancelAdd", name="cancel") Cancel
               button.button.button-primary(
                 type="submit"
               )
@@ -68,6 +69,9 @@ export default {
     }
   },
   methods: {
+    cancelAdd () {
+      this.$router.push('/profile')
+    },
     onSubmit () {
       this.$v.$touch()
       if (this.$v.$invalid) {
@@ -76,7 +80,8 @@ export default {
         const user = {
           fname: this.fname,
           sname: this.sname,
-          status: this.status
+          status: this.status,
+          openstartup: 0
         }
         this.$store.dispatch('addUserData', user)
           .then(() => {

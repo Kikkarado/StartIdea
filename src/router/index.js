@@ -8,7 +8,8 @@ import Login from '@/components/Auth/Login'
 import Registration from '@/components/Auth/Registration'
 import ResetPassword from '@/components/Auth/ResetPassword'
 import AddDataProfile from '@/components/Profile/AddDataProfile'
-import StartUps from '@/components/StartUps'
+import MyStartUps from '@/components/StartUps/MyStartUps'
+import AddStartUp from '@/components/StartUps/AddStartUp'
 
 Vue.use(Router)
 
@@ -56,9 +57,14 @@ export default new Router({
       component: AddDataProfile
     },
     {
-      path: '/startUps',
-      name: 'startUps',
-      component: StartUps
+      path: '/myStartUps',
+      name: 'myStartUps',
+      component: MyStartUps
+    },
+    {
+      path: '/addStartUp',
+      name: 'addStartUp',
+      component: AddStartUp
     }
   ]
 })
