@@ -9,6 +9,9 @@ export default {
   mutations: {
     addUserData (state, payload) {
       state.profile = payload
+    },
+    usersData (state, userAllData) {
+      state.profile = userAllData
     }
   },
   actions: {
@@ -29,6 +32,23 @@ export default {
         await usersRef.set(addUserData)
         // Send mutation
         commit('addUserData', new Profile(payload.uid))
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+        throw error
+      }
+    },
+    async findUserData ({commit}, username) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        const userAllData = await firebase.database().ref('Users').orderByChild('username').equalTo('Kuka').limitToFirst(1)
+        userAllData.on('value', snap => {
+          console.log(snap)
+        })
+        // Send mutation
+        commit('usersData', userAllData)
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)

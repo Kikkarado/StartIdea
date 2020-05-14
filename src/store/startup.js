@@ -21,7 +21,7 @@ export default {
           payload.title,
           payload.description,
           payload.cost,
-          payload.comleted,
+          payload.completed,
           payload.raisedfunds,
           getters.user.id
         )

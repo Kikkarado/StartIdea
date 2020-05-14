@@ -37,6 +37,9 @@ export default new Router({
       }
     },
     {
+      path: '/profile/:id', component: Profile
+    },
+    {
       path: '/login',
       name: 'login',
       component: Login

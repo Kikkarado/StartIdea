@@ -47,7 +47,9 @@ new Vue({
       }
       this.$store.dispatch('fetchInfo')
       this.$store.dispatch('fetchStatus')
-      this.$store.dispatch('fetchStartup')
+      this.$store.dispatch('fetchActiveStartup')
+      this.$store.dispatch('fetchStartups')
+      this.$store.dispatch('findUserData')
     })
   }
 })

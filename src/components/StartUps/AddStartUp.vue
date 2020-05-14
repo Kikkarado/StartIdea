@@ -86,7 +86,7 @@ export default {
           title: this.title,
           description: this.description,
           cost: this.cost,
-          comleted: false,
+          completed: false,
           raisedfunds: 0
         }
         this.$store.dispatch('newStartUp', startup)

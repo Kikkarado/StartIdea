@@ -3,7 +3,7 @@ export default class Startup {
     title,
     description,
     cost,
-    comleted,
+    completed,
     raisedfunds,
     user = null,
     id = null
@@ -11,7 +11,7 @@ export default class Startup {
     this.title = title
     this.description = description
     this.cost = cost
-    this.comleted = comleted
+    this.completed = completed
     this.raisedfunds = raisedfunds
     this.user = user
     this.id = id
