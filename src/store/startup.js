@@ -4,7 +4,8 @@ import Startup from './startup_help'
 
 export default {
   state: {
-    startup: {}
+    startup: {},
+    startups: []
   },
   mutations: {
     newStartUp (state, payload) {

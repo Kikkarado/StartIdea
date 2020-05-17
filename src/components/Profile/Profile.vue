@@ -9,6 +9,7 @@
             p Name: {{ profFil.fname }}
             p Surname: {{ profFil.sname }}
             p Status: {{ profFil.status }}
+            p {{ $route.params.id }}
             .buttons-list.button-list--info
               span Edit account info?
                 router-link(to="/addDataProfile")  Click Here

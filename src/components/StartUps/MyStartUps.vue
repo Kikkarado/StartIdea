@@ -25,19 +25,36 @@
           .ui-card.ui-card--shadow
               .task-item__info
                 .task-item__main-info
+                  p.typo__p(v-if="startups.completed === true") Completed
                   span Cost: {{ startups.raisedfunds }} : {{ startups.cost }}
                 .task-item__content
                   .task-item__header
                     span.ui-title-2 {{ startups.title }}
                   .task-item__body
-                    p.ui-text-regular {{ startups.fname }}
+                    p.ui-text-regular {{ startups.description }}
                   .task-item__foter
                     .buttons-list
-                      .button.button--round.button-primary Done
+                      .button(
+                        v-if="startups.completed !== true"
+                        @click="startupDone(startups.id, startups.title)"
+                        ).button--round.button-primary Done
         .auth__bot
           button.button-primary(@click="addStartUp") Add startup
           p {{ OpStartup }}
           form(@submit.prevent="onSubmit")
+    .ui-messageBox__wrapper(
+      v-if="done"
+      :class="{active: done}"
+    )
+      .ui-messageBox.fadeInDown
+        .ui-messageBox__header
+          span.messageBox-title Warning!
+          span.button-close(@click="cancelStartupDone")
+        .ui-messageBox__content
+          p Are you sure you want to close "{{ titleDone }}"
+        .ui-messageBox__footer
+          .button.button-light(@click="cancelStartupDone") Cancel
+          .button.button-primary(@click="finishStartupDone") OK
 </template>
 
 <script>
@@ -45,7 +62,10 @@ export default {
   data () {
     return {
       OpStartup: null,
-      filter: 'complete'
+      filter: 'complete',
+      done: false,
+      titleDone: '',
+      srtpId: null
     }
   },
   async mounted () {
@@ -57,23 +77,39 @@ export default {
     }
   },
   methods: {
+    startupDone (id, title) {
+      this.done = !this.done
+      // console.log({id, title})
+      this.srtpId = id
+      this.titleDone = title
+    },
+    // Cancel button (POPUP)
+    cancelStartupDone () {
+      this.done = !this.done
+      // Reset
+      this.srtpId = null
+      this.titleDone = ''
+    },
+    // Done button
+    finishStartupDone () {
+      // console.log(this.titleEditing)
+      this.$store.dispatch('completeStartup', {
+        id: this.srtpId,
+        completed: true
+      })
+      this.done = !this.done
+    },
     addStartUp () {
       if (this.checkActiveStartup === 1) {
         this.OpStartup = 'You already have open StartUp'
       } else {
         this.$router.push('/addStartUp')
       }
-    },
-    clickme () {
-      alert('Anchor tag is clicked')
     }
   },
   computed: {
     checkActiveStartup () {
       return this.$store.getters.openstartup
-    },
-    checkStartups () {
-      return this.$store.getters.startups
     },
     startupFilter () {
       if (this.filter === 'notcomplete') {
@@ -105,4 +141,10 @@ export default {
     color #fc5c65
   .button-done
     text-align right
+
+.ui-messageBox__wrapper
+  &.active
+    display flex
+  .button-light
+    margin-right 8px
 </style>

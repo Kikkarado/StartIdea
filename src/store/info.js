@@ -23,6 +23,12 @@ export default {
     },
     setStartups (state, payload) {
       state.startups = payload
+    },
+    completeStartup (state, {id, completed}) {
+      const strp = state.startups.find(t => {
+        return t.id === id
+      })
+      strp.completed = completed
     }
   },
   actions: {
@@ -103,6 +109,23 @@ export default {
         commit('setError', e.message)
         throw e
       }
+    },
+    async completeStartup ({commit}, {id, completed}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        // Use helped class
+        await firebase.database().ref('startups').child(id).update({completed})
+        const userID = firebase.auth().currentUser.uid
+        await firebase.database().ref('Users').child(userID).child('openstartup').set(0)
+        // Send mutation
+        commit('completeStartup', {id, completed})
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+        throw error
+      }
     }
   },
   getters: {
@@ -114,12 +137,12 @@ export default {
         return stups.user === getters.user.id
       })
     },
-    startupNotCompleted (state, getters) {
+    startupNotCompleted (getters) {
       return getters.startups.filter(task => {
         return task.completed
       })
     },
-    startupCompleted (state, getters) {
+    startupCompleted (getters) {
       return getters.startups.filter(task => {
         return task.completed === false
       })
