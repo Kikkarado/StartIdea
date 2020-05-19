@@ -28,9 +28,9 @@
                 | Description must have at least {{ $v.description.$params.minLength.min }} letters.
             .form-item(:class="{ errorInput: $v.cost.$error }")
               input(
-                type="text"
+                type="number"
                 placeholder="Cost in $"
-                v-model="cost"
+                v-model.number="cost"
                 :class="{ error: $v.cost.$error }"
                 @change="$v.cost.$touch()"
               )
@@ -59,7 +59,7 @@ export default {
     return {
       title: '',
       description: '',
-      cost: ''
+      cost: 1000
     }
   },
   validations: {

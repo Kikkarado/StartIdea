@@ -7,10 +7,10 @@
           span.ui-title-2 My StartUp
         .buttons-list
           .button.button--round.button-default(
-            @click="filter = 'complete'"
+            @click="filter = 'active'"
           ) Active
           .button.button--round.button-default(
-            @click="filter = 'notcomplete'"
+            @click="filter = 'completed'"
           ) Completed
           .button.button--round.button-default(
             @click="filter = 'all'"
@@ -39,9 +39,10 @@
                         @click="startupDone(startups.id, startups.title)"
                         ).button--round.button-primary Done
         .auth__bot
-          button.button-primary(@click="addStartUp") Add startup
-          p {{ OpStartup }}
-          form(@submit.prevent="onSubmit")
+          button.button-primary(
+            v-if="checkActiveStartup === 0"
+            @click="addStartUp"
+            ) Add startup
     .ui-messageBox__wrapper(
       v-if="done"
       :class="{active: done}"
@@ -62,7 +63,7 @@ export default {
   data () {
     return {
       OpStartup: null,
-      filter: 'complete',
+      filter: 'active',
       done: false,
       titleDone: '',
       srtpId: null
@@ -72,8 +73,8 @@ export default {
     if (!Object.keys(this.$store.getters.openstartup).length) {
       await this.$store.dispatch('fetchActiveStartup')
     }
-    if (!Object.keys(this.$store.getters.startups).length) {
-      await this.$store.dispatch('fetchStartups')
+    if (!Object.keys(this.$store.getters.startupsUser).length) {
+      await this.$store.dispatch('fetchStartupsUser')
     }
   },
   methods: {
@@ -100,11 +101,7 @@ export default {
       this.done = !this.done
     },
     addStartUp () {
-      if (this.checkActiveStartup === 1) {
-        this.OpStartup = 'You already have open StartUp'
-      } else {
-        this.$router.push('/addStartUp')
-      }
+      this.$router.push('/addStartUp')
     }
   },
   computed: {
@@ -112,14 +109,14 @@ export default {
       return this.$store.getters.openstartup
     },
     startupFilter () {
-      if (this.filter === 'notcomplete') {
+      if (this.filter === 'active') {
         return this.$store.getters.startupNotCompleted
-      } else if (this.filter === 'complete') {
+      } else if (this.filter === 'completed') {
         return this.$store.getters.startupCompleted
       } else if (this.filter === 'all') {
-        return this.$store.getters.startups
+        return this.$store.getters.startupsUser
       }
-      return this.filter === 'complete'
+      return this.filter === 'active'
     },
     loading () {
       return this.$store.getters.loading

@@ -6,7 +6,8 @@ export default {
     profileInfo: {},
     statusUs: null,
     startupsOn: null,
-    startups: []
+    startupsUser: [],
+    startupsAll: []
   },
   mutations: {
     setInfo (state, profileInfo) {
@@ -22,13 +23,22 @@ export default {
       state.startupsOn = startupsOn
     },
     setStartups (state, payload) {
-      state.startups = payload
+      state.startupsUser = payload
     },
     completeStartup (state, {id, completed}) {
-      const strp = state.startups.find(t => {
+      const strp = state.startupsUser.find(t => {
         return t.id === id
       })
       strp.completed = completed
+    },
+    setAllStartups (state, payload) {
+      state.startupsAll = payload
+    },
+    donationStartup (state, {id, raisedfunds}) {
+      const strp = state.startupsAll.find(t => {
+        return t.id === id
+      })
+      strp.raisedfunds = raisedfunds
     }
   },
   actions: {
@@ -77,7 +87,7 @@ export default {
         throw e
       }
     },
-    async fetchStartups ({commit}) {
+    async fetchStartupsUser ({commit}) {
       commit('clearError')
       commit('setLoading', true)
       try {
@@ -126,25 +136,80 @@ export default {
         commit('setError', error.message)
         throw error
       }
+    },
+    async fetchAllStartups ({commit}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        const startup = await firebase.database().ref('startups').once('value')
+        const startups = startup.val()
+        const allStartupsArray = []
+        Object.keys(startups).forEach(key => {
+          const s = startups[key]
+          allStartupsArray.push(
+            new Startup(
+              s.title,
+              s.description,
+              s.cost,
+              s.completed,
+              s.raisedfunds,
+              s.user,
+              key
+            )
+          )
+        })
+        commit('setAllStartups', allStartupsArray)
+        commit('setLoading', false)
+        console.log(allStartupsArray)
+      } catch (e) {
+        commit('setLoading', false)
+        commit('setError', e.message)
+        throw e
+      }
+    },
+    async donationStartup ({commit}, {id, raisedfunds}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        // Use helped class
+        const raisedfundsStart = (await firebase.database().ref('startups').child(id).child('raisedfunds').once('value')).val()
+        const comp = (await firebase.database().ref('startups').child(id).child('cost').once('value')).val()
+        raisedfunds += raisedfundsStart
+        await firebase.database().ref('startups').child(id).update({raisedfunds})
+        if (raisedfunds >= comp) {
+          const completed = true
+          await firebase.database().ref('startups').child(id).update({completed})
+        }
+        // Send mutation
+        commit('donationStartup', {id, raisedfunds})
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+        throw error
+      }
     }
   },
   getters: {
     info: s => s.profileInfo,
     status: s => s.statusUs,
     openstartup: s => s.startupsOn,
-    startups (state, getters) {
-      return state.startups.filter(stups => {
-        return stups.user === getters.user.id
-      })
+    startupsUser (state, getters) {
+      return state.startupsUser
     },
     startupNotCompleted (getters) {
-      return getters.startups.filter(task => {
-        return task.completed
+      return getters.startupsUser.filter(stups => {
+        return stups.completed === false
       })
     },
     startupCompleted (getters) {
-      return getters.startups.filter(task => {
-        return task.completed === false
+      return getters.startupsUser.filter(stups => {
+        return stups.completed
+      })
+    },
+    startupsAll (getters) {
+      return getters.startupsAll.filter(stups => {
+        return stups.completed === false
       })
     }
   }
