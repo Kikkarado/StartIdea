@@ -10,6 +10,7 @@ import ResetPassword from '@/components/Auth/ResetPassword'
 import AddDataProfile from '@/components/Profile/AddDataProfile'
 import MyStartUps from '@/components/StartUps/MyStartUps'
 import AddStartUp from '@/components/StartUps/AddStartUp'
+import Startup from '@/components/StartUps/Startup'
 
 Vue.use(Router)
 
@@ -27,6 +28,9 @@ export default new Router({
         //   next('/login')
         // }
       }
+    },
+    {
+      path: '/startup/:id', name: 'startup', component: Startup
     },
     {
       path: '/profile',

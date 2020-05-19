@@ -7,7 +7,8 @@ export default {
     statusUs: null,
     startupsOn: null,
     startupsUser: [],
-    startupsAll: []
+    startupsAll: [],
+    infoStr: {}
   },
   mutations: {
     setInfo (state, profileInfo) {
@@ -39,6 +40,9 @@ export default {
         return t.id === id
       })
       strp.raisedfunds = raisedfunds
+    },
+    infoStartup (state, infoStr) {
+      state.infoStr = infoStr
     }
   },
   actions: {
@@ -167,7 +171,7 @@ export default {
         throw e
       }
     },
-    async donationStartup ({commit}, {id, raisedfunds}) {
+    async donationStartup ({commit}, {id, raisedfunds, user}) {
       commit('clearError')
       commit('setLoading', true)
       try {
@@ -179,9 +183,27 @@ export default {
         if (raisedfunds >= comp) {
           const completed = true
           await firebase.database().ref('startups').child(id).update({completed})
+          await firebase.database().ref('Users').child(user).child('openstartup').set(0)
+          console.log({user})
         }
         // Send mutation
         commit('donationStartup', {id, raisedfunds})
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+        throw error
+      }
+    },
+    async infoStartup ({commit}, {id}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        // Use helped class
+        const infoStr = (await firebase.database().ref('startups').child(id).once('value')).val()
+        console.log(infoStr)
+        // Send mutation
+        commit('infoStartup', infoStr)
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
@@ -211,6 +233,7 @@ export default {
       return getters.startupsAll.filter(stups => {
         return stups.completed === false
       })
-    }
+    },
+    infoS: s => s.infoStr
   }
 }

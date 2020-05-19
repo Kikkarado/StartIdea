@@ -26,7 +26,7 @@
               .task-item__info
                 .task-item__main-info
                   p.typo__p(v-if="startups.completed === true") Completed
-                  span Cost: {{ startups.raisedfunds }} : {{ startups.cost }}
+                  span Collected {{ startups.raisedfunds }} : {{ startups.cost }}
                 .task-item__content
                   .task-item__header
                     span.ui-title-2 {{ startups.title }}

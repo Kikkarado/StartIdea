@@ -64,6 +64,7 @@ export default {
       return state.user
     },
     checkUser (state) {
+      console.log('User ' + state.user)
       return state.user !== null
     }
   }

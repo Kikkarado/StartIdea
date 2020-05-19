@@ -51,6 +51,7 @@ new Vue({
       this.$store.dispatch('fetchStartupsUser')
       this.$store.dispatch('findUserData')
       this.$store.dispatch('fetchAllStartups')
+      // this.$store.dispatch('infoStartup')
     })
   }
 })
