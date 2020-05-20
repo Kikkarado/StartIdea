@@ -1,5 +1,7 @@
 import firebase from 'firebase/app'
 
+import Profile from './profile_help'
+
 import User from './user_help'
 
 export default {
@@ -12,12 +14,30 @@ export default {
     }
   },
   actions: {
-    async registerUser ({commit}, {email, password}) {
+    async registerUser ({commit}, {email, password, fname, sname, status, openstartup}) {
       commit('clearError')
       commit('setLoading', true)
       try {
+        const aboutme = ''
+        const mail = ''
+        const phone = ''
+        const dateofbirth = ''
         const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
+        const addUserData = new Profile(
+          fname,
+          sname,
+          status,
+          openstartup,
+          aboutme,
+          mail,
+          phone,
+          dateofbirth
+        )
+        const userID = user.user.uid
+        await firebase.database().ref('Users').child(userID).set(addUserData)
+        // Send mutation
         commit('setUser', new User(user.user.uid))
+        commit('setUser', addUserData)
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)

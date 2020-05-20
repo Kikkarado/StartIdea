@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import store from '../store'
 
 import Home from '@/components/Home'
-import Profile from '@/components/Profile/Profile'
+import MyProfile from '@/components/Profile/MyProfile'
 import Login from '@/components/Auth/Login'
 import Registration from '@/components/Auth/Registration'
 import ResetPassword from '@/components/Auth/ResetPassword'
@@ -11,6 +11,7 @@ import AddDataProfile from '@/components/Profile/AddDataProfile'
 import MyStartUps from '@/components/StartUps/MyStartUps'
 import AddStartUp from '@/components/StartUps/AddStartUp'
 import Startup from '@/components/StartUps/Startup'
+import UserProfile from '@/components/Profile/UserProfile'
 
 Vue.use(Router)
 
@@ -35,13 +36,13 @@ export default new Router({
     {
       path: '/profile',
       name: 'profile',
-      component: Profile,
+      component: MyProfile,
       beforeEnter (to, from, next) {
         store.getters.checkUser ? next() : next()
       }
     },
     {
-      path: '/profile/:id', component: Profile
+      path: '/userprofile/:id', name: 'userprofile', component: UserProfile
     },
     {
       path: '/login',

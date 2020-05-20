@@ -4,6 +4,10 @@ export default class Profile {
     sname,
     status,
     openstartup,
+    aboutme,
+    mail,
+    phone,
+    dateofbirth,
     user = null,
     id = null
   ) {
@@ -11,6 +15,10 @@ export default class Profile {
     this.sname = sname
     this.status = status
     this.openstartup = openstartup
+    this.aboutme = aboutme
+    this.mail = mail
+    this.phone = phone
+    this.dateofbirth = dateofbirth
     this.user = user
     this.id = id
   }

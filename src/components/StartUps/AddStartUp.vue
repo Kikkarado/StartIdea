@@ -128,6 +128,8 @@ export default {
       display block
 
 select,
+textarea
+  width 20%
 input
   &.error
     border-color #fc5c65

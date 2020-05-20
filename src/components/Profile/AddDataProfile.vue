@@ -2,15 +2,16 @@
  .content-wrapper
    section
     .container
+      .form-title
+        span.ui-title-2 Settings Profile
       .auth
-        .auth__form
-          span.ui-title-2 Settings Profile
+        .auth__form1
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.fname.$error }")
               input(
                 type="text"
                 placeholder="First Name"
-                v-model="fname"
+                v-model="profFil.fname"
                 :class="{ error: $v.fname.$error }"
                 @change="$v.fname.$touch()"
               )
@@ -19,19 +20,84 @@
               input(
                 type="text"
                 placeholder="Surame"
-                v-model="sname"
+                v-model="profFil.sname"
                 :class="{ error: $v.sname.$error }"
                 @change="$v.sname.$touch()"
               )
               .error(v-if="!$v.sname.required") Field is required
-            .form-item(:class="{ errorInput: $v.status.$error }")
-              select(v-model='status')
-                option(disabled='', value='') Who are you?
-                option Investor
-                option Startuper
-                option Specialist
-              span Choose: {{ status }}
-              .error(v-if="!$v.status.required") Field is required
+            .form-date
+              .form-date(:class="{ errorInput: $v.day.$error }")
+                input(
+                  type="number"
+                  placeholder="Day"
+                  v-model.number="profFil.day"
+                  :class="{ error: $v.day.$error }"
+                  @change="$v.day.$touch()"
+                )
+                .error(v-if="!$v.day.required")
+                .error(v-if="!$v.day.minValue")
+                  | {{ $v.day.$params.minValue.min }}
+                .error(v-if="!$v.day.maxValue")
+                  | {{ $v.day.$params.maxValue.max }}
+              .form-date(:class="{ errorInput: $v.month.$error }")
+                input(
+                  type="number"
+                  placeholder="Month"
+                  v-model.number="profFil.month"
+                  :class="{ error: $v.month.$error }"
+                  @change="$v.month.$touch()"
+                )
+                .error(v-if="!$v.month.required")
+                .error(v-if="!$v.month.minValue")
+                  | {{ $v.month.$params.minValue.min }}
+                .error(v-if="!$v.month.maxValue")
+                  | {{ $v.month.$params.maxValue.max }}
+              .form-date(:class="{ errorInput: $v.year.$error }")
+                input(
+                  type="number"
+                  placeholder="Year"
+                  v-model.number="profFil.year"
+                  :class="{ error: $v.year.$error }"
+                  @change="$v.year.$touch()"
+                )
+                .error(v-if="!$v.year.required")
+                .error(v-if="!$v.year.minValue")
+                  | {{ $v.year.$params.minValue.min }}
+                .error(v-if="!$v.year.maxValue")
+                  | {{ $v.year.$params.maxValue.max }}
+            .form-item(:class="{ errorInput: $v.email.$error }")
+              input(
+                type="email"
+                placeholder="Email"
+                v-model="profFil.email"
+                :class="{ error: $v.email.$error }"
+                @change="$v.email.$touch()"
+              )
+              .error(v-if="!$v.email.required") Field is required
+              .error(v-if="!$v.email.email") Email is not correct
+        .auth__form2
+          form(@submit.prevent="onSubmit")
+            .form-item(:class="{ errorInput: $v.number.$error }")
+              input(
+                type="text"
+                placeholder="+38 (999) 999-99-99"
+                v-mask="'+38 (999) 999-99-99'"
+                v-model="profFil.number"
+                :class="{ error: $v.number.$error }"
+                @change="$v.number.$touch()"
+              )
+              .error(v-if="!$v.number.required") Field is required
+            .form-item(:class="{ errorInput: $v.description.$error }")
+              textarea(
+                type="text"
+                placeholder="Description"
+                v-model="description"
+                :class="{ error: $v.description.$error }"
+                @change="$v.description.$touch()"
+              )
+              .error(v-if="!$v.description.required") Field is required
+              .error(v-if="!$v.description.minLength")
+                | Description must have at least {{ $v.description.$params.minLength.min }} letters.
             .buttons-list
               button.button.button-light(@click="cancelAdd", name="cancel") Cancel
               button.button.button-primary(
@@ -46,15 +112,31 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators'
+import { required, email, minValue, maxValue, minLength } from 'vuelidate/lib/validators'
+import Vue from 'vue'
+const VueInputMask = require('vue-inputmask').default
+
+Vue.use(VueInputMask)
 
 export default {
   data () {
     return {
       fname: '',
       sname: '',
-      status: '',
+      day: null,
+      month: null,
+      year: null,
+      email: '',
+      number: null,
+      description: '',
       submitStatus: null
+    }
+  },
+  created: function () {
+  },
+  async mounted () {
+    if (!Object.keys(this.$store.getters.info).length) {
+      await this.$store.dispatch('fetchInfo')
     }
   },
   validations: {
@@ -64,8 +146,31 @@ export default {
     sname: {
       required
     },
-    status: {
+    day: {
+      required,
+      minValue: minValue(1),
+      maxValue: maxValue(31)
+    },
+    month: {
+      required,
+      minValue: minValue(1),
+      maxValue: maxValue(12)
+    },
+    year: {
+      required,
+      minValue: minValue(1900),
+      maxValue: maxValue(2020)
+    },
+    email: {
+      required,
+      email
+    },
+    number: {
       required
+    },
+    description: {
+      required,
+      minLength: minLength(100)
     }
   },
   methods: {
@@ -79,9 +184,7 @@ export default {
       } else {
         const user = {
           fname: this.fname,
-          sname: this.sname,
-          status: this.status,
-          openstartup: 0
+          sname: this.sname
         }
         this.$store.dispatch('addUserData', user)
           .then(() => {
@@ -96,6 +199,9 @@ export default {
     }
   },
   computed: {
+    profFil () {
+      return this.$store.getters.info
+    },
     loading () {
       return this.$store.getters.loading
     }
@@ -104,11 +210,31 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.form-title
+  text-align center
+
 .auth
   display flex
-.auth__banner,
-.auth__form
+  text-align center
+  justify-content center
+
+.auth__form1,
+.auth__form2
   width 30%
+  padding 10px
+
+.form-date
+  width 100%
+  display flex
+  padding 0px 3px
+  .error
+    display none
+    margin-bottom 8px
+    font-size 13px
+    color #fc5c65
+  &.errorInput
+    .error
+      display block
 
 .form-item
   .error
@@ -121,13 +247,17 @@ export default {
       display block
 
 select,
+textarea,
 input
   &.error
     border-color #fc5c65
 
+.button
+  margin 0px 12px
+
 .buttons-list
-  text-align right
-  margin-bottom 20px
+  text-align center
+  margin 20px
   &.buttons-list--info
     text-align center
     &:last-child

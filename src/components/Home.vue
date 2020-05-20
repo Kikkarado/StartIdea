@@ -36,7 +36,7 @@
                     router-link(
                       v-if="checkStatus === 'Investor'"
                       :to="{ name: 'startup', params: { id: startups.id } }"
-                      ) More
+                      ) Read more
 </template>
 
 <script>
@@ -63,3 +63,6 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+</style>

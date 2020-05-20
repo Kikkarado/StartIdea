@@ -16,6 +16,10 @@
                     span.ui-title-2 {{ startup.title }}
                   .task-item__body
                     p.ui-text-regular {{ startup.description }}
+                  .task-iten__footer
+                    router-link(
+                      :to="{ name: 'userprofile', params: { id: startup.user } }"
+                      ) About author
                     .buttons-list
                       .button(
                         v-if="checkStatus === 'Investor'"
@@ -48,7 +52,6 @@ export default {
       done: false,
       titleDonation: '',
       srtpId: null,
-      raisedfundsDonation: 0,
       userStartaper: ''
     }
   },
@@ -86,7 +89,7 @@ export default {
       this.done = !this.done
     },
     openInfoStartup () {
-      var startupId = this.$route.params.id
+      const startupId = this.$route.params.id
       this.$store.dispatch('infoStartup', {
         id: startupId
       })
@@ -112,4 +115,6 @@ export default {
     display flex
   .button-light
     margin-right 8px
+.buttons-list
+  text-align right
 </style>

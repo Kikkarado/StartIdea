@@ -8,7 +8,8 @@ export default {
     startupsOn: null,
     startupsUser: [],
     startupsAll: [],
-    infoStr: {}
+    infoStr: {},
+    infoUs: {}
   },
   mutations: {
     setInfo (state, profileInfo) {
@@ -43,6 +44,9 @@ export default {
     },
     infoStartup (state, infoStr) {
       state.infoStr = infoStr
+    },
+    infoUser (state, infoUs) {
+      state.infoUs = infoUs
     }
   },
   actions: {
@@ -186,6 +190,7 @@ export default {
           await firebase.database().ref('Users').child(user).child('openstartup').set(0)
           console.log({user})
         }
+        window.location.reload('/startup/')
         // Send mutation
         commit('donationStartup', {id, raisedfunds})
         commit('setLoading', false)
@@ -201,9 +206,24 @@ export default {
       try {
         // Use helped class
         const infoStr = (await firebase.database().ref('startups').child(id).once('value')).val()
-        console.log(infoStr)
         // Send mutation
         commit('infoStartup', infoStr)
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+        throw error
+      }
+    },
+    async infoUser ({commit}, {id}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        // Use helped class
+        const infoUs = (await firebase.database().ref('Users/' + id).once('value')).val()
+        console.log(infoUs)
+        // Send mutation
+        commit('infoUser', infoUs)
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
@@ -234,6 +254,7 @@ export default {
         return stups.completed === false
       })
     },
-    infoS: s => s.infoStr
+    infoS: s => s.infoStr,
+    infoU: s => s.infoUs
   }
 }

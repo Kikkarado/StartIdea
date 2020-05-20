@@ -2,11 +2,10 @@
  .content-wrapper
    section
     .container
+      .form-title
+        span.ui-title-2 Registration
       .auth
         .auth__banner
-          h1.ui-title-2 Hello banner
-        .auth__form
-          span.ui-title-2 Registration
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.email.$error }")
               input(
@@ -38,20 +37,48 @@
                 @change="$v.repeatPassword.$touch()"
               )
               .error(v-if="!$v.repeatPassword.sameAsPassword") Passwords must be identical.
-            .buttons-list
-              button.button.button-primary(
-                type="submit"
+        .auth__form
+          form(@submit.prevent="onSubmit")
+            .form-item(:class="{ errorInput: $v.fname.$error }")
+              input(
+                type="text"
+                placeholder="First Name"
+                v-model="fname"
+                :class="{ error: $v.fname.$error }"
+                @change="$v.fname.$touch()"
               )
-                span(v-if="loading") Loading...
-                span(v-else) Registration
-            .buttons-list.buttons-list--info
-              p.typo__p(v-if="submitStatus === 'OK'") Thanks for your submission!
-              p.typo__p(v-if="submitStatus === 'ERROR'") Please fill the form correctly.
-              p.typo__p(v-else) {{ submitStatus }}
-              // p.typo__p(v-if="submitStatus === 'PENDING'") Sending...
-            .buttons-list.buttons-list--info
-              span Do you have an account?
-                router-link(to="/login")  Enter Here
+              .error(v-if="!$v.fname.required") Field is required
+            .form-item(:class="{ errorInput: $v.sname.$error }")
+              input(
+                type="text"
+                placeholder="Surame"
+                v-model="sname"
+                :class="{ error: $v.sname.$error }"
+                @change="$v.sname.$touch()"
+              )
+              .error(v-if="!$v.sname.required") Field is required
+            .form-item(:class="{ errorInput: $v.status.$error }")
+              select(v-model='status')
+                option(disabled='', value='') Who are you?
+                option Investor
+                option Startuper
+                option Specialist
+              span Choose: {{ status }}
+              .error(v-if="!$v.status.required") Field is required
+      .buttons-list
+        button.button.button-primary(
+          type="submit"
+        )
+          span(v-if="loading") Loading...
+          span(v-else) Registration
+      .buttons-list.buttons-list--info
+        p.typo__p(v-if="submitStatus === 'OK'") Thanks for your submission!
+        p.typo__p(v-if="submitStatus === 'ERROR'") Please fill the form correctly.
+        p.typo__p(v-else) {{ submitStatus }}
+        // p.typo__p(v-if="submitStatus === 'PENDING'") Sending...
+      .buttons-list.buttons-list--info
+        span Do you have an account?
+          router-link(to="/login")  Enter Here
 </template>
 
 <script>
@@ -63,6 +90,9 @@ export default {
       email: '',
       password: '',
       repeatPassword: '',
+      fname: '',
+      sname: '',
+      status: '',
       submitStatus: null
     }
   },
@@ -77,6 +107,15 @@ export default {
     },
     repeatPassword: {
       sameAsPassword: sameAs('password')
+    },
+    fname: {
+      required
+    },
+    sname: {
+      required
+    },
+    status: {
+      required
     }
   },
   methods: {
@@ -88,7 +127,11 @@ export default {
         console.log('submit!')
         const user = {
           email: this.email,
-          password: this.password
+          password: this.password,
+          fname: this.fname,
+          sname: this.sname,
+          status: this.status,
+          openstartup: 0
         }
         this.$store.dispatch('registerUser', user)
           .then(() => {
@@ -115,12 +158,18 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.form-title
+  text-align center
+
 .auth
   display flex
   flex-wrap wrap
+  justify-content center
 .auth__banner,
 .auth__form
-  width 50%
+  width 40%
+  padding-right 15px
+  padding-left 15px
   @media screen and (max-width: 768px)
     width 100%
     margin-bottom 30px
@@ -142,7 +191,7 @@ input
     border-color #fc5c65
 
 .buttons-list
-  text-align right
+  text-align center
   margin-bottom 20px
   &.buttons-list--info
     text-align center
