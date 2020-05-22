@@ -5,9 +5,11 @@ export default class Profile {
     status,
     openstartup,
     aboutme,
-    mail,
+    email,
     phone,
-    dateofbirth,
+    dayofbirth,
+    monthofbirth,
+    yearofbirth,
     user = null,
     id = null
   ) {
@@ -16,9 +18,11 @@ export default class Profile {
     this.status = status
     this.openstartup = openstartup
     this.aboutme = aboutme
-    this.mail = mail
+    this.email = email
     this.phone = phone
-    this.dateofbirth = dateofbirth
+    this.dayofbirth = dayofbirth
+    this.monthofbirth = monthofbirth
+    this.yearofbirth = yearofbirth
     this.user = user
     this.id = id
   }

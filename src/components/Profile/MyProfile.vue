@@ -2,16 +2,31 @@
  .content-wrapper
    section
     .container
+      .form-title
+        span.ui-title-2 Your profile
       .auth
-        .auth__form
-          span.ui-title-2 Profile
-          form
-            p Name: {{ profFil.fname }}
-            p Surname: {{ profFil.sname }}
-            p Status: {{ profFil.status }}
-            .buttons-list.button-list--info
-              span Edit account info?
-                router-link(to="/addDataProfile")  Click Here
+        .auth__form1
+          form(@submit.prevent="onSubmit")
+            .form-item
+              span.ui-title-4 Name
+              span.ui-title-5 {{ profFil.fname }}  {{ profFil.sname }}
+            .form-item
+              span.ui-title-4 Email
+              span.ui-title-5 {{ profFil.email }}
+            .form-item
+              span.ui-title-4 Date of birth
+              span.ui-title-5 {{ profFil.dayofbirth }}.{{ profFil.monthofbirth }}.{{ profFil.yearofbirth }}
+        .auth__form2
+          form(@submit.prevent="onSubmit")
+            .form-item
+              span.ui-title-4 Phone number
+              p.ui-title-5 {{ profFil.phone }}
+            .form-item
+              span.ui-title-4 About me
+              p.ui-title-5 {{ profFil.aboutme }}
+    .buttons-list.button-list--info
+      span Edit account info?
+        router-link(to="/addDataProfile")  Click Here
 </template>
 
 <script>
@@ -36,29 +51,30 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.form-title
+  text-align center
+
 .auth
   display flex
-.auth__banner,
-.auth__form
+  justify-content center
+
+.auth__form1,
+.auth__form2
   width 30%
+  padding 10px
+
+.form-date
+  width 100%
+  display flex
+  padding 0px 0px 0px 0px
+  justify-content left
 
 .form-item
-  .error
-    display none
-    margin-bottom 8px
-    font-size 13px
-    color #fc5c65
-  &.errorInput
-    .error
-      display block
-
-select,
-input
-  &.error
-    border-color #fc5c65
+  margin-bottom 15px
+  display block
 
 .buttons-list
-  text-align right
+  text-align center
   margin-bottom 20px
   &.buttons-list--info
     text-align center

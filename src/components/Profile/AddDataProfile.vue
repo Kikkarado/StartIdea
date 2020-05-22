@@ -8,68 +8,78 @@
         .auth__form1
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.fname.$error }")
+              span First Name
               input(
                 type="text"
                 placeholder="First Name"
-                v-model="profFil.fname"
+                v-model="fname"
                 :class="{ error: $v.fname.$error }"
                 @change="$v.fname.$touch()"
               )
               .error(v-if="!$v.fname.required") Field is required
             .form-item(:class="{ errorInput: $v.sname.$error }")
+              span Surmame
               input(
                 type="text"
-                placeholder="Surame"
-                v-model="profFil.sname"
+                placeholder="Surmame"
+                v-model="sname"
                 :class="{ error: $v.sname.$error }"
                 @change="$v.sname.$touch()"
               )
               .error(v-if="!$v.sname.required") Field is required
             .form-date
-              .form-date(:class="{ errorInput: $v.day.$error }")
+              .form-date
+                p Day
+              .form-date
+                p Month
+              .form-date
+                p Year
+            .form-date
+              .form-date(:class="{ errorInput: $v.dayofbirth.$error }")
                 input(
-                  type="number"
-                  placeholder="Day"
-                  v-model.number="profFil.day"
-                  :class="{ error: $v.day.$error }"
-                  @change="$v.day.$touch()"
+                  type="text"
+                  placeholder="(01-31)"
+                  v-model.number="dayofbirth"
+                  :class="{ error: $v.dayofbirth.$error }"
+                  @change="$v.dayofbirth.$touch()"
                 )
-                .error(v-if="!$v.day.required")
-                .error(v-if="!$v.day.minValue")
-                  | {{ $v.day.$params.minValue.min }}
-                .error(v-if="!$v.day.maxValue")
-                  | {{ $v.day.$params.maxValue.max }}
-              .form-date(:class="{ errorInput: $v.month.$error }")
+                .error(v-if="!$v.dayofbirth.required")
+                .error(v-if="!$v.dayofbirth.minValue")
+                  | {{ $v.dayofbirth.$params.minValue.min }}
+                .error(v-if="!$v.dayofbirth.maxValue")
+                  | {{ $v.dayofbirth.$params.maxValue.max }}
+              .form-date(:class="{ errorInput: $v.monthofbirth.$error }")
                 input(
-                  type="number"
-                  placeholder="Month"
-                  v-model.number="profFil.month"
-                  :class="{ error: $v.month.$error }"
-                  @change="$v.month.$touch()"
+                  type="text"
+                  placeholder="(01-12)"
+                  v-model.number="monthofbirth"
+                  :class="{ error: $v.monthofbirth.$error }"
+                  @change="$v.monthofbirth.$touch()"
                 )
-                .error(v-if="!$v.month.required")
-                .error(v-if="!$v.month.minValue")
-                  | {{ $v.month.$params.minValue.min }}
-                .error(v-if="!$v.month.maxValue")
-                  | {{ $v.month.$params.maxValue.max }}
-              .form-date(:class="{ errorInput: $v.year.$error }")
+                .error(v-if="!$v.monthofbirth.required")
+                .error(v-if="!$v.monthofbirth.minValue")
+                  | {{ $v.monthofbirth.$params.minValue.min }}
+                .error(v-if="!$v.monthofbirth.maxValue")
+                  | {{ $v.monthofbirth.$params.maxValue.max }}
+              .form-date(:class="{ errorInput: $v.yearofbirth.$error }")
                 input(
-                  type="number"
-                  placeholder="Year"
-                  v-model.number="profFil.year"
-                  :class="{ error: $v.year.$error }"
-                  @change="$v.year.$touch()"
+                  type="text"
+                  placeholder="(1900-2020)"
+                  v-model.number="yearofbirth"
+                  :class="{ error: $v.yearofbirth.$error }"
+                  @change="$v.yearofbirth.$touch()"
                 )
-                .error(v-if="!$v.year.required")
-                .error(v-if="!$v.year.minValue")
-                  | {{ $v.year.$params.minValue.min }}
-                .error(v-if="!$v.year.maxValue")
-                  | {{ $v.year.$params.maxValue.max }}
+                .error(v-if="!$v.yearofbirth.required")
+                .error(v-if="!$v.yearofbirth.minValue")
+                  | {{ $v.yearofbirth.$params.minValue.min }}
+                .error(v-if="!$v.yearofbirth.maxValue")
+                  | {{ $v.yearofbirth.$params.maxValue.max }}
             .form-item(:class="{ errorInput: $v.email.$error }")
+              span Contact email
               input(
                 type="email"
                 placeholder="Email"
-                v-model="profFil.email"
+                v-model="email"
                 :class="{ error: $v.email.$error }"
                 @change="$v.email.$touch()"
               )
@@ -77,27 +87,31 @@
               .error(v-if="!$v.email.email") Email is not correct
         .auth__form2
           form(@submit.prevent="onSubmit")
-            .form-item(:class="{ errorInput: $v.number.$error }")
+            .form-item(:class="{ errorInput: $v.phone.$error }")
+              span Your phone number
               input(
-                type="text"
+                type="tel"
                 placeholder="+38 (999) 999-99-99"
                 v-mask="'+38 (999) 999-99-99'"
-                v-model="profFil.number"
-                :class="{ error: $v.number.$error }"
-                @change="$v.number.$touch()"
+                v-model.tel="phone"
+                :class="{ error: $v.phone.$error }"
+                @change="$v.phone.$touch()"
               )
-              .error(v-if="!$v.number.required") Field is required
-            .form-item(:class="{ errorInput: $v.description.$error }")
+              .error(v-if="!$v.phone.required") Field is required
+            .form-item(:class="{ errorInput: $v.aboutme.$error }")
+              span About you
               textarea(
                 type="text"
-                placeholder="Description"
-                v-model="description"
-                :class="{ error: $v.description.$error }"
-                @change="$v.description.$touch()"
+                placeholder="About me"
+                v-model="aboutme"
+                :class="{ error: $v.aboutme.$error }"
+                @change="$v.aboutme.$touch()"
               )
-              .error(v-if="!$v.description.required") Field is required
-              .error(v-if="!$v.description.minLength")
-                | Description must have at least {{ $v.description.$params.minLength.min }} letters.
+              .error(v-if="!$v.aboutme.required") Field is required
+              .error(v-if="!$v.aboutme.minLength")
+                | Description must have at least {{ $v.aboutme.$params.minLength.min }} letters.
+              .error(v-if="!$v.aboutme.maxLength")
+                | Description must have at least {{ $v.aboutme.$params.maxLength.max }} letters.
             .buttons-list
               button.button.button-light(@click="cancelAdd", name="cancel") Cancel
               button.button.button-primary(
@@ -112,7 +126,7 @@
 </template>
 
 <script>
-import { required, email, minValue, maxValue, minLength } from 'vuelidate/lib/validators'
+import { required, email, minValue, maxValue, maxLength, minLength } from 'vuelidate/lib/validators'
 import Vue from 'vue'
 const VueInputMask = require('vue-inputmask').default
 
@@ -123,16 +137,24 @@ export default {
     return {
       fname: '',
       sname: '',
-      day: null,
-      month: null,
-      year: null,
+      dayofbirth: null,
+      monthofbirth: null,
+      yearofbirth: null,
       email: '',
-      number: null,
-      description: '',
+      phone: null,
+      aboutme: '',
       submitStatus: null
     }
   },
   created: function () {
+    this.fname = this.profFil.fname
+    this.sname = this.profFil.sname
+    this.dayofbirth = this.profFil.dayofbirth
+    this.monthofbirth = this.profFil.monthofbirth
+    this.yearofbirth = this.profFil.yearofbirth
+    this.email = this.profFil.email
+    this.phone = this.profFil.phone
+    this.aboutme = this.profFil.aboutme
   },
   async mounted () {
     if (!Object.keys(this.$store.getters.info).length) {
@@ -146,17 +168,17 @@ export default {
     sname: {
       required
     },
-    day: {
+    dayofbirth: {
       required,
       minValue: minValue(1),
       maxValue: maxValue(31)
     },
-    month: {
+    monthofbirth: {
       required,
       minValue: minValue(1),
       maxValue: maxValue(12)
     },
-    year: {
+    yearofbirth: {
       required,
       minValue: minValue(1900),
       maxValue: maxValue(2020)
@@ -165,12 +187,13 @@ export default {
       required,
       email
     },
-    number: {
+    phone: {
       required
     },
-    description: {
+    aboutme: {
       required,
-      minLength: minLength(100)
+      minLength: minLength(10),
+      maxLength: maxLength(250)
     }
   },
   methods: {
@@ -182,15 +205,21 @@ export default {
       if (this.$v.$invalid) {
         this.submitStatus = 'ERROR'
       } else {
-        const user = {
+        this.$store.dispatch('addUserData', {
           fname: this.fname,
-          sname: this.sname
-        }
-        this.$store.dispatch('addUserData', user)
+          sname: this.sname,
+          dayofbirth: this.dayofbirth,
+          monthofbirth: this.monthofbirth,
+          yearofbirth: this.yearofbirth,
+          email: this.email,
+          phone: this.phone,
+          aboutme: this.aboutme
+        })
           .then(() => {
             console.log('Added!')
             this.submitStatus = 'OK'
             this.$router.push('/profile')
+            window.location.reload('/profile')
           })
           .catch(err => {
             this.submitStatus = err.message
@@ -215,7 +244,7 @@ export default {
 
 .auth
   display flex
-  text-align center
+  text-align left
   justify-content center
 
 .auth__form1,
@@ -227,6 +256,7 @@ export default {
   width 100%
   display flex
   padding 0px 3px
+  justify-content center
   .error
     display none
     margin-bottom 8px

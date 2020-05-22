@@ -2,19 +2,14 @@
   .content-wrapper
     section
     .container
+      input(
+          type="text"
+          v-model="search"
+          placeholder="Search"
+        )
       .auth
         .auth__form
-          span.ui-title-2 Home
-        .buttons-list
-          .button.button--round.button-default(
-            @click="filter = 'complete'"
-          ) Active
-          .button.button--round.button-default(
-            @click="filter = 'notcomplete'"
-          ) Completed
-          .button.button--round.button-default(
-            @click="filter = 'all'"
-          ) All
+          span.ui-title-2 Home {{ nt }}
       .startup-list
         transition-group(name="startupList")
         .task-item(
@@ -33,7 +28,7 @@
                   .task-item__body
                     p().ui-text-regular {{ startups.description }}
                   .task-item__foter
-                    router-link(
+                    router-link.router-link(
                       v-if="checkStatus === 'Investor'"
                       :to="{ name: 'startup', params: { id: startups.id } }"
                       ) Read more
@@ -42,17 +37,29 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      search: '',
+      nt: ''
+    }
   },
   async mounted () {
     if (!Object.keys(this.$store.getters.startupsAll).length) {
       await this.$store.dispatch('fetchAllStartups')
     }
   },
-  methods: {},
+  methods: {
+    notFound () {
+      console.log('Not Found')
+      this.nt = 'Not Found'
+    }
+  },
   computed: {
     allStartups () {
-      return this.$store.getters.startupsAll
+      if (this.search === '') {
+        return this.$store.getters.startupsAll
+      } else {
+        return this.$store.getters.startupsAll.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()))
+      }
     },
     checkStatus () {
       return this.$store.getters.status
@@ -65,4 +72,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.router-link
+  color #444ce0
 </style>

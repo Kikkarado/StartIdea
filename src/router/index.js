@@ -22,7 +22,7 @@ export default new Router({
       name: 'home',
       component: Home,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next()
+        store.getters.checkUser ? next() : next('/login')
         // if (store.getters.sheckUser) {
         //   next()
         // } else {
@@ -31,18 +31,28 @@ export default new Router({
       }
     },
     {
-      path: '/startup/:id', name: 'startup', component: Startup
+      path: '/startup/:id',
+      name: 'startup',
+      component: Startup,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next() : next('/login')
+      }
     },
     {
       path: '/profile',
       name: 'profile',
       component: MyProfile,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next()
+        store.getters.checkUser ? next() : next('/login')
       }
     },
     {
-      path: '/userprofile/:id', name: 'userprofile', component: UserProfile
+      path: '/userprofile/:id',
+      name: 'userprofile',
+      component: UserProfile,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next() : next('/login')
+      }
     },
     {
       path: '/login',
@@ -62,17 +72,26 @@ export default new Router({
     {
       path: '/addDataProfile',
       name: 'addDataProfile',
-      component: AddDataProfile
+      component: AddDataProfile,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next() : next('/login')
+      }
     },
     {
       path: '/myStartUps',
       name: 'myStartUps',
-      component: MyStartUps
+      component: MyStartUps,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next() : next('/login')
+      }
     },
     {
       path: '/addStartUp',
       name: 'addStartUp',
-      component: AddStartUp
+      component: AddStartUp,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next() : next('/login')
+      }
     }
   ]
 })

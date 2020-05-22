@@ -65,20 +65,21 @@
                 option Specialist
               span Choose: {{ status }}
               .error(v-if="!$v.status.required") Field is required
-      .buttons-list
-        button.button.button-primary(
-          type="submit"
-        )
-          span(v-if="loading") Loading...
-          span(v-else) Registration
-      .buttons-list.buttons-list--info
-        p.typo__p(v-if="submitStatus === 'OK'") Thanks for your submission!
-        p.typo__p(v-if="submitStatus === 'ERROR'") Please fill the form correctly.
-        p.typo__p(v-else) {{ submitStatus }}
-        // p.typo__p(v-if="submitStatus === 'PENDING'") Sending...
-      .buttons-list.buttons-list--info
-        span Do you have an account?
-          router-link(to="/login")  Enter Here
+      form(@submit.prevent="onSubmit")
+        .buttons-list
+          button.button.button-primary(
+            type="submit"
+          )
+            span(v-if="loading") Loading...
+            span(v-else) Registration
+        .buttons-list.buttons-list--info
+          p.typo__p(v-if="submitStatus === 'OK'") Thanks for your submission!
+          p.typo__p(v-if="submitStatus === 'ERROR'") Please fill the form correctly.
+          p.typo__p(v-else) {{ submitStatus }}
+          // p.typo__p(v-if="submitStatus === 'PENDING'") Sending...
+        .buttons-list.buttons-list--info
+          span Do you have an account?
+            router-link(to="/login")  Enter Here
 </template>
 
 <script>
@@ -186,6 +187,7 @@ export default {
     .error
       display block
 
+select,
 input
   &.error
     border-color #fc5c65

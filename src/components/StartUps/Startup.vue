@@ -17,7 +17,7 @@
                   .task-item__body
                     p.ui-text-regular {{ startup.description }}
                   .task-iten__footer
-                    router-link(
+                    router-link.router-link(
                       :to="{ name: 'userprofile', params: { id: startup.user } }"
                       ) About author
                     .buttons-list
@@ -117,4 +117,7 @@ export default {
     margin-right 8px
 .buttons-list
   text-align right
+
+.router-link
+  color #444ce0
 </style>

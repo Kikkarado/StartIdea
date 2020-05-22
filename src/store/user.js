@@ -6,7 +6,7 @@ import User from './user_help'
 
 export default {
   state: {
-    user: null
+    user: ''
   },
   mutations: {
     setUser (state, payload) {
@@ -19,9 +19,10 @@ export default {
       commit('setLoading', true)
       try {
         const aboutme = ''
-        const mail = ''
         const phone = ''
-        const dateofbirth = ''
+        const dayofbirth = ''
+        const monthofbirth = ''
+        const yearofbirth = ''
         const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
         const addUserData = new Profile(
           fname,
@@ -29,9 +30,11 @@ export default {
           status,
           openstartup,
           aboutme,
-          mail,
+          email,
           phone,
-          dateofbirth
+          dayofbirth,
+          monthofbirth,
+          yearofbirth
         )
         const userID = user.user.uid
         await firebase.database().ref('Users').child(userID).set(addUserData)
@@ -81,6 +84,7 @@ export default {
   },
   getters: {
     user (state) {
+      console.log('User ' + state.user)
       return state.user
     },
     checkUser (state) {

@@ -1,7 +1,5 @@
 import firebase from 'firebase/app'
 
-import Profile from './profile_help'
-
 export default {
   state: {
     profile: {}
@@ -12,23 +10,14 @@ export default {
     }
   },
   actions: {
-    async addUserData ({commit}, payload) {
+    async addUserData ({commit}, {fname, sname, dayofbirth, monthofbirth, yearofbirth, email, phone, aboutme}) {
       commit('clearError')
       commit('setLoading', true)
       try {
-        // Use helped class
-        const addUserData = new Profile(
-          payload.fname,
-          payload.sname,
-          payload.status,
-          payload.openstartup
-        )
-        const rootRef = firebase.database().ref('Users')
         const userID = firebase.auth().currentUser.uid
-        const usersRef = rootRef.child(userID)
-        await usersRef.set(addUserData)
+        const addProf = await firebase.database().ref('Users').child(userID).update({fname, sname, dayofbirth, monthofbirth, yearofbirth, email, phone, aboutme})
         // Send mutation
-        commit('addUserData', new Profile(payload.uid))
+        commit('addUserData', addProf)
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)

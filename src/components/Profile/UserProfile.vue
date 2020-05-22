@@ -2,15 +2,28 @@
  .content-wrapper
    section
     .container
+      .form-title
+        span.ui-title-2 User profile
       .auth
-        .auth__form
-          span.ui-title-2 Profile
-          form(
-            v-if="userInf"
-          )
-            p Name: {{ userInf.fname }}
-            p Surname: {{ userInf.sname }}
-            p Status: {{ userInf.status }}
+        .auth__form1
+          form(@submit.prevent="onSubmit")
+            .form-item
+              span.ui-title-4 Name
+              span.ui-title-5 {{ userInf.fname }}  {{ userInf.sname }}
+            .form-item
+              span.ui-title-4 Email
+              span.ui-title-5 {{ userInf.email }}
+            .form-item
+              span.ui-title-4 Date of birth
+              span.ui-title-5 {{ userInf.dayofbirth }}.{{ userInf.monthofbirth }}.{{ userInf.yearofbirth }}
+        .auth__form2
+          form(@submit.prevent="onSubmit")
+            .form-item
+              span.ui-title-4 Phone number
+              p.ui-title-5 {{ userInf.phone }}
+            .form-item
+              span.ui-title-4 About me
+              p.ui-title-5 {{ userInf.aboutme }}
 </template>
 
 <script>
@@ -47,34 +60,28 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.form-title
+  text-align center
+
 .auth
   display flex
-.auth__banner,
-.auth__form
+  justify-content center
+
+.auth__form1,
+.auth__form2
   width 30%
+  padding 10px
+
+.form-date
+  width 100%
+  display flex
+  padding 0px 0px 0px 0px
+  justify-content left
 
 .form-item
-  .error
-    display none
-    margin-bottom 8px
-    font-size 13px
-    color #fc5c65
-  &.errorInput
-    .error
-      display block
+  margin-bottom 15px
+  display block
 
-select,
-input
-  &.error
-    border-color #fc5c65
-
-.buttons-list
-  text-align right
-  margin-bottom 20px
-  &.buttons-list--info
-    text-align center
-    &:last-child
-      margin-bottom 0
 a
   color #444ce0
 </style>
