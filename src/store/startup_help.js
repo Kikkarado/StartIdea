@@ -1,7 +1,8 @@
 export default class Startup {
   constructor (
     title,
-    description,
+    shortdescription,
+    fulldescription,
     cost,
     completed,
     raisedfunds,
@@ -9,7 +10,8 @@ export default class Startup {
     id = null
   ) {
     this.title = title
-    this.description = description
+    this.shortdescription = shortdescription
+    this.fulldescription = fulldescription
     this.cost = cost
     this.completed = completed
     this.raisedfunds = raisedfunds

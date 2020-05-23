@@ -49,6 +49,7 @@
 
 <script>
 import { required, email, minLength } from 'vuelidate/lib/validators'
+import messages from '@/utils/messages'
 
 export default {
   data () {
@@ -87,7 +88,7 @@ export default {
             this.$router.push('/')
           })
           .catch(err => {
-            this.submitStatus = err.message
+            this.submitStatus = messages[err.code]
           })
       }
     }

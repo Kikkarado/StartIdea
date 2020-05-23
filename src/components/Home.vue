@@ -17,7 +17,7 @@
           :key="startups.id"
           :class="{ completed: startups.completed }"
         )
-          .ui-card.ui-card--shadow
+          .ui-card.ui-card--shadow.margin
               .task-item__info
                 .task-item__main-info
                   p.typo__p(v-if="startups.completed === true") Completed
@@ -26,7 +26,7 @@
                   .task-item__header
                     span.ui-title-2 {{ startups.title }}
                   .task-item__body
-                    p().ui-text-regular {{ startups.description }}
+                    p.ui-text-regular {{ startups.shortdescription }}
                   .task-item__foter
                     router-link.router-link(
                       v-if="checkStatus === 'Investor'"
@@ -74,4 +74,7 @@ export default {
 <style lang="stylus" scoped>
 .router-link
   color #444ce0
+
+.margin
+  margin-bottom 12px
 </style>

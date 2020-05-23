@@ -109,7 +109,8 @@ export default {
             startupsArray.push(
               new Startup(
                 s.title,
-                s.description,
+                s.shortdescription,
+                s.fulldescription,
                 s.cost,
                 s.completed,
                 s.raisedfunds,
@@ -137,6 +138,7 @@ export default {
         const userID = firebase.auth().currentUser.uid
         await firebase.database().ref('Users').child(userID).child('openstartup').set(0)
         // Send mutation
+        window.location.reload('/myStartUps')
         commit('completeStartup', {id, completed})
         commit('setLoading', false)
       } catch (error) {
@@ -157,7 +159,8 @@ export default {
           allStartupsArray.push(
             new Startup(
               s.title,
-              s.description,
+              s.shortdescription,
+              s.fulldescription,
               s.cost,
               s.completed,
               s.raisedfunds,

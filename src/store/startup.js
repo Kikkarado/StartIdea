@@ -19,7 +19,8 @@ export default {
         // Use helped class
         const newStartUp = new Startup(
           payload.title,
-          payload.description,
+          payload.shortdescription,
+          payload.fulldescription,
           payload.cost,
           payload.completed,
           payload.raisedfunds,

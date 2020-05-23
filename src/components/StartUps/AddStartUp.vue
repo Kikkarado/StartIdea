@@ -15,17 +15,30 @@
                 @change="$v.title.$touch()"
               )
               .error(v-if="!$v.title.required") Field is required
-            .form-item(:class="{ errorInput: $v.description.$error }")
+            .form-item(:class="{ errorInput: $v.shortdescription.$error }")
               textarea(
                 type="text"
                 placeholder="Description"
-                v-model="description"
-                :class="{ error: $v.description.$error }"
-                @change="$v.description.$touch()"
+                v-model="shortdescription"
+                :class="{ error: $v.shortdescription.$error }"
+                @change="$v.shortdescription.$touch()"
               )
-              .error(v-if="!$v.description.required") Field is required
-              .error(v-if="!$v.description.minLength")
-                | Description must have at least {{ $v.description.$params.minLength.min }} letters.
+              .error(v-if="!$v.shortdescription.required") Field is required
+              .error(v-if="!$v.shortdescription.maxLength")
+                | Description must have at least {{ $v.shortdescription.$params.maxLength.max }} letters.
+            .form-item(:class="{ errorInput: $v.fulldescription.$error }")
+              textarea.textarea(
+                type="text"
+                placeholder="Description"
+                v-model="fulldescription"
+                :class="{ error: $v.fulldescription.$error }"
+                @change="$v.fulldescription.$touch()"
+              )
+              .error(v-if="!$v.fulldescription.required") Field is required
+              .error(v-if="!$v.fulldescription.minLength")
+                | Description must have at least {{ $v.fulldescription.$params.minLength.min }} letters.
+              .error(v-if="!$v.fulldescription.maxLength")
+                | Description must have at least {{ $v.fulldescription.$params.maxLength.max }} letters.
             .form-item(:class="{ errorInput: $v.cost.$error }")
               input(
                 type="number"
@@ -52,13 +65,14 @@
 </template>
 
 <script>
-import { required, minLength, minValue, maxValue } from 'vuelidate/lib/validators'
+import { required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators'
 
 export default {
   data () {
     return {
       title: '',
-      description: '',
+      shortdescription: '',
+      fulldescription: '',
       cost: 1000
     }
   },
@@ -66,9 +80,14 @@ export default {
     title: {
       required
     },
-    description: {
+    shortdescription: {
       required,
-      minLength: minLength(10)
+      maxLength: maxLength(300)
+    },
+    fulldescription: {
+      required,
+      minLength: minLength(500),
+      maxLength: maxLength(15000)
     },
     cost: {
       required,
@@ -84,7 +103,8 @@ export default {
       } else {
         const startup = {
           title: this.title,
-          description: this.description,
+          shortdescription: this.shortdescription,
+          fulldescription: this.fulldescription,
           cost: this.cost,
           completed: false,
           raisedfunds: 0
@@ -95,6 +115,7 @@ export default {
             console.log(startup)
             this.submitStatus = 'OK'
             this.$router.push('/myStartUps')
+            window.location.reload('/myStartUps')
           })
           .catch(err => {
             this.submitStatus = err.message
@@ -113,9 +134,10 @@ export default {
 <style lang="stylus" scoped>
 .auth
   display flex
+  justify-content center
 .auth__banner,
 .auth__form
-  width 30%
+  width 70%
 
 .form-item
   .error
@@ -127,7 +149,11 @@ export default {
     .error
       display block
 
-textarea
+.textarea
+  height 350px
+  &.error
+    border-color #fc5c65
+
 input
   &.error
     border-color #fc5c65
