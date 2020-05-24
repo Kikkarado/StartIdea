@@ -4,7 +4,7 @@
     .container
       .auth
         .auth__banner
-          h1.ui-title-2 Hello banner
+          img(src='https://cdn.dribbble.com/users/1568450/screenshots/5419750/work_1_dribbble-01.png')
         .auth__form
           span.ui-title-2 Login
           form(@submit.prevent="onSubmit")
@@ -102,6 +102,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.content-wrapper
+  min-height 100%
+
 .auth
   display flex
 .auth__banner,

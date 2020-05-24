@@ -77,6 +77,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.content-wrapper
+  min-height 100%
+
 .auth
   display flex
 .auth__banner,

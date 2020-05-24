@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import Startup from './startup_help'
+import Profile from './profile_help'
 
 export default {
   state: {
@@ -9,7 +10,8 @@ export default {
     startupsUser: [],
     startupsAll: [],
     infoStr: {},
-    infoUs: {}
+    infoUs: {},
+    usersAll: []
   },
   mutations: {
     setInfo (state, profileInfo) {
@@ -47,6 +49,9 @@ export default {
     },
     infoUser (state, infoUs) {
       state.infoUs = infoUs
+    },
+    setAllUsers (state, payload) {
+      state.usersAll = payload
     }
   },
   actions: {
@@ -233,6 +238,41 @@ export default {
         commit('setError', error.message)
         throw error
       }
+    },
+    async fetchAllUsers ({commit}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        const user = await firebase.database().ref('Users').once('value')
+        const users = user.val()
+        const allUsersArray = []
+        Object.keys(users).forEach(key => {
+          const s = users[key]
+          allUsersArray.push(
+            new Profile(
+              s.fname,
+              s.sname,
+              s.status,
+              s.openstartup,
+              s.aboutme,
+              s.email,
+              s.phone,
+              s.dayofbirth,
+              s.monthofbirth,
+              s.yearofbirth,
+              s.id,
+              key
+            )
+          )
+        })
+        commit('setAllUsers', allUsersArray)
+        commit('setLoading', false)
+        console.log(allUsersArray)
+      } catch (e) {
+        commit('setLoading', false)
+        commit('setError', e.message)
+        throw e
+      }
     }
   },
   getters: {
@@ -258,6 +298,24 @@ export default {
       })
     },
     infoS: s => s.infoStr,
-    infoU: s => s.infoUs
+    infoU: s => s.infoUs,
+    usersAll (state, getters) {
+      return state.usersAll
+    },
+    usersStartupers (getters) {
+      return getters.usersAll.filter(users => {
+        return users.status === 'Startuper'
+      })
+    },
+    usersInvestors (getters) {
+      return getters.usersAll.filter(users => {
+        return users.status === 'Investor'
+      })
+    },
+    usersSpecialists (getters) {
+      return getters.usersAll.filter(users => {
+        return users.status === 'Specialist'
+      })
+    }
   }
 }

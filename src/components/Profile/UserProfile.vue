@@ -23,7 +23,7 @@
               p.ui-title-5 {{ userInf.phone }}
             .form-item
               span.ui-title-4 About me
-              p.ui-title-5 {{ userInf.aboutme }}
+              span.ui-title-5 {{ userInf.aboutme }}
 </template>
 
 <script>
@@ -60,6 +60,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.content-wrapper
+  min-height 100%
+
 .form-title
   text-align center
 
@@ -81,6 +84,7 @@ export default {
 .form-item
   margin-bottom 15px
   display block
+  white-space pre-line
 
 a
   color #444ce0

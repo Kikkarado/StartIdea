@@ -39,6 +39,7 @@ export default {
       await this.$store.dispatch('fetchInfo')
     }
   },
+  methods: {},
   computed: {
     profFil () {
       return this.$store.getters.info
@@ -51,6 +52,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.content-wrapper
+  min-height 100%
+
 .form-title
   text-align center
 
@@ -72,6 +76,7 @@ export default {
 .form-item
   margin-bottom 15px
   display block
+  white-space pre-line
 
 .buttons-list
   text-align center

@@ -14,10 +14,10 @@
                 .task-item__content
                   .task-item__header
                     span.ui-title-3 {{ startup.title }}
+                  .task-item__body.margin-bottom-16
+                    span.ui-text-regular.font {{ startup.shortdescription }}
                   .task-item__body
-                    p.ui-text-regular.font {{ startup.shortdescription }}
-                  .task-item__body
-                    p.ui-text-regular.font {{ startup.fulldescription }}
+                    span.ui-text-regular.font {{ startup.fulldescription }}
                   .task-iten__footer
                     router-link.router-link(
                       :to="{ name: 'userprofile', params: { id: startup.user } }"
@@ -152,6 +152,9 @@ export default {
 </script>
 
 <style lang="stylus">
+.content-wrapper
+  min-height 100%
+
 .ui-messageBox__wrapper
   &.active
     display flex
@@ -162,6 +165,12 @@ export default {
 
 .router-link
   color #444ce0
+
+.task-item__body
+  white-space pre-line
+
+.margin-bottom-16
+  margin-bottom 16px
 
 .form-item
   .error

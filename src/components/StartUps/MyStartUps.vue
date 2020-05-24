@@ -1,39 +1,43 @@
 <template lang="pug">
   .content-wrapper
-    section
-    .container
+    .container.margin-top
       .auth
         .auth__form
           span.ui-title-2 My StartUp
         .buttons-list
-          .button.button--round.button-default(
-            @click="filter = 'active'"
+          .button.button--round.button-default.margin-right.button-ok(
+            @click="filter = 'active', used1=true, butActive()"
+            :class="{used: used1}"
           ) Active
-          .button.button--round.button-default(
-            @click="filter = 'completed'"
+          .button.button--round.button-default.margin-right.button-ok(
+            @click="filter = 'completed', used2=true, butCompleted()"
+            :class="{used: used2}"
           ) Completed
-          .button.button--round.button-default(
-            @click="filter = 'all'"
+          .button.button--round.button-default.button-ok(
+            @click="filter = 'all', used3=true, butAll()"
+            :class="{used: used3}"
           ) All
-      .startup-list
+      .startup-list.margin-top
         transition-group(name="startupList")
         .task-item(
           v-for="startups in startupFilter"
           :key="startups.id"
           :class="{ completed: startups.completed }"
         )
-          .ui-card.ui-card--shadow.margin
+          .ui-card.ui-card--shadow.margin-bottom
               .task-item__info
                 .task-item__main-info
                   p.typo__p(v-if="startups.completed === true") Completed
-                  span Collected {{ startups.raisedfunds }} : {{ startups.cost }}
+                  span(v-if="startups.raisedfunds < startups.cost").ui-label.ui-label--light {{ startups.raisedfunds }}$
+                  span(v-if="startups.raisedfunds >= startups.cost").ui-label.ui-label--success {{ startups.raisedfunds }}$
+                  span.ui-label.ui-label--primary {{ startups.cost }}$
                 .task-item__content
                   .task-item__header
                     span.ui-title-2 {{ startups.title }}
                   .task-item__body
-                    p.ui-text-regular {{ startups.shortdescription }}
+                    p.ui-text-regular.margin-bottom {{ startups.shortdescription }}
                   .task-item__body
-                    p.ui-text-regular {{ startups.fulldescription }}
+                    p.ui-text-regular.margin-bottom-16 {{ startups.fulldescription }}
                   .task-item__foter
                     .buttons-list
                       .button(
@@ -41,10 +45,11 @@
                         @click="startupDone(startups.id, startups.title)"
                         ).button--round.button-primary Done
         .auth__bot
-          button.button-primary(
-            v-if="checkActiveStartup === 0"
-            @click="addStartUp"
-            ) Add startup
+          .buttons-list
+            button.button-primary(
+              v-if="checkActiveStartup === 0 && filter === 'active'"
+              @click="addStartUp"
+              ) Add startup
     .ui-messageBox__wrapper(
       v-if="done"
       :class="{active: done}"
@@ -68,7 +73,10 @@ export default {
       filter: 'active',
       done: false,
       titleDone: '',
-      srtpId: null
+      srtpId: null,
+      used1: true,
+      used2: false,
+      used3: false
     }
   },
   async mounted () {
@@ -80,6 +88,18 @@ export default {
     }
   },
   methods: {
+    butActive () {
+      this.used2 = false
+      this.used3 = false
+    },
+    butCompleted () {
+      this.used1 = false
+      this.used3 = false
+    },
+    butAll () {
+      this.used1 = false
+      this.used2 = false
+    },
     startupDone (id, title) {
       this.done = !this.done
       // console.log({id, title})
@@ -128,18 +148,32 @@ export default {
 </script>
 
 <style lang="stylus">
-  .auth
-    display flex
-    flex-wrap wrap
-  .auth__banner,
-  .auth__form
-    display right
-    width 100%
-  .button-add
-    text-align right
-    color #fc5c65
-  .button-done
-    text-align right
+.content-wrapper
+  min-height 100%
+
+.auth
+  display flex
+  flex-wrap wrap
+
+.auth__banner,
+.auth__form
+  display right
+  width 100%
+
+.button-ok
+  &.used
+    background-color: #444ce0
+    color #fff
+
+.button-add
+  color #fc5c65
+
+.buttons-list
+  display block
+  text-align right
+
+.task-item__body
+  white-space pre-line
 
 .ui-messageBox__wrapper
   &.active
@@ -147,6 +181,15 @@ export default {
   .button-light
     margin-right 8px
 
-.margin
-  margin-bottom 12px
+.margin-top
+  margin-top 32px
+
+.margin-bottom
+  margin-bottom 32px
+
+.margin-bottom-16
+  margin-bottom 16px
+
+.margin-right
+  margin-right 12px
 </style>

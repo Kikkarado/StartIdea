@@ -12,6 +12,7 @@ import MyStartUps from '@/components/StartUps/MyStartUps'
 import AddStartUp from '@/components/StartUps/AddStartUp'
 import Startup from '@/components/StartUps/Startup'
 import UserProfile from '@/components/Profile/UserProfile'
+import Users from '@/components/Users/Users'
 
 Vue.use(Router)
 
@@ -20,15 +21,7 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home,
-      beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
-        // if (store.getters.sheckUser) {
-        //   next()
-        // } else {
-        //   next('/login')
-        // }
-      }
+      component: Home
     },
     {
       path: '/startup/:id',
@@ -91,7 +84,13 @@ export default new Router({
       component: AddStartUp,
       beforeEnter (to, from, next) {
         store.getters.checkUser ? next() : next('/login')
+        store.getters.openstartup === 0 ? next() : next('/myStartUps')
       }
+    },
+    {
+      path: '/users',
+      name: 'users',
+      component: Users
     }
   ]
 })

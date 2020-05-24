@@ -21,7 +21,7 @@
               span Surmame
               input(
                 type="text"
-                placeholder="Surmame"
+                placeholder="Surname"
                 v-model="sname"
                 :class="{ error: $v.sname.$error }"
                 @change="$v.sname.$touch()"
@@ -64,7 +64,7 @@
               .form-date(:class="{ errorInput: $v.yearofbirth.$error }")
                 input(
                   type="text"
-                  placeholder="(1900-2020)"
+                  placeholder="(1900-2003)"
                   v-model.number="yearofbirth"
                   :class="{ error: $v.yearofbirth.$error }"
                   @change="$v.yearofbirth.$touch()"
@@ -100,7 +100,7 @@
               .error(v-if="!$v.phone.required") Field is required
             .form-item(:class="{ errorInput: $v.aboutme.$error }")
               span About you
-              textarea(
+              textarea.textarea(
                 type="text"
                 placeholder="About me"
                 v-model="aboutme"
@@ -181,7 +181,7 @@ export default {
     yearofbirth: {
       required,
       minValue: minValue(1900),
-      maxValue: maxValue(2020)
+      maxValue: maxValue(2003)
     },
     email: {
       required,
@@ -192,8 +192,8 @@ export default {
     },
     aboutme: {
       required,
-      minLength: minLength(10),
-      maxLength: maxLength(250)
+      minLength: minLength(70),
+      maxLength: maxLength(800)
     }
   },
   methods: {
@@ -228,6 +228,9 @@ export default {
     }
   },
   computed: {
+    checkStatus () {
+      return this.$store.getters.status
+    },
     profFil () {
       return this.$store.getters.info
     },
@@ -239,6 +242,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.content-wrapper
+  min-height 100%
+
 .form-title
   text-align center
 
@@ -276,8 +282,12 @@ export default {
     .error
       display block
 
+.textarea
+  height 145px
+  &.error
+    border-color #fc5c65
+
 select,
-textarea,
 input
   &.error
     border-color #fc5c65
@@ -287,7 +297,6 @@ input
 
 .buttons-list
   text-align center
-  margin 20px
   &.buttons-list--info
     text-align center
     &:last-child

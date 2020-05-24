@@ -51,7 +51,7 @@
             .form-item(:class="{ errorInput: $v.sname.$error }")
               input(
                 type="text"
-                placeholder="Surame"
+                placeholder="Surname"
                 v-model="sname"
                 :class="{ error: $v.sname.$error }"
                 @change="$v.sname.$touch()"
@@ -159,6 +159,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.content-wrapper
+  min-height 100%
+
 .form-title
   text-align center
 

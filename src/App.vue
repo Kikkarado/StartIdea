@@ -67,9 +67,10 @@ export default {
           {title: 'MyStartUps', url: '/myStartUps'},
           {title: 'Profile', url: '/profile'}
         ]
-      } else if (this.checkUser && this.checkStatus === 'Investor') {
+      } else if ((this.checkUser && this.checkStatus === 'Investor') || (this.checkUser && this.checkStatus === 'Specialist')) {
         return [
           {title: 'Home', url: '/'},
+          {title: 'Users', url: '/users'},
           {title: 'Profile', url: '/profile'}
         ]
       }

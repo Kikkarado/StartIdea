@@ -1,15 +1,15 @@
 <template lang="pug">
   .content-wrapper
-    section
-    .container
-      input(
-          type="text"
-          v-model="search"
-          placeholder="Search"
-        )
+    .container.margin-top
+      .search-form
+        span.margin-right Search
+        input.search(
+            type="text"
+            v-model="search"
+            placeholder="Search"
+          )
       .auth
         .auth__form
-          span.ui-title-2 Home {{ nt }}
       .startup-list
         transition-group(name="startupList")
         .task-item(
@@ -17,29 +17,28 @@
           :key="startups.id"
           :class="{ completed: startups.completed }"
         )
-          .ui-card.ui-card--shadow.margin
+          .ui-card.ui-card--shadow.margin-bottom
               .task-item__info
                 .task-item__main-info
-                  p.typo__p(v-if="startups.completed === true") Completed
-                  span Collected {{ startups.raisedfunds }} : {{ startups.cost }}
+                  .donation
+                    p.typo__p(v-if="startups.completed === true") Completed
+                    span.ui-label.ui-label--light There is:  {{ startups.raisedfunds }}$
+                    span.ui-label.ui-label--primary Nide:  {{ startups.cost }}$
                 .task-item__content
                   .task-item__header
-                    span.ui-title-2 {{ startups.title }}
+                     router-link.router-link.ui-title-2(
+                      :to="{ name: 'startup', params: { id: startups.id } }"
+                      ) {{ startups.title }}
                   .task-item__body
                     p.ui-text-regular {{ startups.shortdescription }}
                   .task-item__foter
-                    router-link.router-link(
-                      v-if="checkStatus === 'Investor'"
-                      :to="{ name: 'startup', params: { id: startups.id } }"
-                      ) Read more
 </template>
 
 <script>
 export default {
   data () {
     return {
-      search: '',
-      nt: ''
+      search: ''
     }
   },
   async mounted () {
@@ -47,12 +46,7 @@ export default {
       await this.$store.dispatch('fetchAllStartups')
     }
   },
-  methods: {
-    notFound () {
-      console.log('Not Found')
-      this.nt = 'Not Found'
-    }
-  },
+  methods: {},
   computed: {
     allStartups () {
       if (this.search === '') {
@@ -72,9 +66,33 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.content-wrapper
+  min-height 100%
+
 .router-link
   color #444ce0
 
-.margin
-  margin-bottom 12px
+.dots
+  display flex
+  font-size 20px
+.donation
+  width 100%
+  display flex
+  padding 0px 3px
+  max-height 50px
+
+.task-item__body
+  white-space pre-line
+
+.margin-top
+  margin-top 32px
+
+.margin-bottom
+  margin-bottom 32px
+
+.margin-right
+  margin-right 12px
+
+.search
+  width 25%
 </style>
