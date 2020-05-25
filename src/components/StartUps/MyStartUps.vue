@@ -3,20 +3,19 @@
     .container.margin-top
       .auth
         .auth__form
-          span.ui-title-2 My StartUp
         .buttons-list
           .button.button--round.button-default.margin-right.button-ok(
             @click="filter = 'active', used1=true, butActive()"
             :class="{used: used1}"
-          ) Active
+          ) Активні
           .button.button--round.button-default.margin-right.button-ok(
             @click="filter = 'completed', used2=true, butCompleted()"
             :class="{used: used2}"
-          ) Completed
+          ) Завершені
           .button.button--round.button-default.button-ok(
             @click="filter = 'all', used3=true, butAll()"
             :class="{used: used3}"
-          ) All
+          ) Усі
       .startup-list.margin-top
         transition-group(name="startupList")
         .task-item(
@@ -27,10 +26,10 @@
           .ui-card.ui-card--shadow.margin-bottom
               .task-item__info
                 .task-item__main-info
-                  p.typo__p(v-if="startups.completed === true") Completed
-                  span(v-if="startups.raisedfunds < startups.cost").ui-label.ui-label--light {{ startups.raisedfunds }}$
-                  span(v-if="startups.raisedfunds >= startups.cost").ui-label.ui-label--success {{ startups.raisedfunds }}$
-                  span.ui-label.ui-label--primary {{ startups.cost }}$
+                  p.typo__p(v-if="startups.completed === true") Завершено
+                  span(v-if="startups.raisedfunds < startups.cost").ui-label.ui-label--light Зібрано: {{ startups.raisedfunds }}$
+                  span(v-if="startups.raisedfunds >= startups.cost").ui-label.ui-label--success Зібрано: {{ startups.raisedfunds }}$
+                  span.ui-label.ui-label--primary Потрібно: {{ startups.cost }}$
                 .task-item__content
                   .task-item__header
                     span.ui-title-2 {{ startups.title }}
@@ -43,7 +42,7 @@
                       .button(
                         v-if="startups.completed !== true"
                         @click="startupDone(startups.id, startups.title)"
-                        ).button--round.button-primary Done
+                        ).button--round.button-primary Завершити достроково
         .auth__bot
           .buttons-list
             button.button-primary(
@@ -56,13 +55,13 @@
     )
       .ui-messageBox.fadeInDown
         .ui-messageBox__header
-          span.messageBox-title Warning!
+          span.messageBox-title Увага!
           span.button-close(@click="cancelStartupDone")
         .ui-messageBox__content
-          p Are you sure you want to close "{{ titleDone }}"
+          p Ви впевнені, що хочете завершити стартап "{{ titleDone }}"?
         .ui-messageBox__footer
-          .button.button-light(@click="cancelStartupDone") Cancel
-          .button.button-primary(@click="finishStartupDone") OK
+          .button.button-light(@click="cancelStartupDone") Ні
+          .button.button-primary(@click="finishStartupDone") Так
 </template>
 
 <script>

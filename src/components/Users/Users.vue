@@ -1,16 +1,17 @@
 <template lang="pug">
   .content-wrapper
     .container.margin-top
-      .selector
+      span Оберіть статус корисутвачів для відображення
+      .selector.margin-top-8
         select.select.margin-right(v-model="usStatus")
           option(v-for="(item, key) in reasons", :value='key', select="item") {{ item }}
-        span Choose: {{ usStatus }}
+        span Ви обрали: {{ usStatus }}
       .search-form
-        span.margin-right Search
+        span.margin-right Пошук
         input.search(
             type="text"
             v-model="search"
-            placeholder="Search"
+            placeholder="Введіть те, що хочете знайти."
           )
       .auth
         .auth__form
@@ -41,9 +42,9 @@ export default {
       usStatus: 'All',
       reasons: {
         'All': 'All',
-        'Startuper': 'Startuper',
-        'Investor': 'Investor',
-        'Specialist': 'Specialist'
+        'Startupers': 'Startupers',
+        'Investors': 'Investors',
+        'Specialists': 'Specialists'
       }
     }
   },
@@ -55,19 +56,19 @@ export default {
   methods: {},
   computed: {
     usersFilter () {
-      if (this.usStatus === 'Startuper') {
+      if (this.usStatus === 'Startupers') {
         if (this.search === '') {
           return this.$store.getters.usersStartupers
         } else {
           return this.$store.getters.usersStartupers.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
         }
-      } else if (this.usStatus === 'Investor') {
+      } else if (this.usStatus === 'Investors') {
         if (this.search === '') {
           return this.$store.getters.usersInvestors
         } else {
           return this.$store.getters.usersInvestors.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
         }
-      } else if (this.usStatus === 'Specialist') {
+      } else if (this.usStatus === 'Specialists') {
         if (this.search === '') {
           return this.$store.getters.usersSpecialists
         } else {
@@ -99,8 +100,11 @@ export default {
 .router-link
   color #444ce0
 
+.margin-top-8
+  margin-top 8px
+
 .margin-top
-  margin-top 30px
+  margin-top 32px
 
 .margin-bottom
   margin-bottom 32px

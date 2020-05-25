@@ -8,82 +8,95 @@
         .auth__banner
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.email.$error }")
+              span Пошта
               input(
                 type="email"
                 placeholder="Email"
                 v-model="email"
+                :maxlength="25"
                 :class="{ error: $v.email.$error }"
                 @change="$v.email.$touch()"
               )
-              .error(v-if="!$v.email.required") Field is required
-              .error(v-if="!$v.email.email") Email is not correct
+              .error(v-if="!$v.email.required") Поле обов&acuteязкове.
+              .error(v-if="!$v.email.email") Адреса електронної пошти введена некоректно
             .form-item(:class="{ errorInput: $v.password.$error }")
+              span Пароль
               input(
                 type="password"
                 placeholder="Password"
                 v-model="password"
+                :maxlength="36"
                 :class="{ error: $v.password.$error }"
                 @change="$v.password.$touch()"
               )
-              .error(v-if="!$v.password.required") Password is required.
+              .error(v-if="!$v.password.required") Поле обов&acuteязкове.
               .error(v-if="!$v.password.minLength")
-                | Password must have at least {{ $v.password.$params.minLength.min }} letters.
+                | У паролі має бути не менше {{ $v.password.$params.minLength.min }} літер.
             .form-item(:class="{ errorInput: $v.repeatPassword.$error }")
+              span Повторіть пароль
               input(
                 type="password"
                 placeholder="Repeat password"
                 v-model="repeatPassword"
+                :maxlength="36"
                 :class="{ error: $v.repeatPassword.$error }"
                 @change="$v.repeatPassword.$touch()"
               )
-              .error(v-if="!$v.repeatPassword.sameAsPassword") Passwords must be identical.
+              .error(v-if="!$v.repeatPassword.sameAsPassword") Паролі повинні співпадати.
         .auth__form
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.fname.$error }")
+              span Ваше і&acuteмя
               input(
                 type="text"
                 placeholder="First Name"
                 v-model="fname"
+                :maxlength="20"
                 :class="{ error: $v.fname.$error }"
                 @change="$v.fname.$touch()"
               )
-              .error(v-if="!$v.fname.required") Field is required
+              .error(v-if="!$v.fname.required") Поле обов&acuteязкове.
             .form-item(:class="{ errorInput: $v.sname.$error }")
+              span Ваше прізвище
               input(
                 type="text"
                 placeholder="Surname"
                 v-model="sname"
+                :maxlength="20"
                 :class="{ error: $v.sname.$error }"
                 @change="$v.sname.$touch()"
               )
-              .error(v-if="!$v.sname.required") Field is required
+              .error(v-if="!$v.sname.required") Поле обов&acuteязкове.
             .form-item(:class="{ errorInput: $v.status.$error }")
-              select(v-model='status')
-                option(disabled='', value='') Who are you?
+              span Ваш стутас
+              select(v-model='status'
+                :class="{ error: $v.status.$error }"
+                )
+                option(disabled='', value='') Оберіть статус. (Ви не зможете потім його змінити)
                 option Investor
                 option Startuper
                 option Specialist
-              span Choose: {{ status }}
-              .error(v-if="!$v.status.required") Field is required
+              span Ви обрали: {{ status }}
+              .error(v-if="!$v.status.required") Поле обов&acuteязкове.
       form(@submit.prevent="onSubmit")
         .buttons-list
           button.button.button-primary(
             type="submit"
           )
-            span(v-if="loading") Loading...
-            span(v-else) Registration
+            span(v-if="loading") Завантаження...
+            span(v-else) Реєстрація
         .buttons-list.buttons-list--info
-          p.typo__p(v-if="submitStatus === 'OK'") Thanks for your submission!
-          p.typo__p(v-if="submitStatus === 'ERROR'") Please fill the form correctly.
-          p.typo__p(v-else) {{ submitStatus }}
-          // p.typo__p(v-if="submitStatus === 'PENDING'") Sending...
+          .error(v-if="submitStatus === 'OK'") Дякуємо за ваше реєстрацію!
+          .error(v-if="submitStatus === 'ERROR'") Будь ласка, заповніть форму правильно.
+          .error(v-else) {{ submitStatus }}
         .buttons-list.buttons-list--info
-          span Do you have an account?
-            router-link(to="/login")  Enter Here
+          span Вже маєте обліковий запис?
+            router-link(to="/login")  Натисніть тут
 </template>
 
 <script>
 import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
+import messages from '@/utils/messages'
 
 export default {
   data () {
@@ -141,7 +154,7 @@ export default {
             this.$router.push('/addDataProfile')
           })
           .catch(err => {
-            this.submitStatus = err.message
+            this.submitStatus = messages[err.code]
           })
         // do your submit logic here
         // setTimeout(() => {

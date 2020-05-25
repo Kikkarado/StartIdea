@@ -50,17 +50,26 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next('/') : next()
+      }
     },
     {
       path: '/registration',
       name: 'registration',
-      component: Registration
+      component: Registration,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next('/') : next()
+      }
     },
     {
       path: '/resetPassword',
       name: 'resetPassword',
-      component: ResetPassword
+      component: ResetPassword,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next('/') : next()
+      }
     },
     {
       path: '/addDataProfile',

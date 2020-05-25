@@ -6,45 +6,49 @@
         .auth__banner
           img(src='https://cdn.dribbble.com/users/1568450/screenshots/5419750/work_1_dribbble-01.png')
         .auth__form
-          span.ui-title-2 Login
+          span.ui-title-2.ceneter Вхід
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.email.$error }")
+              span Пошта
               input(
                 type="email"
-                placeholder="Email"
+                placeholder="Електронна пошта"
                 v-model="email"
+                :maxlength="25"
                 :class="{ error: $v.email.$error }"
                 @change="$v.email.$touch()"
               )
-              .error(v-if="!$v.email.required") Field is required
-              .error(v-if="!$v.email.email") Email is not correct
+              .error(v-if="!$v.email.required") Поле обов&acuteязкове.
+              .error(v-if="!$v.email.email") Адреса електронної пошти введена некоректно
             .form-item(:class="{ errorInput: $v.password.$error }")
+              span Пароль
               input(
                 type="password"
-                placeholder="Password"
+                placeholder="Пароль"
                 v-model="password"
+                :maxlength="36"
                 :class="{ error: $v.password.$error }"
                 @change="$v.password.$touch()"
               )
-              .error(v-if="!$v.password.required") Password is required.
+              .error(v-if="!$v.password.required") Поле обов&acuteязкове.
               .error(v-if="!$v.password.minLength")
-                | Password must have at least {{ $v.password.$params.minLength.min }} letters.
+                | У паролі має бути не менше {{ $v.password.$params.minLength.min }} літер.
             .buttons-list
               button.button.button-primary(
                 type="submit"
               )
-                span(v-if="loading") Loading...
-                span(v-else) Login
+                span(v-if="loading") Завантаження...
+                span(v-else) Увійти
             .buttons-list.buttons-list--info
-              p.typo__p(v-if="submitStatus === 'OK'") Thanks for your submission!
-              p.typo__p(v-if="submitStatus === 'ERROR'") Please fill the form correctly.
+              p.typo__p(v-if="submitStatus === 'OK'") Ви увійшли до системи!
+              p.typo__p(v-if="submitStatus === 'ERROR'") Будь ласка, заповніть форму правильно.
               p.typo__p(v-else) {{ submitStatus }}
             .buttons-list.buttons-list--info
-              span Need Account?
-                router-link(to="/registration")  Click Here
+              span Потрібен обліковий запис?
+                router-link(to="/registration")  Натисніть тут
             .buttons-list.buttons-list--info
-              span Forget Password?
-                router-link(to="/resetPassword")  Click Here
+              span Забули пароль?
+                router-link(to="/resetPassword")  Натисніть тут
 </template>
 
 <script>
@@ -134,4 +138,8 @@ input
       margin-bottom 0
 a
   color #444ce0
+
+.ceneter
+  display flex
+  justify-content center
 </style>

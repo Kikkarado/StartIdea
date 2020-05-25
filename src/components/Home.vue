@@ -2,11 +2,11 @@
   .content-wrapper
     .container.margin-top
       .search-form
-        span.margin-right Search
+        span.margin-right Пошук
         input.search(
             type="text"
             v-model="search"
-            placeholder="Search"
+            placeholder="Введіть те, що хочете знайти."
           )
       .auth
         .auth__form
@@ -21,9 +21,8 @@
               .task-item__info
                 .task-item__main-info
                   .donation
-                    p.typo__p(v-if="startups.completed === true") Completed
-                    span.ui-label.ui-label--light There is:  {{ startups.raisedfunds }}$
-                    span.ui-label.ui-label--primary Nide:  {{ startups.cost }}$
+                    span.ui-label.ui-label--light Зібрано:  {{ startups.raisedfunds }}$
+                    span.ui-label.ui-label--primary Потрібно:  {{ startups.cost }}$
                 .task-item__content
                   .task-item__header
                      router-link.router-link.ui-title-2(

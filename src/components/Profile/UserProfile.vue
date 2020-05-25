@@ -3,26 +3,26 @@
    section
     .container
       .form-title
-        span.ui-title-2 User profile
+        span.ui-title-2 Профіль користувача
       .auth
         .auth__form1
           form(@submit.prevent="onSubmit")
             .form-item
-              span.ui-title-4 Name
+              span.ui-title-4 І&acuteмя
               span.ui-title-5 {{ userInf.fname }}  {{ userInf.sname }}
             .form-item
-              span.ui-title-4 Email
+              span.ui-title-4 Електронна адреса
               span.ui-title-5 {{ userInf.email }}
             .form-item
-              span.ui-title-4 Date of birth
+              span.ui-title-4 Дата народження
               span.ui-title-5 {{ userInf.dayofbirth }}.{{ userInf.monthofbirth }}.{{ userInf.yearofbirth }}
         .auth__form2
           form(@submit.prevent="onSubmit")
             .form-item
-              span.ui-title-4 Phone number
+              span.ui-title-4 Телефон
               p.ui-title-5 {{ userInf.phone }}
             .form-item
-              span.ui-title-4 About me
+              span.ui-title-4 Про користувача
               span.ui-title-5 {{ userInf.aboutme }}
 </template>
 
@@ -72,8 +72,10 @@ export default {
 
 .auth__form1,
 .auth__form2
-  width 30%
+  display flex
+  width 50%
   padding 10px
+  justify-content center
 
 .form-date
   width 100%

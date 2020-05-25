@@ -4,35 +4,38 @@
     .container
       .auth
         .auth__form
-          span.ui-title-2 Reset password
+          span.ui-title-2 Оновлення паролю
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.email.$error }")
+              span Ваша електронна адреса на яку ви реєстрували обліковий запис
               input(
                 type="email"
-                placeholder="Email"
+                placeholder="Електронна адреса"
                 v-model="email"
+                :maxlength="25"
                 :class="{ error: $v.email.$error }"
                 @change="$v.email.$touch()"
               )
-              .error(v-if="!$v.email.required") Field is required
-              .error(v-if="!$v.email.email") Email is not correct
+              .error(v-if="!$v.email.required") Поле обов&acuteязкове.
+              .error(v-if="!$v.email.email") Адреса електронної пошти введена некоректно
             .buttons-list
               button.button.button-primary(
                 type="submit"
               )
-                span(v-if="loading") Loading...
-                span(v-else) Reset
+                span(v-if="loading") Оновлення...
+                span(v-else) Оновити пароль
             .buttons-list.buttons-list--info
-              p.typo__p(v-if="submitStatus === 'OK'") Check your email address!
-              p.typo__p(v-if="submitStatus === 'ERROR'") Please fill the form correctly.
+              p.typo__p(v-if="submitStatus === 'OK'") Перевірте вашу електронну пошту!
+              p.typo__p(v-if="submitStatus === 'ERROR'") Будь ласка, заповніть форму правильно.
               p.typo__p(v-else) {{ submitStatus }}
             .buttons-list.buttons-list--info
-              span Do not reset?
-                router-link(to="/login")  Click Here
+              span Передумали?
+                router-link(to="/login")  Натисніть тут
 </template>
 
 <script>
 import { required, email } from 'vuelidate/lib/validators'
+import messages from '@/utils/messages'
 
 export default {
   data () {
@@ -60,10 +63,9 @@ export default {
           .then(() => {
             console.log('RESET!')
             this.submitStatus = 'OK'
-            this.$router.push('/login')
           })
           .catch(err => {
-            this.submitStatus = err.message
+            this.submitStatus = messages[err.code]
           })
       }
     }

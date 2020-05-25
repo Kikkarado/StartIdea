@@ -49,7 +49,7 @@ new Vue({
       this.$store.dispatch('fetchStatus')
       this.$store.dispatch('fetchActiveStartup')
       this.$store.dispatch('fetchStartupsUser')
-      this.$store.dispatch('findUserData')
+      // this.$store.dispatch('findUserData')
       this.$store.dispatch('fetchAllStartups')
       this.$store.dispatch('infoStartup')
       this.$store.dispatch('infoUser')

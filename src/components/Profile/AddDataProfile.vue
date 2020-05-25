@@ -3,43 +3,46 @@
    section
     .container
       .form-title
-        span.ui-title-2 Settings Profile
+        span.ui-title-2 Налаштування даних профілю
       .auth
         .auth__form1
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.fname.$error }")
-              span First Name
+              span І&acuteмя
               input(
                 type="text"
-                placeholder="First Name"
+                placeholder="І'мя"
                 v-model="fname"
+                :maxlength="20"
                 :class="{ error: $v.fname.$error }"
                 @change="$v.fname.$touch()"
               )
-              .error(v-if="!$v.fname.required") Field is required
+              .error(v-if="!$v.fname.required") Поле обов&acuteязкове.
             .form-item(:class="{ errorInput: $v.sname.$error }")
-              span Surmame
+              span Прізвище
               input(
                 type="text"
-                placeholder="Surname"
+                placeholder="Прізвище"
                 v-model="sname"
+                :maxlength="20"
                 :class="{ error: $v.sname.$error }"
                 @change="$v.sname.$touch()"
               )
-              .error(v-if="!$v.sname.required") Field is required
+              .error(v-if="!$v.sname.required") Поле обов&acuteязкове.
             .form-date
               .form-date
-                p Day
+                p День
               .form-date
-                p Month
+                p Місяць
               .form-date
-                p Year
+                p Рік
             .form-date
               .form-date(:class="{ errorInput: $v.dayofbirth.$error }")
                 input(
                   type="text"
                   placeholder="(01-31)"
                   v-model.number="dayofbirth"
+                  :maxlength="2"
                   :class="{ error: $v.dayofbirth.$error }"
                   @change="$v.dayofbirth.$touch()"
                 )
@@ -53,6 +56,7 @@
                   type="text"
                   placeholder="(01-12)"
                   v-model.number="monthofbirth"
+                  :maxlength="2"
                   :class="{ error: $v.monthofbirth.$error }"
                   @change="$v.monthofbirth.$touch()"
                 )
@@ -66,6 +70,7 @@
                   type="text"
                   placeholder="(1900-2003)"
                   v-model.number="yearofbirth"
+                  :maxlength="4"
                   :class="{ error: $v.yearofbirth.$error }"
                   @change="$v.yearofbirth.$touch()"
                 )
@@ -75,20 +80,21 @@
                 .error(v-if="!$v.yearofbirth.maxValue")
                   | {{ $v.yearofbirth.$params.maxValue.max }}
             .form-item(:class="{ errorInput: $v.email.$error }")
-              span Contact email
+              span Ваша контактна електронна адреса
               input(
                 type="email"
-                placeholder="Email"
+                placeholder="Електронна адреса"
                 v-model="email"
+                :maxlength="25"
                 :class="{ error: $v.email.$error }"
                 @change="$v.email.$touch()"
               )
-              .error(v-if="!$v.email.required") Field is required
+              .error(v-if="!$v.email.required") Поле обов&acuteязкове.
               .error(v-if="!$v.email.email") Email is not correct
         .auth__form2
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.phone.$error }")
-              span Your phone number
+              span Ваш номер телефону
               input(
                 type="tel"
                 placeholder="+38 (999) 999-99-99"
@@ -97,31 +103,31 @@
                 :class="{ error: $v.phone.$error }"
                 @change="$v.phone.$touch()"
               )
-              .error(v-if="!$v.phone.required") Field is required
+              .error(v-if="!$v.phone.required") Поле обов&acuteязкове.
             .form-item(:class="{ errorInput: $v.aboutme.$error }")
-              span About you
+              span Про вас
               textarea.textarea(
                 type="text"
-                placeholder="About me"
+                placeholder="Про мене"
                 v-model="aboutme"
                 :class="{ error: $v.aboutme.$error }"
                 @change="$v.aboutme.$touch()"
               )
-              .error(v-if="!$v.aboutme.required") Field is required
+              .error(v-if="!$v.aboutme.required") Поле обов&acuteязкове.
               .error(v-if="!$v.aboutme.minLength")
-                | Description must have at least {{ $v.aboutme.$params.minLength.min }} letters.
+                | У описі має бути не менше {{ $v.aboutme.$params.minLength.min }} літер.
               .error(v-if="!$v.aboutme.maxLength")
-                | Description must have at least {{ $v.aboutme.$params.maxLength.max }} letters.
+                | У описі має бути не більше {{ $v.aboutme.$params.maxLength.max }} літер.
             .buttons-list
-              button.button.button-light(@click="cancelAdd", name="cancel") Cancel
+              button.button.button-light(@click="cancelAdd", name="cancel") Відміна
               button.button.button-primary(
                 type="submit"
               )
-                span(v-if="loading") Loading...
-                span(v-else) Add profile
+                span(v-if="loading") Збереження...
+                span(v-else) Зберегти
             .buttons-list.buttons-list--info
-              p.typo__p(v-if="submitStatus === 'OK'") Thanks for your submission!
-              p.typo__p(v-if="submitStatus === 'ERROR'") Please fill the form correctly.
+              p.typo__p(v-if="submitStatus === 'OK'") Дані оновлено.
+              p.typo__p(v-if="submitStatus === 'ERROR'") Будь ласка, заповніть форму правильно.
               p.typo__p(v-else) {{ submitStatus }}
 </template>
 

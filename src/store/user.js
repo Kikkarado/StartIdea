@@ -45,6 +45,7 @@ export default {
       } catch (error) {
         commit('setLoading', false)
         commit('setError', error.message)
+        console.log(error)
         throw error
       }
     },
@@ -71,6 +72,7 @@ export default {
       } catch (error) {
         commit('setLoading', false)
         commit('setError', error.message)
+        console.log(error)
         throw error
       }
     },

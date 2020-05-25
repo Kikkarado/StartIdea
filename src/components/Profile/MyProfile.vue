@@ -3,30 +3,30 @@
    section
     .container
       .form-title
-        span.ui-title-2 Your profile
+        span.ui-title-2 Мій профіль
       .auth
         .auth__form1
           form(@submit.prevent="onSubmit")
             .form-item
-              span.ui-title-4 Name
+              span.ui-title-4 І&acuteмя
               span.ui-title-5 {{ profFil.fname }}  {{ profFil.sname }}
             .form-item
-              span.ui-title-4 Email
+              span.ui-title-4 Електронна адреса
               span.ui-title-5 {{ profFil.email }}
             .form-item
-              span.ui-title-4 Date of birth
+              span.ui-title-4 Дата народження
               span.ui-title-5 {{ profFil.dayofbirth }}.{{ profFil.monthofbirth }}.{{ profFil.yearofbirth }}
         .auth__form2
           form(@submit.prevent="onSubmit")
             .form-item
-              span.ui-title-4 Phone number
+              span.ui-title-4 Телефон
               p.ui-title-5 {{ profFil.phone }}
             .form-item
-              span.ui-title-4 About me
+              span.ui-title-4 Про мене
               p.ui-title-5 {{ profFil.aboutme }}
     .buttons-list.button-list--info
-      span Edit account info?
-        router-link(to="/addDataProfile")  Click Here
+      span Для оновлення даних
+        router-link(to="/addDataProfile")  натисніть тут
 </template>
 
 <script>
@@ -64,8 +64,10 @@ export default {
 
 .auth__form1,
 .auth__form2
-  width 30%
+  display flex
+  width 50%
   padding 10px
+  justify-content center
 
 .form-date
   width 100%

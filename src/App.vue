@@ -30,7 +30,7 @@
                   v-if="checkUser"
                   @click="logout"
                 )
-                  span.navbar-link Logout
+                  span.navbar-link Вихід
     router-view
 </template>
 
@@ -63,20 +63,20 @@ export default {
     linkMenu () {
       if (this.checkUser && this.checkStatus === 'Startuper') {
         return [
-          {title: 'Home', url: '/'},
-          {title: 'MyStartUps', url: '/myStartUps'},
-          {title: 'Profile', url: '/profile'}
+          {title: 'Головна', url: '/'},
+          {title: 'Мої стартапи', url: '/myStartUps'},
+          {title: 'Профіль', url: '/profile'}
         ]
       } else if ((this.checkUser && this.checkStatus === 'Investor') || (this.checkUser && this.checkStatus === 'Specialist')) {
         return [
-          {title: 'Home', url: '/'},
-          {title: 'Users', url: '/users'},
-          {title: 'Profile', url: '/profile'}
+          {title: 'Головна', url: '/'},
+          {title: 'Користувачі', url: '/users'},
+          {title: 'Профіль', url: '/profile'}
         ]
       }
       return [
-        {title: 'Login', url: '/login'},
-        {title: 'Registration', url: '/registration'}
+        {title: 'Вхід', url: '/login'},
+        {title: 'Зареєструватися', url: '/registration'}
       ]
     }
   }

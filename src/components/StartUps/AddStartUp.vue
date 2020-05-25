@@ -4,63 +4,69 @@
     .container
       .auth
         .auth__form
-          span.ui-title-2 Add Start Up
+          span.ui-title-2 Створення стартапу
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.title.$error }")
+              span Назва стартапу
               input(
                 type="text"
-                placeholder="Title"
+                placeholder="Назва"
                 v-model="title"
+                :maxlength="36"
                 :class="{ error: $v.title.$error }"
                 @change="$v.title.$touch()"
               )
-              .error(v-if="!$v.title.required") Field is required
+              .error(v-if="!$v.title.required") Поле обов&acuteязкове.
             .form-item(:class="{ errorInput: $v.shortdescription.$error }")
+              span Короткий опис стартапу
               textarea(
                 type="text"
-                placeholder="Description"
+                placeholder="Короткий опис"
                 v-model="shortdescription"
                 :class="{ error: $v.shortdescription.$error }"
                 @change="$v.shortdescription.$touch()"
               )
-              .error(v-if="!$v.shortdescription.required") Field is required
+              .error(v-if="!$v.shortdescription.required") Поле обов&acuteязкове.
               .error(v-if="!$v.shortdescription.maxLength")
-                | Description must have at least {{ $v.shortdescription.$params.maxLength.max }} letters.
+                | У короткому описі має бути не більше {{ $v.shortdescription.$params.maxLength.max }} літер.
             .form-item(:class="{ errorInput: $v.fulldescription.$error }")
+              span Повний опис стартапу
               textarea.textarea(
                 type="text"
-                placeholder="Description"
+                placeholder="Повний опис"
                 v-model="fulldescription"
                 :class="{ error: $v.fulldescription.$error }"
                 @change="$v.fulldescription.$touch()"
               )
-              .error(v-if="!$v.fulldescription.required") Field is required
+              .error(v-if="!$v.fulldescription.required") Поле обов&acuteязкове.
               .error(v-if="!$v.fulldescription.minLength")
-                | Description must have at least {{ $v.fulldescription.$params.minLength.min }} letters.
+                | У повному описі має бути не менше {{ $v.fulldescription.$params.minLength.min }} літер.
               .error(v-if="!$v.fulldescription.maxLength")
-                | Description must have at least {{ $v.fulldescription.$params.maxLength.max }} letters.
+                | У повному описі має бути не більше {{ $v.fulldescription.$params.maxLength.max }} літер.
             .form-item(:class="{ errorInput: $v.cost.$error }")
+              span Необхідна сума в $
               input(
-                type="number"
-                placeholder="Cost in $"
+                type="text"
+                placeholder="Сума"
                 v-model.number="cost"
+                :maxlength="9"
                 :class="{ error: $v.cost.$error }"
                 @change="$v.cost.$touch()"
               )
-              .error(v-if="!$v.cost.required") Field is required
+              .error(v-if="!$v.cost.required") Поле обов&acuteязкове.
               .error(v-if="!$v.cost.minValue")
-                | The minimum amount must be equal {{ $v.cost.$params.minValue.min }}.
+                | Мінімальна сума повинна дорівнювати {{ $v.cost.$params.minValue.min }}.
               .error(v-if="!$v.cost.maxValue")
-                | The maximum amount must be equal {{ $v.cost.$params.maxValue.max }}.
+                | Максимальна сума повинна дорівнювати {{ $v.cost.$params.maxValue.max }}.
             .buttons-list
               button.button.button-primary(
                 type="submit"
               )
-                span(v-if="loading") Loading...
-                span(v-else) Add startup
+                span(v-if="loading") Завантаження...
+                span(v-else) Додати стартап
             .buttons-list.buttons-list--info
-              p.typo__p(v-if="submitStatus === 'OK'") Thanks for your submission!
-              p.typo__p(v-if="submitStatus === 'ERROR'") Please fill the form correctly.
+              p.typo__p(v-if="submitStatus === 'OK'") Ваш стартап додан.
+              p.typo__p(v-if="submitStatus === 'ERROR'") Будь ласка, заповніть форму правильно.
               p.typo__p(v-else) {{ submitStatus }}
 </template>
 
@@ -154,9 +160,8 @@ export default {
 
 .textarea
   height 350px
-  &.error
-    border-color #fc5c65
 
+textarea,
 input
   &.error
     border-color #fc5c65

@@ -10,7 +10,9 @@
           .ui-card.ui-card--shadow
               .task-item__info
                 .task-item__main-info
-                  span Collected {{ startup.raisedfunds }} : {{ startup.cost }}
+                  span(v-if="startup.raisedfunds < startup.cost").ui-label.ui-label--light Зібрано: {{ startup.raisedfunds }}$
+                  span(v-if="startup.raisedfunds >= startup.cost").ui-label.ui-label--success Зібрано: {{ startup.raisedfunds }}$
+                  span.ui-label.ui-label--primary Потрібно: {{ startup.cost }}$
                 .task-item__content
                   .task-item__header
                     span.ui-title-3 {{ startup.title }}
@@ -21,41 +23,42 @@
                   .task-iten__footer
                     router-link.router-link(
                       :to="{ name: 'userprofile', params: { id: startup.user } }"
-                      ) About author
+                      ) Про автора
                     .buttons-list
                       .button(
-                        v-if="checkStatus === 'Investor'"
+                        v-if="checkStatus === 'Investor' && startup.raisedfunds < startup.cost"
                         @click="startupDonation(startup.title, startup.user)"
-                        ).button--round.button-primary Donation
+                        ).button--round.button-primary Підтримати
     .ui-messageBox__wrapper(
       v-if="done"
       :class="{active: done}"
     )
       .ui-messageBox.fadeInDown
         .ui-messageBox__header
-          span.messageBox-title Donation
+          span.messageBox-title Підтримати
           span.button-close(@click="cancelStartupDonation")
         .ui-messageBox__content
           p {{ titleDonation }}
-          p Enter the amount of donation
+          p Введіть суму вказану в $
         .form-item(:class="{ errorInput: $v.raisedfundsDonation.$error }")
           input(
-            type="number"
-            placeholder="Amount"
+            type="text"
+            placeholder="Сума"
             v-model.number="raisedfundsDonation"
+            :maxlength="7"
             :class="{ error: $v.raisedfundsDonation.$error }"
             @change="$v.raisedfundsDonation.$touch()"
           )
-          .error(v-if="!$v.raisedfundsDonation.required") Field is required
+          .error(v-if="!$v.raisedfundsDonation.required") Поле обов&acuteязкове.
           .error(v-if="!$v.raisedfundsDonation.minValue")
-            | The minimum amount must be equal {{ $v.raisedfundsDonation.$params.minValue.min }}.
+            | Мінімальна сума підтримки = {{ $v.raisedfundsDonation.$params.minValue.min }}.
           .error(v-if="!$v.raisedfundsDonation.maxValue")
-            | The maximum amount must be equal {{ $v.raisedfundsDonation.$params.maxValue.max }}.
+            | Максимальна сума підтримки = {{ $v.raisedfundsDonation.$params.maxValue.max }}.
         .ui-messageBox__footer
-          .button.button-light(@click="cancelStartupDonation") Cancel
+          .button.button-light(@click="cancelStartupDonation") Відміна
           .button.button-primary(@click="finishStartupDonation")
-            span(v-if="loading") Loading...
-            span(v-else) Donation
+            span(v-if="loading") Завантаження...
+            span(v-else) Підтримати
 </template>
 
 <script>
