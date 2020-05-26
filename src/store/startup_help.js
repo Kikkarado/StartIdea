@@ -6,6 +6,7 @@ export default class Startup {
     cost,
     completed,
     raisedfunds,
+    deadline,
     user = null,
     id = null
   ) {
@@ -15,6 +16,7 @@ export default class Startup {
     this.cost = cost
     this.completed = completed
     this.raisedfunds = raisedfunds
+    this.deadline = deadline
     this.user = user
     this.id = id
   }

@@ -16,6 +16,18 @@ export default {
       commit('clearError')
       commit('setLoading', true)
       try {
+        const date = new Date()
+        var month = date.getUTCMonth() + 2
+        var year
+        var add
+        if (month > 11) {
+          add = Math.round(2 / 11)
+          month = Math.round(11 % 2)
+          year = date.getUTCFullYear() + add
+        } else {
+          year = date.getUTCFullYear()
+        }
+        const deadline = year + '.' + month + '.' + (date.getUTCDate()) + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds()
         // Use helped class
         const newStartUp = new Startup(
           payload.title,
@@ -24,6 +36,7 @@ export default {
           payload.cost,
           payload.completed,
           payload.raisedfunds,
+          deadline,
           getters.user.id
         )
         const startup = await firebase.database().ref('startups').push(newStartUp)

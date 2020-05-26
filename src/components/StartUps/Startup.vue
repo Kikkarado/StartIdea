@@ -27,7 +27,7 @@
                     .buttons-list
                       .button(
                         v-if="checkStatus === 'Investor' && startup.raisedfunds < startup.cost"
-                        @click="startupDonation(startup.title, startup.user)"
+                        @click="startupDonation(startup.title, startup.user, startup.title)"
                         ).button--round.button-primary Підтримати
     .ui-messageBox__wrapper(
       v-if="done"
@@ -116,7 +116,8 @@ export default {
         this.$store.dispatch('donationStartup', {
           id: this.srtpId,
           raisedfunds: this.raisedfundsDonation,
-          user: this.userStartaper
+          user: this.userStartaper,
+          title: this.titleDonation
         })
         this.done = !this.done
           .then(() => {

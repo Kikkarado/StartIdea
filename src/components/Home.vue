@@ -29,7 +29,8 @@
                       :to="{ name: 'startup', params: { id: startups.id } }"
                       ) {{ startups.title }}
                   .task-item__body
-                    p.ui-text-regular {{ startups.shortdescription }}
+                    p.ui-text-regular.margin-bottom-8 {{ startups.shortdescription }}
+                    p.ui-text-regular До закриття стартапу залишилось {{ startups.deadline }} дней(-ів).
                   .task-item__foter
 </template>
 
@@ -37,9 +38,11 @@
 export default {
   data () {
     return {
-      search: ''
+      search: '',
+      endTime: null
     }
   },
+  created: function () {},
   async mounted () {
     if (!Object.keys(this.$store.getters.startupsAll).length) {
       await this.$store.dispatch('fetchAllStartups')
@@ -88,6 +91,9 @@ export default {
 
 .margin-bottom
   margin-bottom 32px
+
+.margin-bottom-8
+  margin-bottom 8px
 
 .margin-right
   margin-right 12px

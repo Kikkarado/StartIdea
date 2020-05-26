@@ -48,7 +48,7 @@
             button.button-primary(
               v-if="checkActiveStartup === 0 && filter === 'active'"
               @click="addStartUp"
-              ) Add startup
+              ) Додати стартап
     .ui-messageBox__wrapper(
       v-if="done"
       :class="{active: done}"

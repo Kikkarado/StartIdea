@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import Startup from './startup_help'
 import Profile from './profile_help'
+import Donation from './donation_help'
 
 export default {
   state: {
@@ -11,7 +12,8 @@ export default {
     startupsAll: [],
     infoStr: {},
     infoUs: {},
-    usersAll: []
+    usersAll: [],
+    donations: []
   },
   mutations: {
     setInfo (state, profileInfo) {
@@ -52,6 +54,9 @@ export default {
     },
     setAllUsers (state, payload) {
       state.usersAll = payload
+    },
+    setDonations (state, payload) {
+      state.donations = payload
     }
   },
   actions: {
@@ -119,6 +124,7 @@ export default {
                 s.cost,
                 s.completed,
                 s.raisedfunds,
+                s.deadline,
                 s.user,
                 key
               )
@@ -161,6 +167,15 @@ export default {
         const allStartupsArray = []
         Object.keys(startups).forEach(key => {
           const s = startups[key]
+          const date = new Date()
+          const dateDead = date.getUTCFullYear() + '.' + date.getUTCMonth() + '.' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds()
+          if (new Date(dateDead) >= new Date(s.deadline)) {
+            const completed = true
+            firebase.database().ref('startups').child(key).update({completed})
+            firebase.database().ref('Users').child(s.user).child('openstartup').set(0)
+            console.log(s.user)
+          }
+          const toDeath = Math.round((new Date(s.deadline) - new Date(dateDead)) / (1000 * 60 * 60 * 24))
           allStartupsArray.push(
             new Startup(
               s.title,
@@ -169,10 +184,12 @@ export default {
               s.cost,
               s.completed,
               s.raisedfunds,
+              toDeath,
               s.user,
               key
             )
           )
+          console.log(Math.round((new Date(s.deadline) - new Date(dateDead)) / (1000 * 60 * 60 * 24)))
         })
         commit('setAllStartups', allStartupsArray)
         commit('setLoading', false)
@@ -183,24 +200,92 @@ export default {
         throw e
       }
     },
-    async donationStartup ({commit}, {id, raisedfunds, user}) {
+    async donationStartup ({commit}, {id, raisedfunds, user, title}) {
       commit('clearError')
       commit('setLoading', true)
       try {
         // Use helped class
         const raisedfundsStart = (await firebase.database().ref('startups').child(id).child('raisedfunds').once('value')).val()
         const comp = (await firebase.database().ref('startups').child(id).child('cost').once('value')).val()
-        raisedfunds += raisedfundsStart
-        await firebase.database().ref('startups').child(id).update({raisedfunds})
-        if (raisedfunds >= comp) {
-          const completed = true
-          await firebase.database().ref('startups').child(id).update({completed})
-          await firebase.database().ref('Users').child(user).child('openstartup').set(0)
-          console.log({user})
+        const userID = firebase.auth().currentUser.uid
+        const don = await firebase.database().ref('donation').once('value')
+        const dons = don.val()
+        if (dons === null) {
+          const infoDonation = new Donation(
+            userID,
+            id,
+            raisedfunds,
+            title
+          )
+          const donat = firebase.database().ref('donation').push(infoDonation)
+          raisedfunds += raisedfundsStart
+          firebase.database().ref('startups').child(id).update({raisedfunds})
+          if (raisedfunds >= comp) {
+            const completed = true
+            firebase.database().ref('startups').child(id).update({completed})
+            firebase.database().ref('Users').child(user).child('openstartup').set(0)
+            console.log({user})
+          }
+          window.location.reload('/startup/')
+          // Send mutation
+          commit('donationStartup', {id, raisedfunds})
+          commit('donationStartup', {
+            ...infoDonation,
+            id: donat.key
+          })
+        } else {
+          var find = false
+          var Dona = 0
+          var keyid = null
+          Object.keys(dons).forEach(key => {
+            const d = dons[key]
+            if (d.uid === userID && d.idstartup === id) {
+              find = true
+              Dona = d.donation
+              keyid = key
+            }
+          })
+          if (find) {
+            find = true
+            var donation = Dona
+            donation += raisedfunds
+            firebase.database().ref('donation').child(keyid).update({donation})
+            raisedfunds += raisedfundsStart
+            firebase.database().ref('startups').child(id).update({raisedfunds})
+            if (raisedfunds >= comp) {
+              const completed = true
+              firebase.database().ref('startups').child(id).update({completed})
+              firebase.database().ref('Users').child(user).child('openstartup').set(0)
+              console.log({user})
+            }
+            window.location.reload('/startup/')
+            // Send mutation
+            commit('donationStartup', {id, raisedfunds})
+          } else {
+            const infoDonation = new Donation(
+              userID,
+              id,
+              raisedfunds,
+              title
+            )
+            const donat = firebase.database().ref('donation').push(infoDonation)
+            raisedfunds += raisedfundsStart
+            firebase.database().ref('startups').child(id).update({raisedfunds})
+            if (raisedfunds >= comp) {
+              const completed = true
+              firebase.database().ref('startups').child(id).update({completed})
+              firebase.database().ref('Users').child(user).child('openstartup').set(0)
+              console.log({user})
+            }
+            window.location.reload('/startup/')
+            // Send mutation
+            commit('donationStartup', {id, raisedfunds})
+            commit('donationStartup', {
+              ...infoDonation,
+              id: donat.key
+            })
+          }
         }
-        window.location.reload('/startup/')
-        // Send mutation
-        commit('donationStartup', {id, raisedfunds})
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
@@ -273,6 +358,36 @@ export default {
         commit('setError', e.message)
         throw e
       }
+    },
+    async fetchDonations ({commit}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        const donat = await firebase.database().ref('donation').once('value')
+        const donats = donat.val()
+        const userID = firebase.auth().currentUser.uid
+        const donatsArray = []
+        Object.keys(donats).forEach(key => {
+          const d = donats[key]
+          if (d.uid === userID) {
+            donatsArray.push(
+              new Donation(
+                d.uid,
+                d.idstartup,
+                d.donation,
+                d.title
+              )
+            )
+          }
+        })
+        commit('setDonations', donatsArray)
+        commit('setLoading', false)
+        console.log('ku' + donatsArray)
+      } catch (e) {
+        commit('setLoading', false)
+        commit('setError', e.message)
+        throw e
+      }
     }
   },
   getters: {
@@ -316,6 +431,9 @@ export default {
       return getters.usersAll.filter(users => {
         return users.status === 'Specialist'
       })
+    },
+    donations (state) {
+      return state.donations
     }
   }
 }
