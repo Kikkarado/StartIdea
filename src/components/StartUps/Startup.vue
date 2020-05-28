@@ -29,6 +29,14 @@
                         v-if="checkStatus === 'Investor' && startup.raisedfunds < startup.cost"
                         @click="startupDonation(startup.title, startup.user, startup.title)"
                         ).button--round.button-primary Підтримати
+                      .button(
+                        v-if="checkStatus === 'Admin' && startup.approved === 'nonApproved'"
+                        @click="nonApprovedThisStartup(startup.title)"
+                        ).button--round.button-light Відмовити
+                      .button(
+                        v-if="checkStatus === 'Admin' && startup.approved === 'nonApproved'"
+                        @click="approvedThisStartup(startup.title)"
+                        ).button--round.button-primary Ухвалити
     .ui-messageBox__wrapper(
       v-if="done"
       :class="{active: done}"
@@ -59,6 +67,38 @@
           .button.button-primary(@click="finishStartupDonation")
             span(v-if="loading") Завантаження...
             span(v-else) Підтримати
+    .ui-messageBox__wrapper(
+      v-if="approv"
+      :class="{active: approv}"
+    )
+      .ui-messageBox.fadeInDown
+        .ui-messageBox__header
+          span.messageBox-title Ухвалити
+          span.button-close(@click="cancelApprovedStartup")
+        .ui-messageBox__content
+          p {{ titleDonation }}
+          p Ви дійсно хочете ухвалити стартап "{{titleDonation}}"?
+        .ui-messageBox__footer
+          .button.button-light(@click="cancelApprovedStartup") Відміна
+          .button.button-primary(@click="finishApprovedStartup")
+            span(v-if="loading") Завантаження...
+            span(v-else) Ухвалити
+    .ui-messageBox__wrapper(
+      v-if="nonapprov"
+      :class="{active: nonapprov}"
+    )
+      .ui-messageBox.fadeInDown
+        .ui-messageBox__header
+          span.messageBox-title Відмовити
+          span.button-close(@click="cancelNonApprovedStartup")
+        .ui-messageBox__content
+          p {{ titleDonation }}
+          p Ви дійсно хочете відмовити у схваленні стартапу "{{titleDonation}}"?
+        .ui-messageBox__footer
+          .button.button-light(@click="cancelNonApprovedStartup") Відміна
+          .button.button-primary(@click="finishNonApprovedStartup")
+            span(v-if="loading") Завантаження...
+            span(v-else) Відмовити
 </template>
 
 <script>
@@ -68,6 +108,8 @@ export default {
   data () {
     return {
       done: false,
+      approv: false,
+      nonapprov: false,
       titleDonation: '',
       srtpId: null,
       userStartaper: '',
@@ -134,6 +176,44 @@ export default {
         // }, 500)
       }
     },
+    approvedThisStartup (title) {
+      this.approv = !this.approv
+      // console.log({id, title})
+      this.srtpId = this.$route.params.id
+      this.titleDonation = title
+    },
+    nonApprovedThisStartup (title) {
+      this.nonapprov = !this.nonapprov
+      // console.log({id, title})
+      this.srtpId = this.$route.params.id
+      this.titleDonation = title
+    },
+    cancelApprovedStartup () {
+      this.approv = !this.approv
+      // Reset
+      this.srtpId = null
+      this.titleDonation = ''
+    },
+    cancelNonApprovedStartup () {
+      this.nonapprov = !this.nonapprov
+      // Reset
+      this.srtpId = null
+      this.titleDonation = ''
+    },
+    finishApprovedStartup () {
+      this.$store.dispatch('approvedStartup', {
+        id: this.srtpId,
+        approved: 'approved'
+      })
+      this.approv = !this.approv
+    },
+    finishNonApprovedStartup () {
+      this.$store.dispatch('approvedStartup', {
+        id: this.srtpId,
+        approved: 'denied'
+      })
+      this.nonapprov = !this.nonapprov
+    },
     openInfoStartup () {
       const startupId = this.$route.params.id
       this.$store.dispatch('infoStartup', {
@@ -166,6 +246,9 @@ export default {
     margin-right 8px
 .buttons-list
   text-align right
+
+.button
+  margin 0px 8px
 
 .router-link
   color #444ce0

@@ -13,6 +13,7 @@ import AddStartUp from '@/components/StartUps/AddStartUp'
 import Startup from '@/components/StartUps/Startup'
 import UserProfile from '@/components/Profile/UserProfile'
 import Users from '@/components/Users/Users'
+import ApprovedStartups from '@/components/StartUps/ApprovedStartups'
 
 Vue.use(Router)
 
@@ -100,6 +101,15 @@ export default new Router({
       path: '/users',
       name: 'users',
       component: Users
+    },
+    {
+      path: '/approvedStartups',
+      name: 'approvedStartups',
+      component: ApprovedStartups,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next() : next('/login')
+        store.getters.status === 'Admin' ? next() : next('/')
+      }
     }
   ]
 })

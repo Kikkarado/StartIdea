@@ -64,6 +64,7 @@ export default {
       if (this.checkUser && this.checkStatus === 'Startuper') {
         return [
           {title: 'Головна', url: '/'},
+          {title: 'Користувачі', url: '/users'},
           {title: 'Мої стартапи', url: '/myStartUps'},
           {title: 'Профіль', url: '/profile'}
         ]
@@ -72,6 +73,11 @@ export default {
           {title: 'Головна', url: '/'},
           {title: 'Користувачі', url: '/users'},
           {title: 'Профіль', url: '/profile'}
+        ]
+      } else if ((this.checkUser && this.checkStatus === 'Admin')) {
+        return [
+          {title: 'Головна', url: '/'},
+          {title: 'Не схвалені стартапи', url: '/approvedStartups'}
         ]
       }
       return [

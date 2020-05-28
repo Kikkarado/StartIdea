@@ -39,12 +39,12 @@ export default {
   data () {
     return {
       search: '',
-      usStatus: 'All',
+      usStatus: 'Всі',
       reasons: {
-        'All': 'All',
-        'Startupers': 'Startupers',
-        'Investors': 'Investors',
-        'Specialists': 'Specialists'
+        'Всі': 'Всі',
+        'Стартапери': 'Стартапери',
+        'Інвестори': 'Інвестори',
+        'Спеціалісти': 'Спеціалісти'
       }
     }
   },
@@ -56,32 +56,32 @@ export default {
   methods: {},
   computed: {
     usersFilter () {
-      if (this.usStatus === 'Startupers') {
+      if (this.usStatus === 'Стартапери') {
         if (this.search === '') {
           return this.$store.getters.usersStartupers
         } else {
           return this.$store.getters.usersStartupers.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
         }
-      } else if (this.usStatus === 'Investors') {
+      } else if (this.usStatus === 'Інвестори') {
         if (this.search === '') {
           return this.$store.getters.usersInvestors
         } else {
           return this.$store.getters.usersInvestors.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
         }
-      } else if (this.usStatus === 'Specialists') {
+      } else if (this.usStatus === 'Спеціалісти') {
         if (this.search === '') {
           return this.$store.getters.usersSpecialists
         } else {
           return this.$store.getters.usersSpecialists.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
         }
-      } else if (this.usStatus === 'All') {
+      } else if (this.usStatus === 'Всі') {
         if (this.search === '') {
           return this.$store.getters.usersAll
         } else {
           return this.$store.getters.usersAll.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
         }
       }
-      return this.usStatus === 'All'
+      return this.usStatus === 'Всі'
     },
     checkStatus () {
       return this.$store.getters.status

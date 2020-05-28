@@ -55,6 +55,9 @@ export default {
     setAllUsers (state, payload) {
       state.usersAll = payload
     },
+    clearAllUsers (state) {
+      state.usersAll = []
+    },
     setDonations (state, payload) {
       state.donations = payload
     }
@@ -125,6 +128,7 @@ export default {
                 s.completed,
                 s.raisedfunds,
                 s.deadline,
+                s.approved,
                 s.user,
                 key
               )
@@ -185,6 +189,7 @@ export default {
               s.completed,
               s.raisedfunds,
               toDeath,
+              s.approved,
               s.user,
               key
             )
@@ -388,6 +393,22 @@ export default {
         commit('setError', e.message)
         throw e
       }
+    },
+    async approvedStartup ({commit}, {id, approved}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        // Use helped class
+        await firebase.database().ref('startups').child(id).update({approved})
+        // Send mutation
+        window.location.reload('/startup/')
+        commit('completeStartup', {id, approved})
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+        throw error
+      }
     }
   },
   getters: {
@@ -409,27 +430,34 @@ export default {
     },
     startupsAll (getters) {
       return getters.startupsAll.filter(stups => {
-        return stups.completed === false
+        return stups.completed === false && stups.approved === 'approved'
+      })
+    },
+    nonApprovedStartups (getters) {
+      return getters.startupsAll.filter(stups => {
+        return stups.completed === false && stups.approved === 'nonApproved'
       })
     },
     infoS: s => s.infoStr,
     infoU: s => s.infoUs,
     usersAll (state, getters) {
-      return state.usersAll
+      return state.usersAll.filter(users => {
+        return users.status !== 'Admin' && users.id !== firebase.auth().currentUser.uid
+      })
     },
     usersStartupers (getters) {
       return getters.usersAll.filter(users => {
-        return users.status === 'Startuper'
+        return users.status === 'Startuper' && users.id !== firebase.auth().currentUser.uid
       })
     },
     usersInvestors (getters) {
       return getters.usersAll.filter(users => {
-        return users.status === 'Investor'
+        return users.status === 'Investor' && users.id !== firebase.auth().currentUser.uid
       })
     },
     usersSpecialists (getters) {
       return getters.usersAll.filter(users => {
-        return users.status === 'Specialist'
+        return users.status === 'Specialist' && users.id !== firebase.auth().currentUser.uid
       })
     },
     donations (state) {

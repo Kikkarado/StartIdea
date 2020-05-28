@@ -24,9 +24,14 @@
           :class="{ completed: startups.completed }"
         )
           .ui-card.ui-card--shadow.margin-bottom
-              .task-item__info
+              .task-item__info.overflow
                 .task-item__main-info
                   p.typo__p(v-if="startups.completed === true") Завершено
+                  span(v-if="startups.approved === 'nonApproved'").ui-label.ui-label--light Проходе модерацію
+                  span(v-if="startups.approved === 'denied'").ui-label.ui-label--denied Відмовлено
+                  span(v-if="startups.approved === 'approved'").ui-label.ui-label--success Ухвалено
+                  br
+                  br
                   span(v-if="startups.raisedfunds < startups.cost").ui-label.ui-label--light Зібрано: {{ startups.raisedfunds }}$
                   span(v-if="startups.raisedfunds >= startups.cost").ui-label.ui-label--success Зібрано: {{ startups.raisedfunds }}$
                   span.ui-label.ui-label--primary Потрібно: {{ startups.cost }}$
@@ -40,7 +45,7 @@
                   .task-item__foter
                     .buttons-list
                       .button(
-                        v-if="startups.completed !== true"
+                        v-if="startups.completed !== true && startups.approved === 'approved' || startups.approved === 'denied'"
                         @click="startupDone(startups.id, startups.title)"
                         ).button--round.button-primary Завершити достроково
         .auth__bot
@@ -159,6 +164,9 @@ export default {
   display right
   width 100%
 
+.overflow
+ overflow-x hidden
+
 .button-ok
   &.used
     background-color: #444ce0
@@ -179,6 +187,9 @@ export default {
     display flex
   .button-light
     margin-right 8px
+
+.ui-label--denied
+  background #fc5c65
 
 .margin-top
   margin-top 32px

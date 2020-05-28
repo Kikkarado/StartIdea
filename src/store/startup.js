@@ -20,6 +20,7 @@ export default {
         var month = date.getUTCMonth() + 2
         var year
         var add
+        const approved = 'nonApproved'
         if (month > 11) {
           add = Math.round(2 / 11)
           month = Math.round(11 % 2)
@@ -37,6 +38,7 @@ export default {
           payload.completed,
           payload.raisedfunds,
           deadline,
+          approved,
           getters.user.id
         )
         const startup = await firebase.database().ref('startups').push(newStartUp)
