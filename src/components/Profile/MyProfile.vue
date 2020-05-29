@@ -5,25 +5,30 @@
       .form-title
         span.ui-title-2 Мій профіль
       .auth
+        .img_form
+          img.image_avatar(:src='profFil.imageUrl' class="scale")
         .auth__form1
           form(@submit.prevent="onSubmit")
             .form-item
-              span.ui-title-4 І&acuteмя
-              span.ui-title-5 {{ profFil.fname }}  {{ profFil.sname }}
+              .content
+                span.ui-title-4 І&acuteмя
+                span.ui-title-3 {{ profFil.fname }}  {{ profFil.sname }}
+              .content(style="margin-left: 10px; text-align: center")
+                span.ui-title-4 Дата народження
+                p.ui-title-3 {{ profFil.dayofbirth }}.{{ profFil.monthofbirth }}.{{ profFil.yearofbirth }}
             .form-item
-              span.ui-title-4 Електронна адреса
-              span.ui-title-5 {{ profFil.email }}
-            .form-item
-              span.ui-title-4 Дата народження
-              span.ui-title-5 {{ profFil.dayofbirth }}.{{ profFil.monthofbirth }}.{{ profFil.yearofbirth }}
-        .auth__form2
-          form(@submit.prevent="onSubmit")
-            .form-item
-              span.ui-title-4 Телефон
-              p.ui-title-5 {{ profFil.phone }}
-            .form-item
+              .content
+                span.ui-title-4 Електронна адреса
+                span.ui-title-3 {{ profFil.email }}
+              .content
+                span.ui-title-4 Телефон
+                p.ui-title-3 {{ profFil.phone }}
+      .auth__form2
+        form(@submit.prevent="onSubmit")
+          .form-item
+            .content
               span.ui-title-4 Про мене
-              p.ui-title-5 {{ profFil.aboutme }}
+              p.ui-title-3 {{ profFil.aboutme }}
       .buttons-list.button-list--info
         span Для оновлення даних
           router-link(to="/addDataProfile")  натисніть тут
@@ -49,7 +54,8 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+    }
   },
   async mounted () {
     if (!Object.keys(this.$store.getters.info).length) {
@@ -62,6 +68,7 @@ export default {
   methods: {},
   computed: {
     profFil () {
+      console.log(this.$store.getters.info)
       return this.$store.getters.info
     },
     donat () {
@@ -96,10 +103,23 @@ export default {
   width 33%
   justify-content center
 
-.auth__form1,
+.img_form
+  display inline-block
+  text-align right
+  flex 0 1 auto
+  width 22%
+  padding 10px
+  justify-content right
+
+.auth__form1
+  display block
+  width 50%
+  padding 10px
+  justify-content left
+
 .auth__form2
   display flex
-  width 50%
+  width 100%
   padding 10px
   justify-content center
 
@@ -110,9 +130,12 @@ export default {
   justify-content left
 
 .form-item
-  margin-bottom 15px
-  display block
+  margin-bottom 5px
+  display flex
   white-space pre-line
+
+.content
+ padding 10px
 
 .buttons-list
   text-align center
@@ -129,4 +152,17 @@ a
 
 .width-33
   width 33%
+
+.scale
+  transition 1s
+
+.scale:hover
+  transform scale(2)
+
+.image_avatar
+  flex 0 1 auto
+  border 3px solid #999999
+  width 100%
+  height auto
+  border-radius 50%
 </style>

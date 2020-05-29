@@ -26,10 +26,13 @@
                 .task-item__main-info
                   span.ui-label.ui-label--light {{ users.status }}
                 .task-item__content
-                  .task-item__header
-                    router-link.router-link(
-                      :to="{ name: 'userprofile', params: { id: users.id } }"
-                    ).ui-title-2 {{ users.fname }} {{ users.sname }}
+                  .user_av
+                    .img_form
+                      img.image_avatar(:src='users.imageUrl' class="scale")
+                    .task-item__header
+                      router-link.router-link(
+                        :to="{ name: 'userprofile', params: { id: users.id } }"
+                      ).ui-title-2 {{ users.fname }} {{ users.sname }}
                   .task-item__body
                     p.ui-text-regular {{ users.aboutme }}
 </template>
@@ -122,4 +125,38 @@ export default {
 
 .search
   width 25%
+
+.scale
+  transition 1s
+
+.scale:hover
+  transform scale(2)
+
+.task-item__header
+  display block
+  width 50%
+  padding 10px
+  justify-content left
+
+.user_av
+  display flex
+  width 100%
+  padding 10px
+  justify-content left
+
+.img_form
+  display inline-block
+  text-align left
+  flex 0 1 auto
+  width 12%
+  height auto
+  padding 10px
+  justify-content left
+
+.image_avatar
+  flex 0 1 auto
+  border 3px solid #999999
+  width 100%
+  height auto
+  border-radius 50%
 </style>

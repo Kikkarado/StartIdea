@@ -18,6 +18,7 @@ export default {
       commit('clearError')
       commit('setLoading', true)
       try {
+        const imageUrl = ''
         const aboutme = ''
         const phone = ''
         const dayofbirth = ''
@@ -27,6 +28,7 @@ export default {
         const addUserData = new Profile(
           fname,
           sname,
+          imageUrl,
           status,
           openstartup,
           aboutme,

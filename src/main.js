@@ -34,7 +34,7 @@ new Vue({
       authDomain: 'start-idea-37f3a.firebaseapp.com',
       databaseURL: 'https://start-idea-37f3a.firebaseio.com',
       projectId: 'start-idea-37f3a',
-      storageBucket: 'start-idea-37f3a.appspot.com',
+      storageBucket: 'gs://start-idea-37f3a.appspot.com',
       messagingSenderId: '270112436901',
       appId: '1:270112436901:web:7cdcd6b692bc95a7c7d34c'
     }

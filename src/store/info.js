@@ -350,6 +350,7 @@ export default {
               s.dayofbirth,
               s.monthofbirth,
               s.yearofbirth,
+              s.imageUrl,
               s.id,
               key
             )

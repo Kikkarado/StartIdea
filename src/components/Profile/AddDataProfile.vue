@@ -6,6 +6,23 @@
         span.ui-title-2 Налаштування даних профілю
       .auth
         .auth__form1
+          .img_fomr
+            img.image_avatar(:src='imageUrl' class="scale")
+          .buttons-list
+            button.button.button-primary(
+              @click="onPickFile"
+              type="submit"
+            )
+              span(v-if="loading") Збереження...
+              span(v-else) Завантажити зображення
+            input(
+              type="file"
+              style="display: none"
+              ref="fileInput"
+              accept="image/*"
+              @change="onFilePicked"
+            )
+        .auth__form1
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.fname.$error }")
               span І&acuteмя
@@ -143,13 +160,15 @@ export default {
     return {
       fname: '',
       sname: '',
+      imageUrl: '',
       dayofbirth: null,
       monthofbirth: null,
       yearofbirth: null,
       email: '',
       phone: null,
       aboutme: '',
-      submitStatus: null
+      submitStatus: null,
+      image: null
     }
   },
   created: function () {
@@ -161,6 +180,7 @@ export default {
     this.email = this.profFil.email
     this.phone = this.profFil.phone
     this.aboutme = this.profFil.aboutme
+    this.imageUrl = this.profFil.imageUrl
   },
   async mounted () {
     if (!Object.keys(this.$store.getters.info).length) {
@@ -206,6 +226,22 @@ export default {
     cancelAdd () {
       this.$router.push('/profile')
     },
+    onPickFile () {
+      this.$refs.fileInput.click()
+    },
+    onFilePicked (event) {
+      const files = event.target.files
+      let filename = files[0].name
+      if (filename.lastIndexOf('.') <= 0) {
+        return alert('Error')
+      }
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+        this.imageUrl = fileReader.result
+      })
+      fileReader.readAsDataURL(files[0])
+      this.image = files[0]
+    },
     onSubmit () {
       this.$v.$touch()
       if (this.$v.$invalid) {
@@ -214,6 +250,7 @@ export default {
         this.$store.dispatch('addUserData', {
           fname: this.fname,
           sname: this.sname,
+          image: this.image,
           dayofbirth: this.dayofbirth,
           monthofbirth: this.monthofbirth,
           yearofbirth: this.yearofbirth,
@@ -309,4 +346,17 @@ input
       margin-bottom 0
 a
   color #444ce0
+
+.scale
+  transition 1s
+
+.scale:hover
+  transform scale(2)
+
+.image_avatar
+  flex 0 1 auto
+  border 3px solid #999999
+  width 100%
+  height auto
+  border-radius 50%
 </style>

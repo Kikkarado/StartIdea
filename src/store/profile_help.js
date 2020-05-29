@@ -10,6 +10,7 @@ export default class Profile {
     dayofbirth,
     monthofbirth,
     yearofbirth,
+    imageUrl,
     user = null,
     id = null
   ) {
@@ -23,6 +24,7 @@ export default class Profile {
     this.dayofbirth = dayofbirth
     this.monthofbirth = monthofbirth
     this.yearofbirth = yearofbirth
+    this.imageUrl = imageUrl
     this.user = user
     this.id = id
   }
