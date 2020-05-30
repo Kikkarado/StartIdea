@@ -6,7 +6,8 @@
         span.ui-title-2 Мій профіль
       .auth
         .img_form
-          img.image_avatar(:src='profFil.imageUrl' class="scale")
+          img.image_avatar(:src='profFil.imageUrl' class="scale" v-if="profFil.imageUrl")
+          img.image_avatar(src='https://image.flaticon.com/icons/svg/2960/2960006.svg' v-else)
         .auth__form1
           form(@submit.prevent="onSubmit")
             .form-item
@@ -107,7 +108,8 @@ export default {
   display inline-block
   text-align right
   flex 0 1 auto
-  width 22%
+  width 200px
+  height 200px
   padding 10px
   justify-content right
 
@@ -160,9 +162,10 @@ a
   transform scale(2)
 
 .image_avatar
+  object-fit cover
   flex 0 1 auto
   border 3px solid #999999
   width 100%
-  height auto
+  height 100%
   border-radius 50%
 </style>

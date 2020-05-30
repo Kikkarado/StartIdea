@@ -28,7 +28,8 @@
                 .task-item__content
                   .user_av
                     .img_form
-                      img.image_avatar(:src='users.imageUrl' class="scale")
+                      img.image_avatar(:src='users.imageUrl' class="scale" v-if="users.imageUrl")
+                      img.image_avatar(src='https://image.flaticon.com/icons/svg/2960/2960006.svg' class="scale" v-else)
                     .task-item__header
                       router-link.router-link(
                         :to="{ name: 'userprofile', params: { id: users.id } }"
@@ -148,15 +149,16 @@ export default {
   display inline-block
   text-align left
   flex 0 1 auto
-  width 12%
-  height auto
+  width 100px
+  height 100px
   padding 10px
   justify-content left
 
 .image_avatar
+  object-fit cover
   flex 0 1 auto
   border 3px solid #999999
   width 100%
-  height auto
+  height 100%
   border-radius 50%
 </style>

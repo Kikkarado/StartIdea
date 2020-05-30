@@ -18,6 +18,10 @@
                     span.ui-title-3 {{ startup.title }}
                   .task-item__body.margin-bottom-16
                     span.ui-text-regular.font {{ startup.shortdescription }}
+                  .img-form1
+                    img.image-srtp(:src='startup.imageUrl1' @click="openImg(startup.imageUrl1)" v-if="startup.imageUrl1 !== 'none'")
+                    img.image-srtp(:src='startup.imageUrl2' @click="openImg(startup.imageUrl2)" v-if="startup.imageUrl2 !== 'none'")
+                    img.image-srtp(:src='startup.imageUrl3' @click="openImg(startup.imageUrl3)" v-if="startup.imageUrl3 !== 'none'")
                   .task-item__body
                     span.ui-text-regular.font {{ startup.fulldescription }}
                   .task-iten__footer
@@ -26,7 +30,7 @@
                       ) Про автора
                     .buttons-list
                       .button(
-                        v-if="checkStatus === 'Investor' && startup.raisedfunds < startup.cost"
+                        v-if="checkStatus === 'Investor' && startup.raisedfunds < startup.cost && startup.approved === 'approved'"
                         @click="startupDonation(startup.title, startup.user, startup.title)"
                         ).button--round.button-primary Підтримати
                       .button(
@@ -67,6 +71,15 @@
           .button.button-primary(@click="finishStartupDonation")
             span(v-if="loading") Завантаження...
             span(v-else) Підтримати
+    .ui-messageBox__wrapper(
+      v-if="open"
+      :class="{active: open}"
+    )
+      .ui-messageBox.fadeInDown
+        .ui-messageBox__header
+          span.button-close(@click="cancelOpenImg")
+        .ui-messageBox__content
+          img.image_popup(:src='imageUrl' @click="cancelOpenImg")
     .ui-messageBox__wrapper(
       v-if="approv"
       :class="{active: approv}"
@@ -114,7 +127,9 @@ export default {
       srtpId: null,
       userStartaper: '',
       raisedfundsDonation: null,
-      submitStatus: null
+      submitStatus: null,
+      open: false,
+      imageUrl: ''
     }
   },
   validations: {
@@ -133,6 +148,14 @@ export default {
     }
   },
   methods: {
+    openImg (imgUrl) {
+      this.open = !this.open
+      this.imageUrl = imgUrl
+    },
+    cancelOpenImg () {
+      this.open = !this.open
+      this.imageUrl = ''
+    },
     startupDonation (title, user) {
       this.done = !this.done
       // console.log({id, title})
@@ -247,6 +270,10 @@ export default {
 .buttons-list
   text-align right
 
+.ui-messageBox__content
+  display flex
+  justify-content center
+
 .button
   margin 0px 8px
 
@@ -258,6 +285,24 @@ export default {
 
 .margin-bottom-16
   margin-bottom 16px
+
+.image_popup
+  display flex
+  text-align center
+  flex 0 1 auto
+  max-width 1000px
+  max-height 700px
+  padding 10px
+  justify-content center
+
+.img-form1
+  display flex
+  text-align right
+  flex 0 1 auto
+  width 33%
+  height auto
+  padding 10px
+  justify-content right
 
 .form-item
   .error
@@ -276,4 +321,12 @@ input
 .font
   margin-bottom 10px
   color #000
+
+.image-srtp
+  object-fit cover
+  flex 0 1 auto
+  border 3px solid #999999
+  width 100%
+  height 100%
+  margin 12px
 </style>

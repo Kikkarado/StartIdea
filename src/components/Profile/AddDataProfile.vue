@@ -5,23 +5,21 @@
       .form-title
         span.ui-title-2 Налаштування даних профілю
       .auth
-        .auth__form1
-          .img_fomr
-            img.image_avatar(:src='imageUrl' class="scale")
-          .buttons-list
-            button.button.button-primary(
-              @click="onPickFile"
-              type="submit"
-            )
-              span(v-if="loading") Збереження...
-              span(v-else) Завантажити зображення
-            input(
-              type="file"
-              style="display: none"
-              ref="fileInput"
-              accept="image/*"
-              @change="onFilePicked"
-            )
+        .img_form
+          img.image_avatar(:src='imageUrl' class="scale" v-if="imageUrl")
+          img.image_avatar(src='https://image.flaticon.com/icons/svg/2960/2960006.svg' v-else)
+          button.button-img.button-primary(
+            @click="onPickFile"
+          )
+            span(v-if="loading")
+            span(v-else)
+          input(
+            type="file"
+            style="display: none"
+            ref="fileInput"
+            accept="image/*"
+            @change="onFilePicked"
+          )
         .auth__form1
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.fname.$error }")
@@ -296,6 +294,12 @@ export default {
   text-align left
   justify-content center
 
+.auth__form
+  flex 0 1 auto
+  width 18.4%
+  height 100%
+  padding 10px
+
 .auth__form1,
 .auth__form2
   width 30%
@@ -335,7 +339,13 @@ input
   &.error
     border-color #fc5c65
 
+.button-img
+  min-width 48px
+  min-height 48px
+  background-image url("https://img.icons8.com/fluent/48/000000/stack-of-photos.png")
+
 .button
+  margin-right 50px
   margin 0px 12px
 
 .buttons-list
@@ -353,10 +363,20 @@ a
 .scale:hover
   transform scale(2)
 
+.img_form
+  display inline-block
+  text-align right
+  flex 0 1 auto
+  width 200px
+  height 200px
+  padding 10px
+  justify-content right
+
 .image_avatar
+  object-fit cover
   flex 0 1 auto
   border 3px solid #999999
   width 100%
-  height auto
+  height 100%
   border-radius 50%
 </style>

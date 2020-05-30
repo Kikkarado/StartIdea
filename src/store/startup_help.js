@@ -8,6 +8,9 @@ export default class Startup {
     raisedfunds,
     deadline,
     approved,
+    imageUrl1,
+    imageUrl2,
+    imageUrl3,
     user = null,
     id = null
   ) {
@@ -19,6 +22,9 @@ export default class Startup {
     this.raisedfunds = raisedfunds
     this.deadline = deadline
     this.approved = approved
+    this.imageUrl1 = imageUrl1
+    this.imageUrl2 = imageUrl2
+    this.imageUrl3 = imageUrl3
     this.user = user
     this.id = id
   }

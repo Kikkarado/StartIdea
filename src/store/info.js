@@ -37,6 +37,11 @@ export default {
       })
       strp.completed = completed
     },
+    deleteStartup (state, {id}) {
+      state.startupsUser.find(t => {
+        return t.id === id
+      })
+    },
     setAllStartups (state, payload) {
       state.startupsAll = payload
     },
@@ -129,6 +134,9 @@ export default {
                 s.raisedfunds,
                 s.deadline,
                 s.approved,
+                s.imageUrl1,
+                s.imageUrl2,
+                s.imageUrl3,
                 s.user,
                 key
               )
@@ -162,10 +170,65 @@ export default {
         throw error
       }
     },
+    async deleteStartup ({commit}, {id}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        // Use helped class
+        const userID = firebase.auth().currentUser.uid
+        await firebase.database().ref('startups').child(id).remove()
+        await firebase.database().ref('Users').child(userID).child('openstartup').set(0)
+        const img1 = await firebase.storage().ref('startupsImg/' + id + '/' + userID + '1')
+        const img2 = await firebase.storage().ref('startupsImg/' + id + '/' + userID + '2')
+        const img3 = await firebase.storage().ref('startupsImg/' + id + '/' + userID + '3')
+        if (img1 && img2 && img3) {
+          return img1.delete() && img2.delete() && img3.delete()
+        } else {
+          if (img1 && img2 && !img3) {
+            return img1.delete() && img2.delete()
+          } else {
+            if (img1 && !img2 && !img3) {
+              return img1.delete()
+            } else {
+              if (!img1 && !img2 && !img3) {
+                return 'Nothing delete'
+              } else {
+                if (!img1 && !img2 && img3) {
+                  return img2.delete()
+                } else {
+                  if (!img1 && img2 && img3) {
+                    return img2.delete() && img3.delete()
+                  } else {
+                    if (!img1 && img2 && !img3) {
+                      return img2.delete()
+                    } else {
+                      if (img1 && !img2 && img3) {
+                        return img1.delete() && img3.delete()
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        // Send mutation
+        window.location.reload('/myStartUps')
+        commit('completeStartup', {id})
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        console.log(error.message)
+        commit('setError', error.message)
+        throw error
+      }
+    },
     async fetchAllStartups ({commit}) {
       commit('clearError')
       commit('setLoading', true)
       try {
+        const img = await firebase.storage().ref('startupsImg').bucket
+        console.log('img' + img)
         const startup = await firebase.database().ref('startups').once('value')
         const startups = startup.val()
         const allStartupsArray = []
@@ -190,6 +253,9 @@ export default {
               s.raisedfunds,
               toDeath,
               s.approved,
+              s.imageUrl1,
+              s.imageUrl2,
+              s.imageUrl3,
               s.user,
               key
             )

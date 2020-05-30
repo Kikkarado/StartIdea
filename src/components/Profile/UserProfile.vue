@@ -6,7 +6,8 @@
         span.ui-title-2 Профіль користувача
       .auth
         .img_form
-          img.image_avatar(:src='userInf.imageUrl' class="scale")
+          img.image_avatar(:src='userInf.imageUrl' class="scale" v-if="userInf.imageUrl")
+          img.image_avatar(src='https://image.flaticon.com/icons/svg/2960/2960006.svg' v-else)
         .auth__form1
           form(@submit.prevent="onSubmit")
             .form-item

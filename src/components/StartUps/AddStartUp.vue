@@ -43,6 +43,49 @@
                 | У повному описі має бути не менше {{ $v.fulldescription.$params.minLength.min }} літер.
               .error(v-if="!$v.fulldescription.maxLength")
                 | У повному описі має бути не більше {{ $v.fulldescription.$params.maxLength.max }} літер.
+          .form_img
+            .img_form
+              img.image-startup(:src='imageUrl1' class="scale" v-if="imageUrl1")
+              img.image-startup(src='https://image.flaticon.com/icons/svg/1948/1948547.svg' v-else)
+            input(
+              type="file"
+              style="display: none"
+              ref="fileInput1"
+              accept="image/*"
+              @change="onFilePicked1"
+            )
+            .img_form
+              img.image-startup(:src='imageUrl2' class="scale" v-if="imageUrl2")
+              img.image-startup(src='https://image.flaticon.com/icons/svg/1948/1948547.svg' v-else)
+            input(
+              type="file"
+              style="display: none"
+              ref="fileInput2"
+              accept="image/*"
+              @change="onFilePicked2"
+            )
+            .img_form
+              img.image-startup(:src='imageUrl3' class="scale" v-if="imageUrl3")
+              img.image-startup(src='https://image.flaticon.com/icons/svg/1948/1948547.svg' v-else)
+            input(
+              type="file"
+              style="display: none"
+              ref="fileInput3"
+              accept="image/*"
+              @change="onFilePicked3"
+            )
+          .form-button
+            .button-list
+            button.button-img.button-light(
+              @click="onPickFile1"
+            ) №1
+            button.button-img.button-light(
+              @click="onPickFile2"
+            ) №2
+            button.button-img.button-light(
+              @click="onPickFile3"
+            ) №3
+          form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.cost.$error }")
               span Необхідна сума в $
               input(
@@ -61,8 +104,9 @@
             .buttons-list
               button.button.button-primary(
                 type="submit"
+                :disabled='loading'
               )
-                span(v-if="loading") Завантаження...
+                span(v-if="loading" ) Завантаження...
                 span(v-else) Додати стартап
             .buttons-list.buttons-list--info
               p.typo__p(v-if="submitStatus === 'OK'") Ваш стартап додан.
@@ -78,8 +122,14 @@ export default {
     return {
       title: '',
       shortdescription: '',
+      imageUrl1: '',
+      imageUrl2: '',
+      imageUrl3: '',
       fulldescription: '',
-      cost: 1000
+      cost: 1000,
+      image1: null,
+      image2: null,
+      image3: null
     }
   },
   validations: {
@@ -102,6 +152,54 @@ export default {
     }
   },
   methods: {
+    onPickFile1 () {
+      this.$refs.fileInput1.click()
+    },
+    onPickFile2 () {
+      this.$refs.fileInput2.click()
+    },
+    onPickFile3 () {
+      this.$refs.fileInput3.click()
+    },
+    onFilePicked1 (event) {
+      const files = event.target.files
+      let filename = files[0].name
+      if (filename.lastIndexOf('.') <= 0) {
+        return alert('Error')
+      }
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+        this.imageUrl1 = fileReader.result
+      })
+      fileReader.readAsDataURL(files[0])
+      this.image1 = files[0]
+    },
+    onFilePicked2 (event) {
+      const files = event.target.files
+      let filename = files[0].name
+      if (filename.lastIndexOf('.') <= 0) {
+        return alert('Error')
+      }
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+        this.imageUrl2 = fileReader.result
+      })
+      fileReader.readAsDataURL(files[0])
+      this.image2 = files[0]
+    },
+    onFilePicked3 (event) {
+      const files = event.target.files
+      let filename = files[0].name
+      if (filename.lastIndexOf('.') <= 0) {
+        return alert('Error')
+      }
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+        this.imageUrl3 = fileReader.result
+      })
+      fileReader.readAsDataURL(files[0])
+      this.image3 = files[0]
+    },
     onSubmit () {
       this.$v.$touch()
       if (this.$v.$invalid) {
@@ -111,6 +209,9 @@ export default {
           title: this.title,
           shortdescription: this.shortdescription,
           fulldescription: this.fulldescription,
+          image1: this.image1,
+          image2: this.image2,
+          image3: this.image3,
           cost: this.cost,
           completed: false,
           raisedfunds: 0
@@ -120,8 +221,7 @@ export default {
             console.log('Added!')
             console.log(startup)
             this.submitStatus = 'OK'
-            this.$router.push('/myStartUps')
-            window.location.reload('/myStartUps')
+            // this.$router.push('/myStartUps')
           })
           .catch(err => {
             this.submitStatus = err.message
@@ -141,12 +241,23 @@ export default {
 .content-wrapper
   min-height 100%
 
+.form_img,
+.form-button,
 .auth
   display flex
   justify-content center
 .auth__banner,
 .auth__form
   width 70%
+
+.img_form
+  display inline-block
+  text-align right
+  flex 0 1 auto
+  max-width 100%
+  max-height 400px
+  padding 10px
+  justify-content right
 
 .form-item
   .error
@@ -175,4 +286,25 @@ input
       margin-bottom 0
 a
   color #444ce0
+
+.button-img
+  margin 0px 12px
+  width 48px
+  height 48px
+  color #000
+  background-image url("https://img.icons8.com/fluent/48/000000/stack-of-photos.png")
+
+.scale
+  transition 1s
+
+.scale:hover
+  transform scale(1.2)
+
+.image-startup
+  object-fit cover
+  flex 0 1 auto
+  border 3px solid #999999
+  max-width 100%
+  max-height 100%
+
 </style>

@@ -25,9 +25,8 @@ export default {
             return img
           })
           .then(async (fileData) => {
-            const imagePath = fileData.metadata.fullPath
-            await firebase.storage().ref('avatarUser/' + userID + ext).getDownloadURL()
-            return firebase.database().ref('Users').child(userID).update({imageUrl: imagePath})
+            imageUrl = await firebase.storage().ref('avatarUser/' + userID + ext).getDownloadURL()
+            return firebase.database().ref('Users').child(userID).update({imageUrl: imageUrl})
           })
           .then(() => {
             commit('addUserData', {...addProf, imageUrl: imageUrl})

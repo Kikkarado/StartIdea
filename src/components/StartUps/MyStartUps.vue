@@ -37,17 +37,21 @@
                   span.ui-label.ui-label--primary Потрібно: {{ startups.cost }}$
                 .task-item__content
                   .task-item__header
-                    span.ui-title-2 {{ startups.title }}
+                    router-link.router-link.ui-title-2(
+                      :to="{ name: 'startup', params: { id: startups.id } }"
+                      ) {{ startups.title }}
                   .task-item__body
                     p.ui-text-regular.margin-bottom {{ startups.shortdescription }}
-                  .task-item__body
-                    p.ui-text-regular.margin-bottom-16 {{ startups.fulldescription }}
                   .task-item__foter
                     .buttons-list
                       .button(
-                        v-if="startups.completed !== true && startups.approved === 'approved' || startups.approved === 'denied'"
+                        v-if="startups.completed !== true && startups.approved === 'approved' && (Math.round((new Date(startups.deadline) - new Date(deadDate)) / (1000 * 60 * 60 * 24)) < 30)"
                         @click="startupDone(startups.id, startups.title)"
                         ).button--round.button-primary Завершити достроково
+                      .button(
+                        v-if="startups.approved === 'denied'"
+                        @click="startupDelete(startups.id, startups.title)"
+                        ).button--round.button-primary Видалити
         .auth__bot
           .buttons-list
             button.button-primary(
@@ -67,6 +71,19 @@
         .ui-messageBox__footer
           .button.button-light(@click="cancelStartupDone") Ні
           .button.button-primary(@click="finishStartupDone") Так
+    .ui-messageBox__wrapper(
+      v-if="deleted"
+      :class="{active: deleted}"
+    )
+      .ui-messageBox.fadeInDown
+        .ui-messageBox__header
+          span.messageBox-title Увага!
+          span.button-close(@click="cancelStartupDelete")
+        .ui-messageBox__content
+          p Ви впевнені, що хочете видалити стартап "{{ titleDelete }}"?
+        .ui-messageBox__footer
+          .button.button-light(@click="cancelStartupDelete") Ні
+          .button.button-primary(@click="finishStartupDelete") Так
 </template>
 
 <script>
@@ -77,11 +94,17 @@ export default {
       filter: 'active',
       done: false,
       titleDone: '',
+      titleDelete: '',
       srtpId: null,
       used1: true,
       used2: false,
-      used3: false
+      used3: false,
+      deadDate: '',
+      deleted: false
     }
+  },
+  created: function () {
+    this.dateDead()
   },
   async mounted () {
     if (!Object.keys(this.$store.getters.openstartup).length) {
@@ -92,6 +115,10 @@ export default {
     }
   },
   methods: {
+    dateDead () {
+      const date = new Date()
+      this.deadDate = date.getUTCFullYear() + '.' + date.getUTCMonth() + '.' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds()
+    },
     butActive () {
       this.used2 = false
       this.used3 = false
@@ -128,6 +155,27 @@ export default {
     },
     addStartUp () {
       this.$router.push('/addStartUp')
+    },
+    startupDelete (id, title) {
+      this.deleted = !this.deleted
+      // console.log({id, title})
+      this.srtpId = id
+      this.titleDelete = title
+    },
+    // Cancel button (POPUP)
+    cancelStartupDelete () {
+      this.deleted = !this.deleted
+      // Reset
+      this.srtpId = null
+      this.titleDelete = ''
+    },
+    // Done button
+    finishStartupDelete () {
+      // console.log(this.titleEditing)
+      this.$store.dispatch('deleteStartup', {
+        id: this.srtpId
+      })
+      this.deleted = !this.deleted
     }
   },
   computed: {
@@ -155,9 +203,21 @@ export default {
 .content-wrapper
   min-height 100%
 
+.router-link
+  color #444ce0
+
 .auth
   display flex
   flex-wrap wrap
+
+.img_form
+  display inline-block
+  text-align right
+  flex 0 1 auto
+  width 200px
+  height 200px
+  padding 10px
+  justify-content right
 
 .auth__banner,
 .auth__form
@@ -202,4 +262,18 @@ export default {
 
 .margin-right
   margin-right 12px
+
+.scale
+  transition 1s
+
+.scale:hover
+  transform scale(2)
+
+.image_avatar
+  object-fit cover
+  flex 0 1 auto
+  border 3px solid #999999
+  width 100%
+  height 100%
+  border-radius 50%
 </style>

@@ -131,34 +131,34 @@ export default {
         }
         case 'За ціною зростання': if (this.search === '') {
           const allST = this.$store.getters.startupsAll
-          return allST.sort(sortByCostToLow) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
-        } else {
-          const allST = this.$store.getters.startupsAll
-          allST.sort(sortByCostToLow)
-          return this.$store.getters.startupsAll.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()) && item.cost >= this.costfrom && item.cost <= this.costto)
-        }
-        case 'За ціною спадання': if (this.search === '') {
-          const allST = this.$store.getters.startupsAll
           return allST.sort(sortByCostToHight) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
         } else {
           const allST = this.$store.getters.startupsAll
           allST.sort(sortByCostToHight)
           return this.$store.getters.startupsAll.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()) && item.cost >= this.costfrom && item.cost <= this.costto)
         }
-        case 'За пожертвами зростання': if (this.search === '') {
+        case 'За ціною спадання': if (this.search === '') {
           const allST = this.$store.getters.startupsAll
-          return allST.sort(sortByRaisedfundsToLow) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
+          return allST.sort(sortByCostToLow) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
         } else {
           const allST = this.$store.getters.startupsAll
-          allST.sort(sortByRaisedfundsToLow)
+          allST.sort(sortByCostToLow)
           return this.$store.getters.startupsAll.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()) && item.cost >= this.costfrom && item.cost <= this.costto)
         }
-        case 'За пожертвами спадання': if (this.search === '') {
+        case 'За пожертвами зростання': if (this.search === '') {
           const allST = this.$store.getters.startupsAll
           return allST.sort(sortByRaisedfundsToHight) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
         } else {
           const allST = this.$store.getters.startupsAll
           allST.sort(sortByRaisedfundsToHight)
+          return this.$store.getters.startupsAll.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()) && item.cost >= this.costfrom && item.cost <= this.costto)
+        }
+        case 'За пожертвами спадання': if (this.search === '') {
+          const allST = this.$store.getters.startupsAll
+          return allST.sort(sortByRaisedfundsToLow) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
+        } else {
+          const allST = this.$store.getters.startupsAll
+          allST.sort(sortByRaisedfundsToLow)
           return this.$store.getters.startupsAll.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()) && item.cost >= this.costfrom && item.cost <= this.costto)
         }
         case 'Спочатку нові': if (this.search === '') {
@@ -238,7 +238,7 @@ const sortByRaisedfundsToHight = function (d1, d2) { return (d1.raisedfunds > d2
   width 15%
 
 .fromto
-  width 50%
+  width 40%
 
 input
   &.error
