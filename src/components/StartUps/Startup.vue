@@ -10,9 +10,9 @@
           .ui-card.ui-card--shadow
               .task-item__info
                 .task-item__main-info
-                  span(v-if="startup.raisedfunds < startup.cost").ui-label.ui-label--light Зібрано: {{ startup.raisedfunds }}$
-                  span(v-if="startup.raisedfunds >= startup.cost").ui-label.ui-label--success Зібрано: {{ startup.raisedfunds }}$
-                  span.ui-label.ui-label--primary Потрібно: {{ startup.cost }}$
+                  span(v-if="startup.raisedfunds < startup.cost").ui-label.ui-label--light Зібрано: {{ startup.raisedfunds }}&#8372
+                  span(v-if="startup.raisedfunds >= startup.cost").ui-label.ui-label--success Зібрано: {{ startup.raisedfunds }}&#8372
+                  span.ui-label.ui-label--primary Потрібно: {{ startup.cost }}&#8372
                 .task-item__content
                   .task-item__header
                     span.ui-title-3 {{ startup.title }}
@@ -31,7 +31,7 @@
                     .buttons-list
                       .button(
                         v-if="checkStatus === 'Investor' && startup.raisedfunds < startup.cost && startup.approved === 'approved'"
-                        @click="startupDonation(startup.title, startup.user, startup.title)"
+                        @click="startupDonation(startup.title, startup.user)"
                         ).button--round.button-primary Підтримати
                       .button(
                         v-if="checkStatus === 'Admin' && startup.approved === 'nonApproved'"
@@ -47,11 +47,12 @@
     )
       .ui-messageBox.fadeInDown
         .ui-messageBox__header
-          span.messageBox-title Підтримати
+          span.messageBox-title Підтримати {{ titleDonation }}
           span.button-close(@click="cancelStartupDonation")
         .ui-messageBox__content
-          p {{ titleDonation }}
-          p Введіть суму вказану в $
+          p Введіть суму вказану в гривнях &#8372
+        .ui-messageBox__content
+          span.ui-text-smaller(style="color: #000") 1(один) відсоток з вказаної суми буде перераховано на рахунок "Start Idea"
         .form-item(:class="{ errorInput: $v.raisedfundsDonation.$error }")
           input(
             type="text"
@@ -86,10 +87,9 @@
     )
       .ui-messageBox.fadeInDown
         .ui-messageBox__header
-          span.messageBox-title Ухвалити
+          span.messageBox-title Ухвалити "{{ titleDonation }}"
           span.button-close(@click="cancelApprovedStartup")
         .ui-messageBox__content
-          p {{ titleDonation }}
           p Ви дійсно хочете ухвалити стартап "{{titleDonation}}"?
         .ui-messageBox__footer
           .button.button-light(@click="cancelApprovedStartup") Відміна
@@ -102,10 +102,9 @@
     )
       .ui-messageBox.fadeInDown
         .ui-messageBox__header
-          span.messageBox-title Відмовити
+          span.messageBox-title Відмовити "{{ titleDonation }}"
           span.button-close(@click="cancelNonApprovedStartup")
         .ui-messageBox__content
-          p {{ titleDonation }}
           p Ви дійсно хочете відмовити у схваленні стартапу "{{titleDonation}}"?
         .ui-messageBox__footer
           .button.button-light(@click="cancelNonApprovedStartup") Відміна
@@ -178,9 +177,10 @@ export default {
         this.submitStatus = 'ERROR'
       } else {
         console.log('submit!')
+        const raisedfundsWithoutCommission = this.raisedfundsDonation / 100 * 99
         this.$store.dispatch('donationStartup', {
           id: this.srtpId,
-          raisedfunds: this.raisedfundsDonation,
+          raisedfunds: raisedfundsWithoutCommission,
           user: this.userStartaper,
           title: this.titleDonation
         })

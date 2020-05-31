@@ -9,25 +9,23 @@
           img.image_avatar(:src='profFil.imageUrl' class="scale" v-if="profFil.imageUrl")
           img.image_avatar(src='https://image.flaticon.com/icons/svg/2960/2960006.svg' v-else)
         .auth__form1
-          form(@submit.prevent="onSubmit")
-            .form-item
-              .content
-                span.ui-title-4 І&acuteмя
-                span.ui-title-3 {{ profFil.fname }}  {{ profFil.sname }}
-              .content(style="margin-left: 10px; text-align: center")
-                span.ui-title-4 Дата народження
-                p.ui-title-3 {{ profFil.dayofbirth }}.{{ profFil.monthofbirth }}.{{ profFil.yearofbirth }}
-            .form-item
-              .content
-                span.ui-title-4 Електронна адреса
-                span.ui-title-3 {{ profFil.email }}
-              .content
-                span.ui-title-4 Телефон
-                p.ui-title-3 {{ profFil.phone }}
+          .content
+            span.ui-title-4 І&acuteмя
+            span.ui-title-3 {{ profFil.fname }}  {{ profFil.sname }}
+          .content(v-if="profFil.dayofbirth")
+            span.ui-title-4 Дата народження
+            p.ui-title-3 {{ profFil.dayofbirth }}.{{ profFil.monthofbirth }}.{{ profFil.yearofbirth }}
+        .auth__form1
+          .content(v-if="profFil.email")
+            span.ui-title-4 Електронна адреса
+            span.ui-title-3 {{ profFil.email }}
+          .content(v-if="profFil.phone")
+            span.ui-title-4 Телефон
+            p.ui-title-3 {{ profFil.phone }}
       .auth__form2
         form(@submit.prevent="onSubmit")
           .form-item
-            .content
+            .content(v-if="profFil.aboutme")
               span.ui-title-4 Про мене
               p.ui-title-3 {{ profFil.aboutme }}
       .buttons-list.button-list--info
@@ -44,7 +42,7 @@
               .task-item__info
                 .task-item__main-info
                   .donation
-                    span.ui-label.ui-label--primary Всього пожертвувано :  {{ donats.donation }}$
+                    span.ui-label.ui-label--primary Всього пожертвувано :  {{ donats.donation }}&#8372
                 .task-item__content
                   .task-item__header
                     router-link.router-link.ui-title-2(
@@ -113,23 +111,11 @@ export default {
   padding 10px
   justify-content right
 
-.auth__form1
-  display block
-  width 50%
-  padding 10px
-  justify-content left
-
 .auth__form2
   display flex
   width 100%
   padding 10px
   justify-content center
-
-.form-date
-  width 100%
-  display flex
-  padding 0px 0px 0px 0px
-  justify-content left
 
 .form-item
   margin-bottom 5px
@@ -137,7 +123,11 @@ export default {
   white-space pre-line
 
 .content
- padding 10px
+  margin 10px
+  padding 10px
+  border-bottom 2px solid #C0C4CC
+  border-left 1px solid #C0C4CC
+  border-radius 25px
 
 .buttons-list
   text-align center

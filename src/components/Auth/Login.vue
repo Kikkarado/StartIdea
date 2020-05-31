@@ -14,7 +14,7 @@
                 type="email"
                 placeholder="Електронна пошта"
                 v-model="email"
-                :maxlength="25"
+                :maxlength="36"
                 :class="{ error: $v.email.$error }"
                 @change="$v.email.$touch()"
               )

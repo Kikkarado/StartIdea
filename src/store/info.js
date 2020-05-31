@@ -264,7 +264,6 @@ export default {
         })
         commit('setAllStartups', allStartupsArray)
         commit('setLoading', false)
-        console.log(allStartupsArray)
       } catch (e) {
         commit('setLoading', false)
         commit('setError', e.message)
@@ -525,6 +524,11 @@ export default {
     usersSpecialists (getters) {
       return getters.usersAll.filter(users => {
         return users.status === 'Specialist' && users.id !== firebase.auth().currentUser.uid
+      })
+    },
+    usersAdmin (getters) {
+      return getters.usersAll.filter(users => {
+        return users.status === 'Admin' && users.id !== firebase.auth().currentUser.uid
       })
     },
     donations (state) {

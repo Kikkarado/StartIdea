@@ -77,7 +77,8 @@ export default {
       } else if ((this.checkUser && this.checkStatus === 'Admin')) {
         return [
           {title: 'Головна', url: '/'},
-          {title: 'Не схвалені стартапи', url: '/approvedStartups'}
+          {title: 'Не схвалені стартапи', url: '/approvedStartups'},
+          {title: 'Профіль', url: '/profile'}
         ]
       }
       return [

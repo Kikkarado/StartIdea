@@ -32,9 +32,9 @@
                   span(v-if="startups.approved === 'approved'").ui-label.ui-label--success Ухвалено
                   br
                   br
-                  span(v-if="startups.raisedfunds < startups.cost").ui-label.ui-label--light Зібрано: {{ startups.raisedfunds }}$
-                  span(v-if="startups.raisedfunds >= startups.cost").ui-label.ui-label--success Зібрано: {{ startups.raisedfunds }}$
-                  span.ui-label.ui-label--primary Потрібно: {{ startups.cost }}$
+                  span(v-if="startups.raisedfunds < startups.cost").ui-label.ui-label--light Зібрано: {{ startups.raisedfunds }}&#8372
+                  span(v-if="startups.raisedfunds >= startups.cost").ui-label.ui-label--success Зібрано: {{ startups.raisedfunds }}&#8372
+                  span.ui-label.ui-label--primary Потрібно: {{ startups.cost }}&#8372
                 .task-item__content
                   .task-item__header
                     router-link.router-link.ui-title-2(
@@ -176,6 +176,7 @@ export default {
         id: this.srtpId
       })
       this.deleted = !this.deleted
+      window.location.reload('/myStartUps')
     }
   },
   computed: {

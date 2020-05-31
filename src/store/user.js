@@ -28,7 +28,6 @@ export default {
         const addUserData = new Profile(
           fname,
           sname,
-          imageUrl,
           status,
           openstartup,
           aboutme,
@@ -36,7 +35,8 @@ export default {
           phone,
           dayofbirth,
           monthofbirth,
-          yearofbirth
+          yearofbirth,
+          imageUrl
         )
         const userID = user.user.uid
         await firebase.database().ref('Users').child(userID).set(addUserData)

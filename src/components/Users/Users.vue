@@ -48,7 +48,8 @@ export default {
         'Всі': 'Всі',
         'Стартапери': 'Стартапери',
         'Інвестори': 'Інвестори',
-        'Спеціалісти': 'Спеціалісти'
+        'Спеціалісти': 'Спеціалісти',
+        'Адміністратори': 'Адміністратори'
       }
     }
   },
@@ -77,6 +78,12 @@ export default {
           return this.$store.getters.usersSpecialists
         } else {
           return this.$store.getters.usersSpecialists.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
+        }
+      } else if (this.usStatus === 'Адміністратори') {
+        if (this.search === '') {
+          return this.$store.getters.usersAdmin
+        } else {
+          return this.$store.getters.usersAdmin.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
         }
       } else if (this.usStatus === 'Всі') {
         if (this.search === '') {

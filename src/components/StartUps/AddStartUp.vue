@@ -87,7 +87,7 @@
             ) №3
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.cost.$error }")
-              span Необхідна сума в $
+              span Необхідна сума в гривнях &#8372
               input(
                 type="text"
                 placeholder="Сума"
@@ -221,7 +221,8 @@ export default {
             console.log('Added!')
             console.log(startup)
             this.submitStatus = 'OK'
-            // this.$router.push('/myStartUps')
+            this.$router.push('/myStartUps')
+            window.location.reload('/myStartUps')
           })
           .catch(err => {
             this.submitStatus = err.message

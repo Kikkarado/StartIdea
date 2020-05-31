@@ -2,16 +2,17 @@
   .content-wrapper
     .container.margin-top
       .search-form.selector_form
-        span.margin-right Пошук:
-        input.search.margin-right(
-            type="text"
-            v-model="search"
-            placeholder="..."
-            :maxlength="36"
-          )
-        span.margin-right Фільтр:
-        .selector.margin-top-8.margin-right
-          select.select.margin-right(v-model="stFilter")
+        .form-search
+          span.search-sp.margin-right Пошук:
+          input.search-inp.margin-right(
+              type="text"
+              v-model="search"
+              placeholder="..."
+              :maxlength="36"
+            )
+        .form-filter
+          span.select-sp.margin-right Фільтр:
+          select.select-inp(v-model="stFilter")
             option(v-for="(item, key) in reasonsFilter", :value='key', select="item") {{ item }}
         .form-item(:class="{ errorInput: $v.costfrom.$error }")
           span.margin-right Ціна від:
@@ -56,8 +57,8 @@
               .task-item__info
                 .task-item__main-info
                   .donation
-                    span.ui-label.ui-label--light Зібрано:  {{ startups.raisedfunds }}$
-                    span.ui-label.ui-label--primary Потрібно:  {{ startups.cost }}$
+                    span.ui-label.ui-label--light Зібрано:  {{ startups.raisedfunds }}&#8372
+                    span.ui-label.ui-label--primary Потрібно:  {{ startups.cost }}&#8372
                 .task-item__content
                   .task-item__header
                      router-link.router-link.ui-title-2(
@@ -231,11 +232,15 @@ const sortByRaisedfundsToHight = function (d1, d2) { return (d1.raisedfunds > d2
 .margin-right
   margin-right 12px
 
-.select
-  width 100%
+.select-sp
+  width 20%
+.select-inp
+  width 70%
 
-.search
-  width 15%
+.search-sp
+  width 20%
+.search-inp
+  width 70%
 
 .fromto
   width 40%
@@ -253,4 +258,11 @@ input
   &.errorInput
     .error
       display inline
+
+.form-search
+  width 25%
+
+.form-filter
+  width 25%
+
 </style>

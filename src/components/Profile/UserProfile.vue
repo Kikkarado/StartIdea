@@ -9,21 +9,19 @@
           img.image_avatar(:src='userInf.imageUrl' class="scale" v-if="userInf.imageUrl")
           img.image_avatar(src='https://image.flaticon.com/icons/svg/2960/2960006.svg' v-else)
         .auth__form1
-          form(@submit.prevent="onSubmit")
-            .form-item
-              .content
-                span.ui-title-4 І&acuteмя
-                span.ui-title-3 {{ userInf.fname }}  {{ userInf.sname }}
-              .content(style="margin-left: 10px; text-align: center")
-                span.ui-title-4 Дата народження
-                p.ui-title-3 {{ userInf.dayofbirth }}.{{ userInf.monthofbirth }}.{{ userInf.yearofbirth }}
-            .form-item
-              .content
-                span.ui-title-4 Електронна адреса
-                span.ui-title-3 {{ userInf.email }}
-              .content
-                span.ui-title-4 Телефон
-                p.ui-title-3 {{ userInf.phone }}
+          .content
+            span.ui-title-4 І&acuteмя
+            span.ui-title-3 {{ userInf.fname }}  {{ userInf.sname }}
+          .content()
+            span.ui-title-4 Дата народження
+            p.ui-title-3 {{ userInf.dayofbirth }}.{{ userInf.monthofbirth }}.{{ userInf.yearofbirth }}
+        .auth__form1
+          .content
+            span.ui-title-4 Електронна адреса
+            span.ui-title-3 {{ userInf.email }}
+          .content
+            span.ui-title-4 Телефон
+            p.ui-title-3 {{ userInf.phone }}
       .auth__form2
         form(@submit.prevent="onSubmit")
           .form-item
@@ -90,15 +88,10 @@ export default {
   display inline-block
   text-align right
   flex 0 1 auto
-  width 22%
+  width 200px
+  height 200px
   padding 10px
   justify-content right
-
-.auth__form1
-  display block
-  width 50%
-  padding 10px
-  justify-content left
 
 .auth__form2
   display flex
@@ -106,19 +99,17 @@ export default {
   padding 10px
   justify-content center
 
-.form-date
-  width 100%
-  display flex
-  padding 0px 0px 0px 0px
-  justify-content left
-
 .form-item
   margin-bottom 5px
   display flex
   white-space pre-line
 
 .content
- padding 10px
+  margin 10px
+  padding 10px
+  border-bottom 2px solid #C0C4CC
+  border-left 1px solid #C0C4CC
+  border-radius 25px
 
 .buttons-list
   text-align center
@@ -143,9 +134,10 @@ a
   transform scale(2)
 
 .image_avatar
+  object-fit cover
   flex 0 1 auto
   border 3px solid #999999
   width 100%
-  height auto
+  height 100%
   border-radius 50%
 </style>

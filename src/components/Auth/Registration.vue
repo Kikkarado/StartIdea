@@ -11,9 +11,9 @@
               span Пошта
               input(
                 type="email"
-                placeholder="Email"
+                placeholder="Електронна адреса"
                 v-model="email"
-                :maxlength="25"
+                :maxlength="36"
                 :class="{ error: $v.email.$error }"
                 @change="$v.email.$touch()"
               )
@@ -23,7 +23,7 @@
               span Пароль
               input(
                 type="password"
-                placeholder="Password"
+                placeholder="Пароль"
                 v-model="password"
                 :maxlength="36"
                 :class="{ error: $v.password.$error }"
@@ -36,7 +36,7 @@
               span Повторіть пароль
               input(
                 type="password"
-                placeholder="Repeat password"
+                placeholder="Повторіть пароль"
                 v-model="repeatPassword"
                 :maxlength="36"
                 :class="{ error: $v.repeatPassword.$error }"
@@ -49,7 +49,7 @@
               span Ваше і&acuteмя
               input(
                 type="text"
-                placeholder="First Name"
+                placeholder="Ваше і'мя"
                 v-model="fname"
                 :maxlength="20"
                 :class="{ error: $v.fname.$error }"
@@ -60,7 +60,7 @@
               span Ваше прізвище
               input(
                 type="text"
-                placeholder="Surname"
+                placeholder="Ваше прізвище"
                 v-model="sname"
                 :maxlength="20"
                 :class="{ error: $v.sname.$error }"
