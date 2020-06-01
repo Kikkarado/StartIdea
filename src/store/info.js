@@ -137,6 +137,7 @@ export default {
                 s.imageUrl1,
                 s.imageUrl2,
                 s.imageUrl3,
+                s.percent,
                 s.user,
                 key
               )
@@ -256,6 +257,7 @@ export default {
               s.imageUrl1,
               s.imageUrl2,
               s.imageUrl3,
+              s.percent,
               s.user,
               key
             )
@@ -270,7 +272,7 @@ export default {
         throw e
       }
     },
-    async donationStartup ({commit}, {id, raisedfunds, user, title}) {
+    async donationStartup ({commit}, {id, raisedfunds, user, title, profitDon}) {
       commit('clearError')
       commit('setLoading', true)
       try {
@@ -280,12 +282,15 @@ export default {
         const userID = firebase.auth().currentUser.uid
         const don = await firebase.database().ref('donation').once('value')
         const dons = don.val()
+        const startupStatus = ''
         if (dons === null) {
           const infoDonation = new Donation(
             userID,
             id,
             raisedfunds,
-            title
+            title,
+            profitDon,
+            startupStatus
           )
           const donat = firebase.database().ref('donation').push(infoDonation)
           raisedfunds += raisedfundsStart
@@ -306,20 +311,24 @@ export default {
         } else {
           var find = false
           var Dona = 0
+          var Prof = 0
           var keyid = null
           Object.keys(dons).forEach(key => {
             const d = dons[key]
             if (d.uid === userID && d.idstartup === id) {
               find = true
               Dona = d.donation
+              Prof = d.profit
               keyid = key
             }
           })
           if (find) {
             find = true
             var donation = Dona
+            var profit = Prof
             donation += raisedfunds
-            firebase.database().ref('donation').child(keyid).update({donation})
+            profit += profitDon
+            firebase.database().ref('donation').child(keyid).update({donation, profit})
             raisedfunds += raisedfundsStart
             firebase.database().ref('startups').child(id).update({raisedfunds})
             if (raisedfunds >= comp) {
@@ -336,7 +345,8 @@ export default {
               userID,
               id,
               raisedfunds,
-              title
+              title,
+              profitDon
             )
             const donat = firebase.database().ref('donation').push(infoDonation)
             raisedfunds += raisedfundsStart
@@ -438,17 +448,46 @@ export default {
         const donats = donat.val()
         const userID = firebase.auth().currentUser.uid
         const donatsArray = []
-        Object.keys(donats).forEach(key => {
+        Object.keys(donats).forEach(async (key) => {
           const d = donats[key]
           if (d.uid === userID) {
-            donatsArray.push(
-              new Donation(
-                d.uid,
-                d.idstartup,
-                d.donation,
-                d.title
+            const strp = (await firebase.database().ref('startups').child(d.idstartup).once('value')).val()
+            // eslint-disable-next-line no-unused-vars
+            var startupStatus
+            if (strp.completed === true && strp.cost <= strp.raisedfunds) {
+              donatsArray.push(
+                new Donation(
+                  d.uid,
+                  d.idstartup,
+                  d.donation,
+                  d.title,
+                  d.profit,
+                  startupStatus = 'Успішен'
+                )
               )
-            )
+            } else if (strp.completed === true && strp.cost >= strp.raisedfunds) {
+              donatsArray.push(
+                new Donation(
+                  d.uid,
+                  d.idstartup,
+                  d.donation,
+                  d.title,
+                  d.profit,
+                  startupStatus = 'Провалився'
+                )
+              )
+            } else if (strp.completed === false) {
+              donatsArray.push(
+                new Donation(
+                  d.uid,
+                  d.idstartup,
+                  d.donation,
+                  d.title,
+                  d.profit,
+                  startupStatus = 'Продовжується'
+                )
+              )
+            }
           }
         })
         commit('setDonations', donatsArray)
@@ -516,7 +555,7 @@ export default {
         return users.status === 'Startuper' && users.id !== firebase.auth().currentUser.uid
       })
     },
-    usersInvestors (getters) {
+    usersInvestor (getters) {
       return getters.usersAll.filter(users => {
         return users.status === 'Investor' && users.id !== firebase.auth().currentUser.uid
       })

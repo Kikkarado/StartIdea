@@ -16,6 +16,7 @@
                 .task-item__content
                   .task-item__header
                     span.ui-title-3 {{ startup.title }}
+                    span.ui-title-4 Відсоток прибутку {{ startup.percent }}
                   .task-item__body.margin-bottom-16
                     span.ui-text-regular.font {{ startup.shortdescription }}
                   .img-form1
@@ -31,7 +32,7 @@
                     .buttons-list
                       .button(
                         v-if="checkStatus === 'Investor' && startup.raisedfunds < startup.cost && startup.approved === 'approved'"
-                        @click="startupDonation(startup.title, startup.user)"
+                        @click="startupDonation(startup.title, startup.user, startup.percent)"
                         ).button--round.button-primary Підтримати
                       .button(
                         v-if="checkStatus === 'Admin' && startup.approved === 'nonApproved'"
@@ -59,9 +60,11 @@
             placeholder="Сума"
             v-model.number="raisedfundsDonation"
             :maxlength="7"
+            oninput="this.value=this.value.replace(/[^0-9]/g, '')"
             :class="{ error: $v.raisedfundsDonation.$error }"
             @change="$v.raisedfundsDonation.$touch()"
           )
+          span Прибуток складе {{ this.invest }} гривень &#8372
           .error(v-if="!$v.raisedfundsDonation.required") Поле обов&acuteязкове.
           .error(v-if="!$v.raisedfundsDonation.minValue")
             | Мінімальна сума підтримки = {{ $v.raisedfundsDonation.$params.minValue.min }}.
@@ -126,6 +129,7 @@ export default {
       srtpId: null,
       userStartaper: '',
       raisedfundsDonation: null,
+      percentDonation: this.invest,
       submitStatus: null,
       open: false,
       imageUrl: ''
@@ -155,12 +159,13 @@ export default {
       this.open = !this.open
       this.imageUrl = ''
     },
-    startupDonation (title, user) {
+    startupDonation (title, user, percent) {
       this.done = !this.done
       // console.log({id, title})
       this.srtpId = this.$route.params.id
       this.titleDonation = title
       this.userStartaper = user
+      this.percentDonation = percent
     },
     // Cancel button (POPUP)
     cancelStartupDonation () {
@@ -169,6 +174,7 @@ export default {
       this.srtpId = null
       this.titleDonation = ''
       this.userStartaper = ''
+      this.percentDonation = null
     },
     // Done button
     finishStartupDonation () {
@@ -177,12 +183,13 @@ export default {
         this.submitStatus = 'ERROR'
       } else {
         console.log('submit!')
-        const raisedfundsWithoutCommission = this.raisedfundsDonation / 100 * 99
+        const profitWithoutCommission = this.raisedfundsDonation / 100 * 99
         this.$store.dispatch('donationStartup', {
           id: this.srtpId,
-          raisedfunds: raisedfundsWithoutCommission,
+          raisedfunds: profitWithoutCommission,
           user: this.userStartaper,
-          title: this.titleDonation
+          title: this.titleDonation,
+          profitDon: this.invest
         })
         this.done = !this.done
           .then(() => {
@@ -245,6 +252,10 @@ export default {
     }
   },
   computed: {
+    invest () {
+      const profitWithoutCommission = this.raisedfundsDonation / 100 * 99
+      return parseFloat((profitWithoutCommission / 100 * this.$store.getters.infoS.percent).toFixed(2))
+    },
     startup () {
       return this.$store.getters.infoS
     },

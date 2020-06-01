@@ -87,12 +87,13 @@
             ) №3
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.cost.$error }")
-              span Необхідна сума в гривнях &#8372
-              input(
+              p.margin-top-36 Необхідна сума в гривнях &#8372
+              input.cost(
                 type="text"
                 placeholder="Сума"
                 v-model.number="cost"
                 :maxlength="9"
+                oninput="this.value=this.value.replace(/[^0-9]/g, '')"
                 :class="{ error: $v.cost.$error }"
                 @change="$v.cost.$touch()"
               )
@@ -101,6 +102,23 @@
                 | Мінімальна сума повинна дорівнювати {{ $v.cost.$params.minValue.min }}.
               .error(v-if="!$v.cost.maxValue")
                 | Максимальна сума повинна дорівнювати {{ $v.cost.$params.maxValue.max }}.
+            .form-item(:class="{ errorInput: $v.percent.$error }")
+              p Введіть відсоток, який отримає інвестор (максимальний відсоток 25)
+              input.percent(
+                type="text"
+                placeholder="%"
+                v-model.number="percent"
+                v-mask="'99'"
+                :maxlength="2"
+                oninput="this.value=this.value.replace(/[^0-9]/g, '')"
+                :class="{ error: $v.percent.$error }"
+                @change="$v.percent.$touch()"
+              )
+              .error(v-if="!$v.percent.required") Поле обов&acuteязкове.
+              .error(v-if="!$v.percent.minValue")
+                | Мінімальна відсоток повинна дорівнювати {{ $v.percent.$params.minValue.min }}.
+              .error(v-if="!$v.percent.maxValue")
+                | Максимальна відсоток повинна дорівнювати {{ $v.percent.$params.maxValue.max }}.
             .buttons-list
               button.button.button-primary(
                 type="submit"
@@ -116,6 +134,10 @@
 
 <script>
 import { required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators'
+import Vue from 'vue'
+const VueInputMask = require('vue-inputmask').default
+
+Vue.use(VueInputMask)
 
 export default {
   data () {
@@ -127,6 +149,7 @@ export default {
       imageUrl3: '',
       fulldescription: '',
       cost: 1000,
+      percent: 1,
       image1: null,
       image2: null,
       image3: null
@@ -149,6 +172,11 @@ export default {
       required,
       minValue: minValue(1000),
       maxValue: maxValue(100000000)
+    },
+    percent: {
+      required,
+      minValue: minValue(1),
+      maxValue: maxValue(25)
     }
   },
   methods: {
@@ -214,15 +242,16 @@ export default {
           image3: this.image3,
           cost: this.cost,
           completed: false,
-          raisedfunds: 0
+          raisedfunds: 0,
+          percent: this.percent
         }
         this.$store.dispatch('newStartUp', startup)
           .then(() => {
             console.log('Added!')
             console.log(startup)
             this.submitStatus = 'OK'
-            this.$router.push('/myStartUps')
             window.location.reload('/myStartUps')
+            this.$router.push('/myStartUps')
           })
           .catch(err => {
             this.submitStatus = err.message
@@ -268,7 +297,7 @@ export default {
     color #fc5c65
   &.errorInput
     .error
-      display block
+      display flex
 
 .textarea
   height 350px
@@ -277,6 +306,18 @@ textarea,
 input
   &.error
     border-color #fc5c65
+
+.margin-top-36
+ margin-top 36px
+
+.margin-top-12
+ margin-top 12px
+
+.cost
+  width 13%
+
+.percent
+  width 8%
 
 .buttons-list
   text-align right

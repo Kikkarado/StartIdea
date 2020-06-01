@@ -3,11 +3,15 @@ export default class Donation {
     uid,
     idstartup,
     donation,
-    title
+    title,
+    profit,
+    startupStatus
   ) {
     this.uid = uid
     this.idstartup = idstartup
     this.donation = donation
     this.title = title
+    this.profit = profit
+    this.startupStatus = startupStatus
   }
 }

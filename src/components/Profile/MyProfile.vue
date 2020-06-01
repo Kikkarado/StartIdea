@@ -41,8 +41,13 @@
           .ui-card.ui-card--shadow.margin-bottom-16
               .task-item__info
                 .task-item__main-info
-                  .donation
-                    span.ui-label.ui-label--primary Всього пожертвувано :  {{ donats.donation }}&#8372
+                  .donation(v-if="donats.startupStatus === 'Продовжується'")
+                    span.ui-label.ui-label--primary Всього пожертвувано:  {{ donats.donation }}&#8372
+                    span.ui-label.ui-label--success Прибуток складе:  {{ donats.profit }}&#8372
+                  .donation(v-if="donats.startupStatus === 'Успішен'")
+                    span.ui-label.ui-label--success Сума для виводу:  {{ donats.donation + donats.profit }}&#8372
+                  .donation(v-if="donats.startupStatus === 'Провалився'")
+                    span(style="color: #000").ui-label.ui-label--warning Стартап {{donats.startupStatus}}
                 .task-item__content
                   .task-item__header
                     router-link.router-link.ui-title-2(

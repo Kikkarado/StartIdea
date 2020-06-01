@@ -43,6 +43,7 @@ export default {
           cost: payload.cost,
           completed: payload.completed,
           raisedfunds: payload.raisedfunds,
+          percent: payload.percent,
           deadline: deadline,
           approved: approved,
           user: getters.user.id

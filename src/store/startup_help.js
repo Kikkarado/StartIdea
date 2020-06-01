@@ -11,6 +11,7 @@ export default class Startup {
     imageUrl1,
     imageUrl2,
     imageUrl3,
+    percent,
     user = null,
     id = null
   ) {
@@ -25,6 +26,7 @@ export default class Startup {
     this.imageUrl1 = imageUrl1
     this.imageUrl2 = imageUrl2
     this.imageUrl3 = imageUrl3
+    this.percent = percent
     this.user = user
     this.id = id
   }

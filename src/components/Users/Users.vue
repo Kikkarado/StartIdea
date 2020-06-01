@@ -47,7 +47,7 @@ export default {
       reasons: {
         'Всі': 'Всі',
         'Стартапери': 'Стартапери',
-        'Інвестори': 'Інвестори',
+        'Інвестор': 'Інвестор',
         'Спеціалісти': 'Спеціалісти',
         'Адміністратори': 'Адміністратори'
       }
@@ -67,11 +67,11 @@ export default {
         } else {
           return this.$store.getters.usersStartupers.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
         }
-      } else if (this.usStatus === 'Інвестори') {
+      } else if (this.usStatus === 'Інвестор') {
         if (this.search === '') {
-          return this.$store.getters.usersInvestors
+          return this.$store.getters.usersInvestor
         } else {
-          return this.$store.getters.usersInvestors.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
+          return this.$store.getters.usersInvestor.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
         }
       } else if (this.usStatus === 'Спеціалісти') {
         if (this.search === '') {

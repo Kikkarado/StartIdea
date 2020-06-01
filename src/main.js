@@ -44,9 +44,9 @@ new Vue({
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.$store.dispatch('loggedUser', user)
+        this.$store.dispatch('fetchStatus')
       }
       this.$store.dispatch('fetchInfo')
-      this.$store.dispatch('fetchStatus')
       this.$store.dispatch('fetchActiveStartup')
       this.$store.dispatch('fetchStartupsUser')
       this.$store.dispatch('fetchDonations')

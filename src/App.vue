@@ -66,24 +66,28 @@ export default {
           {title: 'Головна', url: '/'},
           {title: 'Користувачі', url: '/users'},
           {title: 'Мої стартапи', url: '/myStartUps'},
-          {title: 'Профіль', url: '/profile'}
+          {title: 'Профіль', url: '/profile'},
+          {title: 'FAQ', url: '/faq'}
         ]
       } else if ((this.checkUser && this.checkStatus === 'Investor') || (this.checkUser && this.checkStatus === 'Specialist')) {
         return [
           {title: 'Головна', url: '/'},
           {title: 'Користувачі', url: '/users'},
-          {title: 'Профіль', url: '/profile'}
+          {title: 'Профіль', url: '/profile'},
+          {title: 'FAQ', url: '/faq'}
         ]
       } else if ((this.checkUser && this.checkStatus === 'Admin')) {
         return [
           {title: 'Головна', url: '/'},
           {title: 'Не схвалені стартапи', url: '/approvedStartups'},
-          {title: 'Профіль', url: '/profile'}
+          {title: 'Профіль', url: '/profile'},
+          {title: 'FAQ', url: '/faq'}
         ]
       }
       return [
         {title: 'Вхід', url: '/login'},
-        {title: 'Зареєструватися', url: '/registration'}
+        {title: 'Зареєструватися', url: '/registration'},
+        {title: 'FAQ', url: '/faq'}
       ]
     }
   }
