@@ -15,6 +15,7 @@ import UserProfile from '@/components/Profile/UserProfile'
 import Users from '@/components/Users/Users'
 import ApprovedStartups from '@/components/StartUps/ApprovedStartups'
 import FAQ from '@/components/FAQ/FAQ'
+import Investments from '@/components/Investments/Investments'
 
 Vue.use(Router)
 
@@ -87,7 +88,7 @@ export default new Router({
       component: MyStartUps,
       beforeEnter (to, from, next) {
         store.getters.checkUser ? next() : next('/login')
-        store.getters.status === 'Startuper' ? next('/myStartUps') : next('/')
+        store.getters.status !== 'Startuper' ? next('/') : next()
       }
     },
     {
@@ -120,6 +121,15 @@ export default new Router({
       path: '/faq',
       name: 'faq',
       component: FAQ
+    },
+    {
+      path: '/investments',
+      name: 'investments',
+      component: Investments,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next() : next('/login')
+        store.getters.status === 'Investor' ? next() : next('/')
+      }
     }
   ]
 })

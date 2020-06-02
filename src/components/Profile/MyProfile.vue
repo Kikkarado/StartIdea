@@ -31,28 +31,9 @@
       .buttons-list.button-list--info
         span Для оновлення даних
           router-link(to="/addDataProfile")  натисніть тут
-      .startup-list
-        transition-group(name="startupList")
-        .task-item(
-          v-for="donats in donat"
-          :key="donats.uid"
-          :class="{ completed: donats.uid }"
-        )
-          .ui-card.ui-card--shadow.margin-bottom-16
-              .task-item__info
-                .task-item__main-info
-                  .donation(v-if="donats.startupStatus === 'Продовжується'")
-                    span.ui-label.ui-label--primary Всього пожертвувано:  {{ donats.donation }}&#8372
-                    span.ui-label.ui-label--success Прибуток складе:  {{ donats.profit }}&#8372
-                  .donation(v-if="donats.startupStatus === 'Успішен'")
-                    span.ui-label.ui-label--success Сума для виводу:  {{ donats.donation + donats.profit }}&#8372
-                  .donation(v-if="donats.startupStatus === 'Провалився'")
-                    span(style="color: #000").ui-label.ui-label--warning Стартап {{donats.startupStatus}}
-                .task-item__content
-                  .task-item__header
-                    router-link.router-link.ui-title-2(
-                      :to="{ name: 'startup', params: { id: donats.idstartup } }"
-                      ) {{ donats.title }}
+      .buttons-list(v-if="Object.keys(this.$store.getters.donations).length").button-list--info
+        span Для перегляду інвестицій
+          router-link(to="/investments")  натисніть тут
 </template>
 
 <script>
@@ -71,13 +52,11 @@ export default {
   },
   methods: {},
   computed: {
-    profFil () {
-      console.log(this.$store.getters.info)
-      return this.$store.getters.info
-    },
     donat () {
-      console.log(this.$store.getters.donations)
       return this.$store.getters.donations
+    },
+    profFil () {
+      return this.$store.getters.info
     },
     loading () {
       return this.$store.getters.loading
@@ -95,11 +74,6 @@ export default {
 
 .auth
   display flex
-  justify-content center
-
-.startup-list
-  width 100%
-  text-align center
   justify-content center
 
 .width

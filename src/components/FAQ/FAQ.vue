@@ -17,7 +17,7 @@
               span.ui-text-regular {{ forauthor }}
           .form-item
             .content
-              span.ui-title-4 Для "донорів"
+              span.ui-title-4 Для інвесторів
               span.ui-text-regular {{ forinvestor }}
           .form-item
             .content

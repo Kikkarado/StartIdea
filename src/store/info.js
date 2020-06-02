@@ -6,7 +6,7 @@ import Donation from './donation_help'
 export default {
   state: {
     profileInfo: {},
-    statusUs: null,
+    statusUs: '',
     startupsOn: null,
     startupsUser: [],
     startupsAll: [],
@@ -22,8 +22,8 @@ export default {
     clearInfo (state) {
       state.profileInfo = {}
     },
-    setStatus (state, statusUs) {
-      state.statusUs = statusUs
+    setStatus (state, payload) {
+      state.statusUs = payload
     },
     setOpStatrup (state, startupsOn) {
       state.startupsOn = startupsOn
@@ -346,7 +346,8 @@ export default {
               id,
               raisedfunds,
               title,
-              profitDon
+              profitDon,
+              startupStatus
             )
             const donat = firebase.database().ref('donation').push(infoDonation)
             raisedfunds += raisedfundsStart
@@ -518,7 +519,11 @@ export default {
   },
   getters: {
     info: s => s.profileInfo,
-    status: s => s.statusUs,
+    status (state) {
+      console.log(state.statusUs)
+      return state.statusUs
+    },
+    // status: s => s.statusUs console.log(),
     openstartup: s => s.startupsOn,
     startupsUser (state, getters) {
       return state.startupsUser
