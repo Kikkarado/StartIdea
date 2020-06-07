@@ -282,7 +282,7 @@ export default {
         const userID = firebase.auth().currentUser.uid
         const don = await firebase.database().ref('donation').once('value')
         const dons = don.val()
-        const startupStatus = ''
+        const startupStatus = 'Продовжується'
         if (dons === null) {
           const infoDonation = new Donation(
             userID,
@@ -504,11 +504,30 @@ export default {
       commit('clearError')
       commit('setLoading', true)
       try {
-        // Use helped class
-        await firebase.database().ref('startups').child(id).update({approved})
-        // Send mutation
-        window.location.reload('/startup/')
-        commit('completeStartup', {id, approved})
+        if (approved === 'approved') {
+          const date = new Date()
+          var month = date.getUTCMonth() + 2
+          var year
+          var add
+          if (month > 11) {
+            add = Math.round(month / 11)
+            month = Math.round((month % 11) - 1)
+            year = date.getUTCFullYear() + add
+          } else {
+            year = date.getUTCFullYear()
+          }
+          const deadline = year + '.' + month + '.' + (date.getUTCDate()) + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds()
+          // Use helped class
+          await firebase.database().ref('startups').child(id).update({approved, deadline})
+          // Send mutation
+          window.location.reload('/startup/')
+          commit('completeStartup', {id, approved})
+        } else {
+          await firebase.database().ref('startups').child(id).update({approved})
+          // Send mutation
+          window.location.reload('/startup/')
+          commit('completeStartup', {id, approved})
+        }
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)

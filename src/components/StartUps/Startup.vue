@@ -10,9 +10,9 @@
           .ui-card.ui-card--shadow
               .task-item__info
                 .task-item__main-info
-                  span(v-if="startup.raisedfunds < startup.cost").ui-label.ui-label--light Зібрано: {{ startup.raisedfunds }}&#8372
-                  span(v-if="startup.raisedfunds >= startup.cost").ui-label.ui-label--success Зібрано: {{ startup.raisedfunds }}&#8372
-                  span.ui-label.ui-label--primary Потрібно: {{ startup.cost }}&#8372
+                  span(v-if="startup.raisedfunds < startup.cost").ui-label.ui-label--light Зібрано: {{ startup.raisedfunds.toFixed(2) }}$
+                  span(v-if="startup.raisedfunds >= startup.cost").ui-label.ui-label--success Зібрано: {{ startup.raisedfunds.toFixed(2) }}$
+                  span.ui-label.ui-label--primary Потрібно: {{ startup.cost }}$
                 .task-item__content
                   .task-item__header
                     span.ui-title-3 {{ startup.title }}
@@ -51,7 +51,7 @@
           span.messageBox-title Підтримати {{ titleDonation }}
           span.button-close(@click="cancelStartupDonation")
         .ui-messageBox__content
-          p Введіть суму вказану в гривнях &#8372
+          p Введіть суму вказану в доларах $
         .ui-messageBox__content
           span.ui-text-smaller(style="color: #000") 1(один) відсоток з вказаної суми буде перераховано на рахунок "Start Idea"
         .form-item(:class="{ errorInput: $v.raisedfundsDonation.$error }")
@@ -59,12 +59,13 @@
             type="text"
             placeholder="Сума"
             v-model.number="raisedfundsDonation"
-            :maxlength="7"
-            oninput="this.value=this.value.replace(/[^0-9]/g, '')"
+            :maxlength="8"
+            @keypress="onlyForCurrency"
             :class="{ error: $v.raisedfundsDonation.$error }"
             @change="$v.raisedfundsDonation.$touch()"
           )
-          span Прибуток складе {{ this.invest }} гривень &#8372
+          p З вас зніме плату в розмірі {{ this.comis }} доларів $
+          span Прибуток складе {{ this.invest }} доларів $
           .error(v-if="!$v.raisedfundsDonation.required") Поле обов&acuteязкове.
           .error(v-if="!$v.raisedfundsDonation.minValue")
             | Мінімальна сума підтримки = {{ $v.raisedfundsDonation.$params.minValue.min }}.
@@ -135,11 +136,13 @@ export default {
       imageUrl: ''
     }
   },
-  validations: {
-    raisedfundsDonation: {
-      required,
-      minValue: minValue(10),
-      maxValue: maxValue(1000000)
+  validations () {
+    return {
+      raisedfundsDonation: {
+        required,
+        minValue: minValue(10),
+        maxValue: maxValue(this.maxDonat)
+      }
     }
   },
   created: function () {
@@ -151,6 +154,18 @@ export default {
     }
   },
   methods: {
+    onlyForCurrency ($event) {
+      // console.log($event.keyCode); //keyCodes value
+      let keyCode = ($event.keyCode ? $event.keyCode : $event.which)
+      // only allow number and one dot
+      if ((keyCode < 48 || keyCode > 57) && (keyCode !== 46 || this.raisedfundsDonation.indexOf('.') !== -1)) { // 46 is dot
+        $event.preventDefault()
+      }
+      // restrict to 2 decimal places
+      if (this.raisedfundsDonation != null && this.raisedfundsDonation.indexOf('.') > -1 && (this.raisedfundsDonation.split('.')[1].length > 1)) {
+        $event.preventDefault()
+      }
+    },
     openImg (imgUrl) {
       this.open = !this.open
       this.imageUrl = imgUrl
@@ -183,10 +198,9 @@ export default {
         this.submitStatus = 'ERROR'
       } else {
         console.log('submit!')
-        const profitWithoutCommission = this.raisedfundsDonation / 100 * 99
         this.$store.dispatch('donationStartup', {
           id: this.srtpId,
-          raisedfunds: profitWithoutCommission,
+          raisedfunds: this.raisedfundsDonation,
           user: this.userStartaper,
           title: this.titleDonation,
           profitDon: this.invest
@@ -252,12 +266,18 @@ export default {
     }
   },
   computed: {
+    comis () {
+      return parseFloat((this.raisedfundsDonation / 100 * 101).toFixed(2))
+    },
     invest () {
-      const profitWithoutCommission = this.raisedfundsDonation / 100 * 99
-      return parseFloat((profitWithoutCommission / 100 * this.$store.getters.infoS.percent).toFixed(2))
+      return parseFloat((this.raisedfundsDonation / 100 * this.$store.getters.infoS.percent).toFixed(2))
     },
     startup () {
       return this.$store.getters.infoS
+    },
+    maxDonat () {
+      var difference = this.$store.getters.infoS.cost - this.$store.getters.infoS.raisedfunds
+      return difference.toFixed(2)
     },
     checkStatus () {
       return this.$store.getters.status

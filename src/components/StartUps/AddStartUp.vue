@@ -87,7 +87,7 @@
             ) №3
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.cost.$error }")
-              p.margin-top-36 Необхідна сума в гривнях &#8372
+              p.margin-top-36 Необхідна сума в доларах $
               input.cost(
                 type="text"
                 placeholder="Сума"
@@ -149,7 +149,7 @@ export default {
       imageUrl3: '',
       fulldescription: '',
       cost: 1000,
-      percent: 1,
+      percent: '',
       image1: null,
       image2: null,
       image3: null

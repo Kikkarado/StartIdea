@@ -15,7 +15,7 @@
           select.select-inp(v-model="stFilter")
             option(v-for="(item, key) in reasonsFilter", :value='key', select="item") {{ item }}
         .form-item(:class="{ errorInput: $v.costfrom.$error }")
-          span.margin-right Ціна від:
+          span.margin-right Необхідна сума від:
           input.fromto.margin-right(
             type="text"
             :maxlength="9"
@@ -57,8 +57,8 @@
               .task-item__info
                 .task-item__main-info
                   .donation
-                    span.ui-label.ui-label--light Зібрано:  {{ startups.raisedfunds }}&#8372
-                    span.ui-label.ui-label--primary Потрібно:  {{ startups.cost }}&#8372
+                    span.ui-label.ui-label--light Зібрано:  {{ startups.raisedfunds }}$
+                    span.ui-label.ui-label--primary Потрібно:  {{ startups.cost }}$
                 .task-item__content
                   .task-item__header
                      router-link.router-link.ui-title-2(
@@ -77,7 +77,7 @@ export default {
   data () {
     return {
       search: '',
-      costfrom: '',
+      costfrom: 1000,
       costto: 100000000,
       stFilter: 'Спочатку нові',
       reasonsFilter: {
@@ -167,7 +167,7 @@ export default {
           return allST.sort(sortByDateToLow) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
         } else {
           const allST = this.$store.getters.startupsAll
-          allST.sort(sortByDateToLow) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
+          allST.sort(sortByDateToLow)
           return this.$store.getters.startupsAll.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()) && item.cost >= this.costfrom && item.cost <= this.costto)
         }
         case 'Спочатку старі': if (this.search === '') {
@@ -175,7 +175,7 @@ export default {
           return allST.sort(sortByDateToHight) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
         } else {
           const allST = this.$store.getters.startupsAll
-          allST.sort(sortByDateToHight) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
+          allST.sort(sortByDateToHight)
           return this.$store.getters.startupsAll.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()) && item.cost >= this.costfrom && item.cost <= this.costto)
         }
       }

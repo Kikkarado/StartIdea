@@ -30,7 +30,6 @@
                       ) {{ startups.title }}
                   .task-item__body
                     p.ui-text-regular.margin-bottom-8 {{ startups.shortdescription }}
-                    p.ui-text-regular До закриття стартапу залишилось {{ startups.deadline }} дней(-ів).
                   .task-item__foter
 </template>
 

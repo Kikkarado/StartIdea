@@ -15,7 +15,7 @@
           select.select-inp(v-model="stFilter")
             option(v-for="(item, key) in reasonsFilter", :value='key', select="item") {{ item }}
         .form-item(:class="{ errorInput: $v.costfrom.$error }")
-          span.margin-right Ціна від:
+          span.margin-right Інвестовано від:
           input.fromto.margin-right(
             type="text"
             :maxlength="7"
@@ -56,10 +56,12 @@
                 .task-item__info
                   .task-item__main-info
                     .donation(v-if="donats.startupStatus === 'Продовжується'")
-                      span.ui-label.ui-label--primary Всього інвестовано:  {{ donats.donation }}&#8372
-                      span.ui-label.ui-label--success Прибуток складе:  {{ (donats.profit).toFixed(2) }}&#8372
+                      p(style="color: #fff; width: 30%; display: block; text-align: center").ui-title-3.ui-label--light {{ donats.startupStatus }}
+                      span.ui-label.ui-label--primary Всього інвестовано:  {{ donats.donation }}$
+                      span.ui-label.ui-label--success Прибуток складе:  {{ (donats.profit).toFixed(2) }}$
                     .donation(v-if="donats.startupStatus === 'Успішен'")
-                      span.ui-label.ui-label--success Сума для виводу:  {{ (donats.donation + donats.profit).toFixed(2) }}&#8372
+                      p(style="color: #fff; width: 30%; display: block; text-align: center").ui-title-3.ui-label--light {{ donats.startupStatus }}
+                      span.ui-label.ui-label--success Сума для виводу:  {{ (donats.donation + donats.profit).toFixed(2) }}$
                     .donation(v-if="donats.startupStatus === 'Провалився'")
                       span(style="color: #000").ui-label.ui-label--warning Стартап {{donats.startupStatus}}
                   .task-item__content

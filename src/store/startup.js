@@ -14,10 +14,6 @@ export default {
       commit('clearError')
       commit('setLoading', true)
       try {
-        const date = new Date()
-        var month = date.getUTCMonth() + 2
-        var year
-        var add
         let imageUrl1
         let imageUrl2
         let imageUrl3
@@ -26,14 +22,7 @@ export default {
         let filename3
         let key
         const approved = 'nonApproved'
-        if (month > 11) {
-          add = Math.round(2 / 11)
-          month = Math.round(11 % 2)
-          year = date.getUTCFullYear() + add
-        } else {
-          year = date.getUTCFullYear()
-        }
-        const deadline = year + '.' + month + '.' + (date.getUTCDate()) + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds()
+        const deadline = ''
         const userID = firebase.auth().currentUser.uid
         // Use helped class
         const newStartUp = {

@@ -26,15 +26,16 @@
           .ui-card.ui-card--shadow.margin-bottom
               .task-item__info.overflow
                 .task-item__main-info
-                  p.typo__p(v-if="startups.completed === true") Завершено
+                  p.ui-title-3(style="text-align: center"
+                    v-if="startups.completed === true") Завершено
                   span(v-if="startups.approved === 'nonApproved'").ui-label.ui-label--light Проходе модерацію
                   span(v-if="startups.approved === 'denied'").ui-label.ui-label--denied Відмовлено
                   span(v-if="startups.approved === 'approved'").ui-label.ui-label--success Ухвалено
                   br
                   br
-                  span(v-if="startups.raisedfunds < startups.cost").ui-label.ui-label--light Зібрано: {{ startups.raisedfunds }}&#8372
-                  span(v-if="startups.raisedfunds >= startups.cost").ui-label.ui-label--success Зібрано: {{ startups.raisedfunds }}&#8372
-                  span.ui-label.ui-label--primary Потрібно: {{ startups.cost }}&#8372
+                  span(v-if="startups.raisedfunds < startups.cost").ui-label.ui-label--light Зібрано: {{ startups.raisedfunds }}$
+                  span(v-if="startups.raisedfunds >= startups.cost").ui-label.ui-label--success Зібрано: {{ startups.raisedfunds }}$
+                  span.ui-label.ui-label--primary Потрібно: {{ startups.cost }}$
                 .task-item__content
                   .task-item__header
                     router-link.router-link.ui-title-2(
@@ -189,7 +190,8 @@ export default {
       } else if (this.filter === 'completed') {
         return this.$store.getters.startupCompleted
       } else if (this.filter === 'all') {
-        return this.$store.getters.startupsUser
+        const allST = this.$store.getters.startupsUser
+        return allST.sort(sortByDateToLow)
       }
       return this.filter === 'active'
     },
@@ -198,6 +200,7 @@ export default {
     }
   }
 }
+const sortByDateToLow = function (d1, d2) { return (new Date(d1.deadline) < new Date(d2.deadline)) ? 1 : -1 }
 </script>
 
 <style lang="stylus">
