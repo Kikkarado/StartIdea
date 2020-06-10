@@ -16,7 +16,8 @@
                 .task-item__content
                   .task-item__header
                     span.ui-title-3 {{ startup.title }}
-                    span.ui-title-4 Відсоток прибутку {{ startup.percent }}
+                    span(v-if="startup.percent").ui-title-4 Відсоток прибутку {{ startup.percent }}
+                    span(v-if="!startup.percent || startup.percent === 0").ui-title-4 Благодійний формат
                   .task-item__body.margin-bottom-16
                     span.ui-text-regular.font {{ startup.shortdescription }}
                   .img-form1
@@ -267,7 +268,7 @@ export default {
   },
   computed: {
     comis () {
-      return parseFloat((this.raisedfundsDonation / 100 * 101).toFixed(2))
+      return parseFloat((this.raisedfundsDonation / 100 * 100.5).toFixed(2))
     },
     invest () {
       return parseFloat((this.raisedfundsDonation / 100 * this.$store.getters.infoS.percent).toFixed(2))

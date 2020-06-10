@@ -103,7 +103,7 @@
               .error(v-if="!$v.cost.maxValue")
                 | Максимальна сума повинна дорівнювати {{ $v.cost.$params.maxValue.max }}.
             .form-item(:class="{ errorInput: $v.percent.$error }")
-              p Введіть відсоток, який отримає інвестор (максимальний відсоток 25)
+              p Введіть відсоток, який отримає інвестор (від 0% до 25%)
               input.percent(
                 type="text"
                 placeholder="%"
@@ -114,7 +114,6 @@
                 :class="{ error: $v.percent.$error }"
                 @change="$v.percent.$touch()"
               )
-              .error(v-if="!$v.percent.required") Поле обов&acuteязкове.
               .error(v-if="!$v.percent.minValue")
                 | Мінімальна відсоток повинна дорівнювати {{ $v.percent.$params.minValue.min }}.
               .error(v-if="!$v.percent.maxValue")
@@ -174,8 +173,7 @@ export default {
       maxValue: maxValue(100000000)
     },
     percent: {
-      required,
-      minValue: minValue(1),
+      minValue: minValue(0),
       maxValue: maxValue(25)
     }
   },

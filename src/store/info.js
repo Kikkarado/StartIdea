@@ -243,7 +243,7 @@ export default {
             firebase.database().ref('Users').child(s.user).child('openstartup').set(0)
             console.log(s.user)
           }
-          const toDeath = Math.round((new Date(s.deadline) - new Date(dateDead)) / (1000 * 60 * 60 * 24))
+          var toDeath = Math.round((new Date(s.deadline) - new Date(dateDead)))
           allStartupsArray.push(
             new Startup(
               s.title,

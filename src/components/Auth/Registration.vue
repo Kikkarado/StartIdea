@@ -3,7 +3,7 @@
    section
     .container
       .form-title
-        span.ui-title-2 Registration
+        span.ui-title-2 Реєстрація
       .auth
         .auth__banner
           form(@submit.prevent="onSubmit")

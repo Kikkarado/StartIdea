@@ -66,7 +66,8 @@
                       ) {{ startups.title }}
                   .task-item__body
                     p.ui-text-regular.margin-bottom-8 {{ startups.shortdescription }}
-                    p.ui-text-regular До закриття стартапу залишилось {{ startups.deadline }} дня(-ів).
+                    p(v-if="startups.deadline > 1").ui-text-regular До закриття стартапу залишилось {{ Math.round(startups.deadline / (1000 * 60 * 60 * 24)) }} дня(-ів).
+                    p(v-if="startups.deadline <= 1").ui-text-regular Звершення відбудеться стратапу сьогодні.
                   .task-item__foter
 </template>
 
@@ -167,7 +168,7 @@ export default {
           return allST.sort(sortByDateToLow) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
         } else {
           const allST = this.$store.getters.startupsAll
-          allST.sort(sortByDateToLow)
+          allST.sort(sortByDateToLow) && this.$store.getters.startupsAll.filter(item => item.cost >= this.costfrom && item.cost <= this.costto)
           return this.$store.getters.startupsAll.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()) && item.cost >= this.costfrom && item.cost <= this.costto)
         }
         case 'Спочатку старі': if (this.search === '') {

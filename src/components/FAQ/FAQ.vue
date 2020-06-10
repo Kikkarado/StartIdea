@@ -3,7 +3,7 @@
    section
     .container
       .form-title
-        span.ui-title-2 FAQ
+        span.ui-title-2 Довідка
       .auth
       .auth__form2
         form(@submit.prevent="onSubmit")
