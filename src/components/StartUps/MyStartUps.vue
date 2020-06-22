@@ -134,7 +134,6 @@ export default {
     },
     startupDone (id, title) {
       this.done = !this.done
-      // console.log({id, title})
       this.srtpId = id
       this.titleDone = title
     },
@@ -147,7 +146,6 @@ export default {
     },
     // Done button
     finishStartupDone () {
-      // console.log(this.titleEditing)
       this.$store.dispatch('completeStartup', {
         id: this.srtpId,
         completed: true
@@ -159,7 +157,6 @@ export default {
     },
     startupDelete (id, title) {
       this.deleted = !this.deleted
-      // console.log({id, title})
       this.srtpId = id
       this.titleDelete = title
     },

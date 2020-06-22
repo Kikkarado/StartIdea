@@ -11,7 +11,7 @@
         input.search(
             type="text"
             v-model="search"
-            placeholder="Введіть те, що хочете знайти."
+            placeholder="..."
           )
       .auth
         .auth__form
@@ -65,31 +65,31 @@ export default {
         if (this.search === '') {
           return this.$store.getters.usersStartupers
         } else {
-          return this.$store.getters.usersStartupers.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
+          return this.$store.getters.usersStartupers.filter(item => (item.fname.toLowerCase() + ' ' + item.sname.toLowerCase()).includes(this.search.toLowerCase()))
         }
       } else if (this.usStatus === 'Інвестор') {
         if (this.search === '') {
           return this.$store.getters.usersInvestor
         } else {
-          return this.$store.getters.usersInvestor.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
+          return this.$store.getters.usersInvestor.filter(item => (item.fname.toLowerCase() + ' ' + item.sname.toLowerCase()).includes(this.search.toLowerCase()))
         }
       } else if (this.usStatus === 'Спеціалісти') {
         if (this.search === '') {
           return this.$store.getters.usersSpecialists
         } else {
-          return this.$store.getters.usersSpecialists.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
+          return this.$store.getters.usersSpecialists.filter(item => (item.fname.toLowerCase() + ' ' + item.sname.toLowerCase()).includes(this.search.toLowerCase()))
         }
       } else if (this.usStatus === 'Адміністратори') {
         if (this.search === '') {
           return this.$store.getters.usersAdmin
         } else {
-          return this.$store.getters.usersAdmin.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
+          return this.$store.getters.usersAdmin.filter(item => (item.fname.toLowerCase() + ' ' + item.sname.toLowerCase()).includes(this.search.toLowerCase()))
         }
       } else if (this.usStatus === 'Всі') {
         if (this.search === '') {
           return this.$store.getters.usersAll
         } else {
-          return this.$store.getters.usersAll.filter(item => item.fname.toLowerCase().includes(this.search.toLowerCase()) || item.sname.toLowerCase().includes(this.search.toLowerCase()))
+          return this.$store.getters.usersAll.filter(item => (item.fname.toLowerCase() + ' ' + item.sname.toLowerCase()).includes(this.search.toLowerCase()))
         }
       }
       return this.usStatus === 'Всі'

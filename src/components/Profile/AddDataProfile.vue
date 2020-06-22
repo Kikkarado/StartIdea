@@ -46,40 +46,12 @@
               .error(v-if="!$v.sname.required") Поле обов&acuteязкове.
             .form-date
               .form-date
-                p День
+                p Рік {{ this.corectDate }}
               .form-date
                 p Місяць
               .form-date
-                p Рік
+                p День
             .form-date
-              .form-date(:class="{ errorInput: $v.dayofbirth.$error }")
-                input(
-                  type="text"
-                  placeholder="(01-31)"
-                  v-model.number="dayofbirth"
-                  :maxlength="2"
-                  :class="{ error: $v.dayofbirth.$error }"
-                  @change="$v.dayofbirth.$touch()"
-                )
-                .error(v-if="!$v.dayofbirth.required")
-                .error(v-if="!$v.dayofbirth.minValue")
-                  | {{ $v.dayofbirth.$params.minValue.min }}
-                .error(v-if="!$v.dayofbirth.maxValue")
-                  | {{ $v.dayofbirth.$params.maxValue.max }}
-              .form-date(:class="{ errorInput: $v.monthofbirth.$error }")
-                input(
-                  type="text"
-                  placeholder="(01-12)"
-                  v-model.number="monthofbirth"
-                  :maxlength="2"
-                  :class="{ error: $v.monthofbirth.$error }"
-                  @change="$v.monthofbirth.$touch()"
-                )
-                .error(v-if="!$v.monthofbirth.required")
-                .error(v-if="!$v.monthofbirth.minValue")
-                  | {{ $v.monthofbirth.$params.minValue.min }}
-                .error(v-if="!$v.monthofbirth.maxValue")
-                  | {{ $v.monthofbirth.$params.maxValue.max }}
               .form-date(:class="{ errorInput: $v.yearofbirth.$error }")
                 input(
                   type="text"
@@ -94,6 +66,36 @@
                   | {{ $v.yearofbirth.$params.minValue.min }}
                 .error(v-if="!$v.yearofbirth.maxValue")
                   | {{ $v.yearofbirth.$params.maxValue.max }}
+              .form-date(:class="{ errorInput: $v.monthofbirth.$error }")
+                input(
+                  :disabled="!this.yearofbirth"
+                  type="text"
+                  placeholder="1-12"
+                  v-model.number="monthofbirth"
+                  :maxlength="2"
+                  :class="{ error: $v.monthofbirth.$error }"
+                  @change="$v.monthofbirth.$touch()"
+                )
+                .error(v-if="!$v.monthofbirth.required")
+                .error(v-if="!$v.monthofbirth.minValue")
+                  | {{ $v.monthofbirth.$params.minValue.min }}
+                .error(v-if="!$v.monthofbirth.maxValue")
+                  | {{ $v.monthofbirth.$params.maxValue.max }}
+              .form-date(:class="{ errorInput: $v.dayofbirth.$error }")
+                input(
+                  :disabled="!this.monthofbirth"
+                  type="text"
+                  :placeholder="this.dayplaceholde"
+                  v-model.number="dayofbirth"
+                  :maxlength="2"
+                  :class="{ error: $v.dayofbirth.$error }"
+                  @change="$v.dayofbirth.$touch()"
+                )
+                .error(v-if="!$v.dayofbirth.required")
+                .error(v-if="!$v.dayofbirth.minValue")
+                  | {{ $v.dayofbirth.$params.minValue.min }}
+                .error(v-if="!$v.dayofbirth.maxValue")
+                  | {{ $v.dayofbirth.$params.maxValue.max }}
             .form-item(:class="{ errorInput: $v.email.$error }")
               span Ваша контактна електронна адреса
               input(
@@ -121,9 +123,11 @@
               .error(v-if="!$v.phone.required") Поле обов&acuteязкове.
             .form-item(:class="{ errorInput: $v.aboutme.$error }")
               span Про вас
+                span.ui-text-smaller(v-if="aboutme.length < 70" style="color: #000")  (Необхідно ще мінімум {{this.counmedescmin - aboutme.length}} символів)
+                span.ui-text-smaller(v-if="aboutme.length >= 70" style="color: #000")  (Залишилось {{this.counmedescmax - aboutme.length}} символів)
               textarea.textarea(
                 type="text"
-                placeholder="Про мене"
+                placeholder="Про мене (Максимум 800 літер, мінімум 70 літер)"
                 v-model="aboutme"
                 :class="{ error: $v.aboutme.$error }"
                 @change="$v.aboutme.$touch()"
@@ -166,7 +170,11 @@ export default {
       phone: null,
       aboutme: '',
       submitStatus: null,
-      image: null
+      image: null,
+      dayplaceholde: '',
+      dayAmount: null,
+      counmedescmin: 70,
+      counmedescmax: 800
     }
   },
   created: function () {
@@ -185,39 +193,41 @@ export default {
       await this.$store.dispatch('fetchInfo')
     }
   },
-  validations: {
-    fname: {
-      required
-    },
-    sname: {
-      required
-    },
-    dayofbirth: {
-      required,
-      minValue: minValue(1),
-      maxValue: maxValue(31)
-    },
-    monthofbirth: {
-      required,
-      minValue: minValue(1),
-      maxValue: maxValue(12)
-    },
-    yearofbirth: {
-      required,
-      minValue: minValue(1900),
-      maxValue: maxValue(2003)
-    },
-    email: {
-      required,
-      email
-    },
-    phone: {
-      required
-    },
-    aboutme: {
-      required,
-      minLength: minLength(70),
-      maxLength: maxLength(800)
+  validations () {
+    return {
+      fname: {
+        required
+      },
+      sname: {
+        required
+      },
+      dayofbirth: {
+        required,
+        minValue: minValue(1),
+        maxValue: maxValue(this.dayAmount)
+      },
+      monthofbirth: {
+        required,
+        minValue: minValue(1),
+        maxValue: maxValue(12)
+      },
+      yearofbirth: {
+        required,
+        minValue: minValue(1900),
+        maxValue: maxValue(2003)
+      },
+      email: {
+        required,
+        email
+      },
+      phone: {
+        required
+      },
+      aboutme: {
+        required,
+        minLength: minLength(this.counmedescmin),
+        maxLength: maxLength(this.counmedescmax)
+      }
     }
   },
   methods: {
@@ -266,6 +276,10 @@ export default {
             this.submitStatus = err.message
           })
       }
+    },
+    corDate (dayplaceholde, dayAmount) {
+      this.dayplaceholde = dayplaceholde
+      this.dayAmount = dayAmount
     }
   },
   computed: {
@@ -274,6 +288,27 @@ export default {
     },
     profFil () {
       return this.$store.getters.info
+    },
+    corectDate () {
+      const cYear = !((this.yearofbirth % 4) || (!(this.yearofbirth % 100) && (this.yearofbirth % 400)))
+      if (this.monthofbirth === 1 || this.monthofbirth === 3 || this.monthofbirth === 5 || this.monthofbirth === 7 || this.monthofbirth === 8 || this.monthofbirth === 10 || this.monthofbirth === 12) {
+        const dayplaceholde = '(1-31)'
+        const dayAmount = 31
+        return this.corDate(dayplaceholde, dayAmount)
+      } else if (this.monthofbirth === 4 || this.monthofbirth === 6 || this.monthofbirth === 9 || this.monthofbirth === 11) {
+        const dayplaceholde = '(1-30)'
+        const dayAmount = 30
+        return this.corDate(dayplaceholde, dayAmount)
+      }
+      if (cYear === true && this.monthofbirth === 2) {
+        const dayplaceholde = '(1-29)'
+        const dayAmount = 29
+        return this.corDate(dayplaceholde, dayAmount)
+      } else if (cYear !== true && this.monthofbirth === 2) {
+        const dayplaceholde = '(1-28)'
+        const dayAmount = 28
+        return this.corDate(dayplaceholde, dayAmount)
+      }
     },
     loading () {
       return this.$store.getters.loading

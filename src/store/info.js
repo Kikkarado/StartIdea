@@ -76,7 +76,6 @@ export default {
         const profileInfo = (await firebase.database().ref('Users/' + userID).once('value')).val()
         commit('setInfo', profileInfo)
         commit('setLoading', false)
-        console.log(profileInfo)
       } catch (e) {
         commit('setLoading', false)
         commit('setError', e.message)
@@ -91,7 +90,6 @@ export default {
         const statusUs = (await firebase.database().ref('Users/' + userID + '/status/').once('value')).val()
         commit('setStatus', statusUs)
         commit('setLoading', false)
-        console.log(statusUs)
       } catch (e) {
         commit('setLoading', false)
         commit('setError', e.message)
@@ -106,7 +104,6 @@ export default {
         const startupsOn = (await firebase.database().ref('Users/' + userID + '/openstartup/').once('value')).val()
         commit('setOpStatrup', startupsOn)
         commit('setLoading', false)
-        console.log('openstartup ' + startupsOn)
       } catch (e) {
         commit('setLoading', false)
         commit('setError', e.message)
@@ -146,7 +143,6 @@ export default {
         })
         commit('setStartups', startupsArray)
         commit('setLoading', false)
-        console.log(startupsArray)
       } catch (e) {
         commit('setLoading', false)
         commit('setError', e.message)
@@ -178,7 +174,7 @@ export default {
         // Use helped class
         const userID = firebase.auth().currentUser.uid
         await firebase.database().ref('startups').child(id).remove()
-        await firebase.database().ref('Users').child(userID).child('openstartup').set(0)
+          .then(await firebase.database().ref('Users').child(userID).child('openstartup').set(0))
         const img1 = await firebase.storage().ref('startupsImg/' + id + '/' + userID + '1')
         const img2 = await firebase.storage().ref('startupsImg/' + id + '/' + userID + '2')
         const img3 = await firebase.storage().ref('startupsImg/' + id + '/' + userID + '3')
@@ -228,20 +224,29 @@ export default {
       commit('clearError')
       commit('setLoading', true)
       try {
-        const img = await firebase.storage().ref('startupsImg').bucket
-        console.log('img' + img)
+        await firebase.storage().ref('startupsImg').bucket
         const startup = await firebase.database().ref('startups').once('value')
         const startups = startup.val()
         const allStartupsArray = []
-        Object.keys(startups).forEach(key => {
-          const s = startups[key]
+        Object.keys(startups).forEach(async (skey) => {
+          const s = startups[skey]
           const date = new Date()
           const dateDead = date.getUTCFullYear() + '.' + date.getUTCMonth() + '.' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds()
           if (new Date(dateDead) >= new Date(s.deadline)) {
             const completed = true
-            firebase.database().ref('startups').child(key).update({completed})
+            firebase.database().ref('startups').child(skey).update({completed})
+            const don = await firebase.database().ref('donation').once('value')
+            const dons = don.val()
+            var keyid = null
+            Object.keys(dons).forEach(dkey => {
+              const d = dons[dkey]
+              if (d.idstartup === skey) {
+                keyid = dkey
+              }
+            })
+            const startupStatus = 'Провалився'
+            firebase.database().ref('donation').child(keyid).update({startupStatus})
             firebase.database().ref('Users').child(s.user).child('openstartup').set(0)
-            console.log(s.user)
           }
           var toDeath = Math.round((new Date(s.deadline) - new Date(dateDead)))
           allStartupsArray.push(
@@ -259,10 +264,9 @@ export default {
               s.imageUrl3,
               s.percent,
               s.user,
-              key
+              skey
             )
           )
-          console.log(Math.round((new Date(s.deadline) - new Date(dateDead)) / (1000 * 60 * 60 * 24)))
         })
         commit('setAllStartups', allStartupsArray)
         commit('setLoading', false)
@@ -282,7 +286,7 @@ export default {
         const userID = firebase.auth().currentUser.uid
         const don = await firebase.database().ref('donation').once('value')
         const dons = don.val()
-        const startupStatus = 'Продовжується'
+        var startupStatus = 'Продовжується'
         if (dons === null) {
           const infoDonation = new Donation(
             userID,
@@ -299,7 +303,6 @@ export default {
             const completed = true
             firebase.database().ref('startups').child(id).update({completed})
             firebase.database().ref('Users').child(user).child('openstartup').set(0)
-            console.log({user})
           }
           window.location.reload('/startup/')
           // Send mutation
@@ -333,9 +336,10 @@ export default {
             firebase.database().ref('startups').child(id).update({raisedfunds})
             if (raisedfunds >= comp) {
               const completed = true
+              startupStatus = 'Успішний'
               firebase.database().ref('startups').child(id).update({completed})
+              firebase.database().ref('donation').child(keyid).update({startupStatus})
               firebase.database().ref('Users').child(user).child('openstartup').set(0)
-              console.log({user})
             }
             window.location.reload('/startup/')
             // Send mutation
@@ -354,9 +358,10 @@ export default {
             firebase.database().ref('startups').child(id).update({raisedfunds})
             if (raisedfunds >= comp) {
               const completed = true
+              startupStatus = 'Успішний'
               firebase.database().ref('startups').child(id).update({completed})
+              firebase.database().ref('donation').child(keyid).update({startupStatus})
               firebase.database().ref('Users').child(user).child('openstartup').set(0)
-              console.log({user})
             }
             window.location.reload('/startup/')
             // Send mutation
@@ -395,7 +400,6 @@ export default {
       try {
         // Use helped class
         const infoUs = (await firebase.database().ref('Users/' + id).once('value')).val()
-        console.log(infoUs)
         // Send mutation
         commit('infoUser', infoUs)
         commit('setLoading', false)
@@ -434,7 +438,6 @@ export default {
         })
         commit('setAllUsers', allUsersArray)
         commit('setLoading', false)
-        console.log(allUsersArray)
       } catch (e) {
         commit('setLoading', false)
         commit('setError', e.message)
@@ -463,7 +466,7 @@ export default {
                   d.donation,
                   d.title,
                   d.profit,
-                  startupStatus = 'Успішен'
+                  d.startupStatus
                 )
               )
             } else if (strp.completed === true && strp.cost >= strp.raisedfunds) {
@@ -474,7 +477,7 @@ export default {
                   d.donation,
                   d.title,
                   d.profit,
-                  startupStatus = 'Провалився'
+                  d.startupStatus
                 )
               )
             } else if (strp.completed === false) {
@@ -485,7 +488,7 @@ export default {
                   d.donation,
                   d.title,
                   d.profit,
-                  startupStatus = 'Продовжується'
+                  d.startupStatus
                 )
               )
             }
@@ -493,7 +496,6 @@ export default {
         })
         commit('setDonations', donatsArray)
         commit('setLoading', false)
-        console.log('ku' + donatsArray)
       } catch (e) {
         commit('setLoading', false)
         commit('setError', e.message)
@@ -539,10 +541,8 @@ export default {
   getters: {
     info: s => s.profileInfo,
     status (state) {
-      console.log(state.statusUs)
       return state.statusUs
     },
-    // status: s => s.statusUs console.log(),
     openstartup: s => s.startupsOn,
     startupsUser (state, getters) {
       return state.startupsUser

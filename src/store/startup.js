@@ -40,7 +40,6 @@ export default {
         await firebase.database().ref('startups').push(newStartUp)
           .then(data => {
             key = data.key
-            console.log(key)
             return key
           })
           .then(async (key) => {

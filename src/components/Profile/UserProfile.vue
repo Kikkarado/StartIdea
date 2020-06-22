@@ -46,7 +46,6 @@ export default {
   methods: {
     openInfoUser () {
       const userId = this.$route.params.id
-      console.log('ku ' + userId)
       this.$store.dispatch('infoUser', {
         id: userId
       })

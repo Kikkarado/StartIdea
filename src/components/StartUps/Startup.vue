@@ -7,7 +7,7 @@
         .task-item(
           v-if="startup"
         )
-          .ui-card.ui-card--shadow
+          .ui-card.ui-card--shadow(id="content", ref="content")
               .task-item__info
                 .task-item__main-info
                   span(v-if="startup.raisedfunds < startup.cost").ui-label.ui-label--light Зібрано: {{ startup.raisedfunds.toFixed(2) }}$
@@ -43,6 +43,9 @@
                         v-if="checkStatus === 'Admin' && startup.approved === 'nonApproved'"
                         @click="approvedThisStartup(startup.title)"
                         ).button--round.button-primary Ухвалити
+                      .button(
+                        @click="toPDF()"
+                        ).button--round.button-primary Зберегти в PDF
     .ui-messageBox__wrapper(
       v-if="done"
       :class="{active: done}"
@@ -54,12 +57,12 @@
         .ui-messageBox__content
           p Введіть суму вказану в доларах $
         .ui-messageBox__content
-          span.ui-text-smaller(style="color: #000") 1(один) відсоток з вказаної суми буде перераховано на рахунок "Start Idea"
+          span.ui-text-smaller(style="color: #000") 0.5(пів відсотка) відсоток з вказаної суми буде перераховано на рахунок "Start Idea"
         .form-item(:class="{ errorInput: $v.raisedfundsDonation.$error }")
           input(
             type="text"
-            placeholder="Сума"
-            v-model.number="raisedfundsDonation"
+            :placeholder="'Максимальна сума ' + this.maxDonat + '$' + ', мінімальна 10$'"
+            v-model="raisedfundsDonation"
             :maxlength="8"
             @keypress="onlyForCurrency"
             :class="{ error: $v.raisedfundsDonation.$error }"
@@ -120,6 +123,8 @@
 
 <script>
 import { required, minValue, maxValue } from 'vuelidate/lib/validators'
+import * as jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 export default {
   data () {
@@ -156,7 +161,6 @@ export default {
   },
   methods: {
     onlyForCurrency ($event) {
-      // console.log($event.keyCode); //keyCodes value
       let keyCode = ($event.keyCode ? $event.keyCode : $event.which)
       // only allow number and one dot
       if ((keyCode < 48 || keyCode > 57) && (keyCode !== 46 || this.raisedfundsDonation.indexOf('.') !== -1)) { // 46 is dot
@@ -177,7 +181,6 @@ export default {
     },
     startupDonation (title, user, percent) {
       this.done = !this.done
-      // console.log({id, title})
       this.srtpId = this.$route.params.id
       this.titleDonation = title
       this.userStartaper = user
@@ -201,7 +204,7 @@ export default {
         console.log('submit!')
         this.$store.dispatch('donationStartup', {
           id: this.srtpId,
-          raisedfunds: this.raisedfundsDonation,
+          raisedfunds: parseFloat(this.raisedfundsDonation),
           user: this.userStartaper,
           title: this.titleDonation,
           profitDon: this.invest
@@ -223,13 +226,11 @@ export default {
     },
     approvedThisStartup (title) {
       this.approv = !this.approv
-      // console.log({id, title})
       this.srtpId = this.$route.params.id
       this.titleDonation = title
     },
     nonApprovedThisStartup (title) {
       this.nonapprov = !this.nonapprov
-      // console.log({id, title})
       this.srtpId = this.$route.params.id
       this.titleDonation = title
     },
@@ -264,7 +265,65 @@ export default {
       this.$store.dispatch('infoStartup', {
         id: startupId
       })
+    },
+    toPDF () {
+      // eslint-disable-next-line new-cap
+      var doc = new jsPDF('p', 'mm', 'a4')
+      var width = doc.internal.pageSize.getWidth()
+      const content = document.getElementById('content')
+      const tt = this.$store.getters.infoS.title
+      html2canvas(content, {
+        width: 1920,
+        height: 3000
+        // onrendered: function (canvas) {
+        //   var imgData = canvas.toDataURL('image/png')
+        //   doc.addImage(imgData, 'JPEG', 15, 0, width, 0)
+        //   console.log(imgData)
+        //   content.append(canvas)
+        //   doc.save(tt + '.pdf')
+        // }
+      }
+      )
+        .then(function (cont) {
+          var imgData = cont.toDataURL('image/png')
+          doc.addImage(imgData, 'PNG', 10, 10, width, 0)
+          doc.save(tt + '.pdf')
+        })
+        .catch(err =>
+          console.log(err)
+        )
+      // doc.fromHTML(content, 15, 15, {
+      //   'width': 170,
+      //   'elementHandlers': {'#editor': () => true}
+      // },
+      // function (bla) { doc.save(tt + '.pdf') })
     }
+    // Export2Doc (content, filename = '') {
+    //   var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>"
+    //   var postHtml = '</body></html>'
+    //   var html = preHtml + document.getElementById(content).innerHTML + postHtml
+    //   var blob = new Blob(['\ufeff', html], {
+    //     type: 'application/msword'
+    //   })
+    //   // Specify link url
+    //   var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html)
+    //   // Specify file name
+    //   filename = filename ? filename + '.doc' : 'document.doc'
+    //   // Create download link element
+    //   var downloadLink = document.createElement('a')
+    //   document.body.appendChild(downloadLink)
+    //   if (navigator.msSaveOrOpenBlob) {
+    //     navigator.msSaveOrOpenBlob(blob, filename)
+    //   } else {
+    //     // Create a link to the file
+    //     downloadLink.href = url
+    //     // Setting the file name
+    //     downloadLink.download = filename
+    //     // triggering the function
+    //     downloadLink.click()
+    //   }
+    //   document.body.removeChild(downloadLink)
+    // }
   },
   computed: {
     comis () {

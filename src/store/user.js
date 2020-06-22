@@ -6,7 +6,7 @@ import User from './user_help'
 
 export default {
   state: {
-    user: ''
+    user: null
   },
   mutations: {
     setUser (state, payload) {

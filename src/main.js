@@ -44,16 +44,16 @@ new Vue({
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.$store.dispatch('loggedUser', user)
+        this.$store.dispatch('fetchInfo')
+        this.$store.dispatch('fetchStatus')
+        this.$store.dispatch('fetchActiveStartup')
+        this.$store.dispatch('fetchStartupsUser')
+        this.$store.dispatch('fetchDonations')
+        this.$store.dispatch('infoStartup')
+        this.$store.dispatch('infoUser')
+        this.$store.dispatch('fetchAllUsers')
       }
-      this.$store.dispatch('fetchInfo')
-      this.$store.dispatch('fetchStatus')
-      this.$store.dispatch('fetchActiveStartup')
-      this.$store.dispatch('fetchStartupsUser')
-      this.$store.dispatch('fetchDonations')
       this.$store.dispatch('fetchAllStartups')
-      this.$store.dispatch('infoStartup')
-      this.$store.dispatch('infoUser')
-      this.$store.dispatch('fetchAllUsers')
     })
   }
 })

@@ -6,7 +6,7 @@
         input.search(
             type="text"
             v-model="search"
-            placeholder="Введіть те, що хочете знайти."
+            placeholder="..."
           )
       .auth
         .auth__form

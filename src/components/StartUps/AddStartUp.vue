@@ -10,7 +10,7 @@
               span Назва стартапу
               input(
                 type="text"
-                placeholder="Назва"
+                placeholder="Назва (Максимум 36 літер)"
                 v-model="title"
                 :maxlength="36"
                 :class="{ error: $v.title.$error }"
@@ -19,9 +19,10 @@
               .error(v-if="!$v.title.required") Поле обов&acuteязкове.
             .form-item(:class="{ errorInput: $v.shortdescription.$error }")
               span Короткий опис стартапу
+                span.ui-text-smaller(style="color: #000")  (Залишилось {{this.countsdec - shortdescription.length}} символів)
               textarea(
                 type="text"
-                placeholder="Короткий опис"
+                placeholder="Короткий опис (Максимум 300 літер)"
                 v-model="shortdescription"
                 :class="{ error: $v.shortdescription.$error }"
                 @change="$v.shortdescription.$touch()"
@@ -31,9 +32,11 @@
                 | У короткому описі має бути не більше {{ $v.shortdescription.$params.maxLength.max }} літер.
             .form-item(:class="{ errorInput: $v.fulldescription.$error }")
               span Повний опис стартапу
+                span.ui-text-smaller(v-if="fulldescription.length < 500" style="color: #000")  (Необхідно ще мінімум {{this.countfdecmin - fulldescription.length}} символів)
+                span.ui-text-smaller(v-if="fulldescription.length >= 500" style="color: #000")  (Залишилось {{this.countfdecmax - fulldescription.length}} символів)
               textarea.textarea(
                 type="text"
-                placeholder="Повний опис"
+                placeholder="Повний опис (Максимум 15000 літер, мінімум - 500)"
                 v-model="fulldescription"
                 :class="{ error: $v.fulldescription.$error }"
                 @change="$v.fulldescription.$touch()"
@@ -87,7 +90,7 @@
             ) №3
           form(@submit.prevent="onSubmit")
             .form-item(:class="{ errorInput: $v.cost.$error }")
-              p.margin-top-36 Необхідна сума в доларах $
+              p.margin-top-36 Необхідна сума в доларах $  (Максимальна сума 100000000$, мінімальна - 1000$)
               input.cost(
                 type="text"
                 placeholder="Сума"
@@ -107,10 +110,9 @@
               input.percent(
                 type="text"
                 placeholder="%"
-                v-model.number="percent"
-                v-mask="'99'"
-                :maxlength="2"
-                oninput="this.value=this.value.replace(/[^0-9]/g, '')"
+                v-model="percent"
+                :maxlength="5"
+                @keypress="onlyForCurrency"
                 :class="{ error: $v.percent.$error }"
                 @change="$v.percent.$touch()"
               )
@@ -151,33 +153,49 @@ export default {
       percent: '',
       image1: null,
       image2: null,
-      image3: null
+      image3: null,
+      countsdec: 300,
+      countfdecmin: 500,
+      countfdecmax: 15000
     }
   },
-  validations: {
-    title: {
-      required
-    },
-    shortdescription: {
-      required,
-      maxLength: maxLength(300)
-    },
-    fulldescription: {
-      required,
-      minLength: minLength(500),
-      maxLength: maxLength(15000)
-    },
-    cost: {
-      required,
-      minValue: minValue(1000),
-      maxValue: maxValue(100000000)
-    },
-    percent: {
-      minValue: minValue(0),
-      maxValue: maxValue(25)
+  validations () {
+    return {
+      title: {
+        required
+      },
+      shortdescription: {
+        required,
+        maxLength: maxLength(this.countsdec)
+      },
+      fulldescription: {
+        required,
+        minLength: minLength(this.countfdecmin),
+        maxLength: maxLength(this.countfdecmax)
+      },
+      cost: {
+        required,
+        minValue: minValue(1000),
+        maxValue: maxValue(100000000)
+      },
+      percent: {
+        minValue: minValue(0),
+        maxValue: maxValue(25)
+      }
     }
   },
   methods: {
+    onlyForCurrency ($event) {
+      let keyCode = ($event.keyCode ? $event.keyCode : $event.which)
+      // only allow number and one dot
+      if ((keyCode < 48 || keyCode > 57) && (keyCode !== 46 || this.percent.indexOf('.') !== -1)) { // 46 is dot
+        $event.preventDefault()
+      }
+      // restrict to 2 decimal places
+      if (this.percent != null && this.percent.indexOf('.') > -1 && (this.percent.split('.')[1].length > 1)) {
+        $event.preventDefault()
+      }
+    },
     onPickFile1 () {
       this.$refs.fileInput1.click()
     },
@@ -241,12 +259,11 @@ export default {
           cost: this.cost,
           completed: false,
           raisedfunds: 0,
-          percent: this.percent
+          percent: parseFloat(this.percent)
         }
         this.$store.dispatch('newStartUp', startup)
           .then(() => {
             console.log('Added!')
-            console.log(startup)
             this.submitStatus = 'OK'
             window.location.reload('/myStartUps')
             this.$router.push('/myStartUps')

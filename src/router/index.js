@@ -31,7 +31,7 @@ export default new Router({
       name: 'startup',
       component: Startup,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next('/')
       }
     },
     {
@@ -39,7 +39,7 @@ export default new Router({
       name: 'profile',
       component: MyProfile,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next('/')
       }
     },
     {
@@ -47,7 +47,7 @@ export default new Router({
       name: 'userprofile',
       component: UserProfile,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next('/')
       }
     },
     {
@@ -79,7 +79,7 @@ export default new Router({
       name: 'addDataProfile',
       component: AddDataProfile,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next('/')
       }
     },
     {
@@ -87,7 +87,7 @@ export default new Router({
       name: 'myStartUps',
       component: MyStartUps,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next('/')
         store.getters.status !== 'Startuper' ? next('/') : next()
       }
     },
@@ -96,7 +96,7 @@ export default new Router({
       name: 'addStartUp',
       component: AddStartUp,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next('/')
         store.getters.openstartup === 0 ? next() : next('/myStartUps')
       }
     },
@@ -105,7 +105,7 @@ export default new Router({
       name: 'users',
       component: Users,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next('/')
       }
     },
     {
@@ -113,7 +113,7 @@ export default new Router({
       name: 'approvedStartups',
       component: ApprovedStartups,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next('/')
         store.getters.status === 'Admin' ? next() : next('/')
       }
     },
@@ -127,7 +127,7 @@ export default new Router({
       name: 'investments',
       component: Investments,
       beforeEnter (to, from, next) {
-        store.getters.checkUser ? next() : next('/login')
+        store.getters.checkUser ? next() : next('/')
         store.getters.status === 'Investor' ? next() : next('/')
       }
     }
